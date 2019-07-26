@@ -6,15 +6,17 @@ layout: default
 ## Autumn 2019
 ### University of Washington Tacoma
 
-# Part 1: Introduction and R Markdown
+## Installation
+
+   * [R and RStudio Installation Instructions](https://clanfear.github.io/CSSS508/docs/installation.html)
+   * [Enabling compilation of packages](https://clanfear.github.io/CSSS508/docs/compiling.html)
+   
+## Part 1: Introduction and R Markdown
 
    * [Presentation Slides](https://clanfear.github.io/r_exposure_workshop/introduction/introduction_slides.html)
    * [.R Script to follow along](https://clanfear.github.io/r_exposure_workshop/introduction/introduction_slides.R) (Save as to download)
 
-   * [R and RStudio Installation Instructions](https://clanfear.github.io/CSSS508/docs/installation.html)
-   * [Enabling compilation of packages](https://clanfear.github.io/CSSS508/docs/compiling.html)
-
-# Part 2: Data Management and Visualization
+## Part 2: Management and Visualization
 
    * [Presentation Slides](https://clanfear.github.io/r_exposure_workshop/introduction/intermediate_slides.html)
    * [.R Script to follow along](https://clanfear.github.io/r_exposure_workshop/introduction/intermediate_slides.R) (Save as to download)
@@ -24,7 +26,7 @@ layout: default
    * [UW CSSS508](https://clanfear.github.io/CSSS508/): My University of Washington Introduction to R course which forms the basis for this workshop. All content including lecture videos are freely available.
    * [R for Data Science](http://r4ds.had.co.nz/) online textbook by Garrett Grolemund and Hadley Wickham. One of many good R texts available, but importantly it is free and focuses on the [`tidyverse`](http://tidyverse.org/) collection of R packages which are the modern standard for data manipulation and visualization in R.
    * [Advanced R](http://adv-r.had.co.nz/) online textbook by Hadley Wickham. A great source for more in-depth and advanced R programming.
-   * [DataCamp](https://www.datacamp.com/): A source for interactive R tutorials (some free of charge).
+   * [R Studio Primers](https://rstudio.cloud/learn/primers): Interative online tutorials in R.
    * [`swirl`](http://swirlstats.com/students.html): Interactive tutorials inside R.
    * [Useful RStudio cheatsheets](https://www.rstudio.com/resources/cheatsheets/) on R Markdown, RStudio shortcuts, etc.
    * [Code style guide](http://adv-r.had.co.nz/Style.html) for writing functions, etc.
