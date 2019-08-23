@@ -1,5 +1,5 @@
 ---
-title: "R Exposure: Intermediate"
+title: "Data Visualization and Management"
 subtitle: "UW Tacoma"  
 author: "Charles Lanfear"
 date: "Sep 28, 2019<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
