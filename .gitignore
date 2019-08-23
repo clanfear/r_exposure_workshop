@@ -34,3 +34,5 @@ vignettes/*.pdf
 
 # Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
 rsconnect/
+ignore/notes.txt
+ignore/Contract for Charles L for Sept 2019_signedMH_CCL.pdf
