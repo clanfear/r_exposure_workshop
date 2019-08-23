@@ -11,12 +11,12 @@ layout: default
    * [R and RStudio Installation Instructions](https://clanfear.github.io/CSSS508/docs/installation.html)
    * [Enabling compilation of packages](https://clanfear.github.io/CSSS508/docs/compiling.html)
    
-## Part 1: Introduction - RStudio and Basic R
+## Part 1: RStudio and Basic R
 
    * [Presentation Slides](https://clanfear.github.io/r_exposure_workshop/introduction/introduction_slides.html)
    * [.R Script to follow along](https://clanfear.github.io/r_exposure_workshop/introduction/introduction_slides.R) (Save as to download)
 
-## Part 2: Intermediate - Data Visualization and Management
+## Part 2: Data Visualization and Management
 
    * [Presentation Slides](https://clanfear.github.io/r_exposure_workshop/introduction/intermediate_slides.html)
    * [.R Script to follow along](https://clanfear.github.io/r_exposure_workshop/introduction/intermediate_slides.R) (Save as to download)
