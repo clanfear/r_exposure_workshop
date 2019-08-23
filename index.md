@@ -18,8 +18,8 @@ layout: default
 
 ## Part 2: Data Visualization and Management
 
-   * [Presentation Slides](https://clanfear.github.io/r_exposure_workshop/introduction/intermediate_slides.html)
-   * [.R Script to follow along](https://clanfear.github.io/r_exposure_workshop/introduction/intermediate_slides.R) (Save as to download)
+   * [Presentation Slides](https://clanfear.github.io/r_exposure_workshop/intermediate/intermediate_slides.html)
+   * [.R Script to follow along](https://clanfear.github.io/r_exposure_workshop/intermediate/intermediate_slides.R) (Save as to download)
 
 ## General R Resources:
 
