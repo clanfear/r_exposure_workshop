@@ -700,9 +700,9 @@ ggplot(data = gapminder,
   xlab("Year") + 
   ylab("Life expectancy") +
   ggtitle("Life expectancy over time") +
-  theme_bw() +  #<<
+  theme_bw() +  
   facet_wrap(~ continent) +
-  theme(legend.position = c(0.8, 0.25))
+  theme(legend.position = c(0.8, 0.25)) #<<
 ```
 ]
 ]
@@ -716,9 +716,9 @@ ggplot(data = gapminder,
   xlab("Year") + 
   ylab("Life expectancy") +
   ggtitle("Life expectancy over time") +
-  theme_bw() + #<<
+  theme_bw() + 
   facet_wrap(~ continent) +
-  theme(legend.position = c(0.8, 0.25))
+  theme(legend.position = c(0.8, 0.25)) #<<
 ```
 ]
 
@@ -733,14 +733,16 @@ We can assign a `ggplot` object to a name:
 ```{r}
 lifeExp_by_year <- 
   ggplot(data = gapminder, 
-         aes(x = year, y = lifeExp, 
-             group = country, color = continent)) +
+       aes(x = year, y = lifeExp, 
+           group = country, 
+           color = continent)) +
   geom_line() +
   xlab("Year") + 
   ylab("Life expectancy") +
   ggtitle("Life expectancy over time") +
   theme_bw() + 
-  facet_wrap(~ continent)
+  facet_wrap(~ continent) +
+  theme(legend.position = c(0.8, 0.25))
 ```
 
 The graph won't be displayed when you do this. You can show the graph using a single line of code with just the object name, *or take the object and add more layers*.
@@ -861,22 +863,24 @@ You can use any function in `summarize()` that aggregates *multiple values* into
 
 Remember our Yugoslavia example from last unit?
 
+.smallish[
 ```{r}
-former_yugoslavia <- c("Bosnia and Herzegovina", "Croatia", #<<
-              "Macedonia", "Montenegro", "Serbia", "Slovenia") #<<
-yugoslavia <- gapminder %>% filter(country %in% former_yugoslavia)
+yugoslavia <- gapminder %>% filter(country %in% c("Bosnia and Herzegovina",
+               "Croatia", "Macedonia", "Montenegro", "Serbia", "Slovenia"))
 ```
+]
 
 For the year 1982, let's get the *number of observations*, *total population*, *mean life expectancy*, and *range of life expectancy* for former Yugoslavian countries.
 
+.smallish[
 ```{r}
-yugoslavia %>%
-    filter(year == 1982) %>%
+yugoslavia %>% filter(year == 1982) %>%
     summarize(n_obs = n(),
               total_pop = sum(pop),
               mean_life_exp = mean(lifeExp),
               range_life_exp = max(lifeExp) - min(lifeExp))
 ```
+]
 
 These new variables are calculated using *all of the rows* in `yugoslavia`
 
@@ -891,7 +895,7 @@ Maybe you need to calculate the mean and standard deviation of a bunch of column
 ```{r}
 yugoslavia %>%
     filter(year == 1982) %>%
-    summarize_at(vars(lifeExp, pop), list(~mean(.), ~sd(.)))
+    summarize_at(vars(lifeExp, pop), list(~ mean(.), ~ sd(.)))
 ```
 
 Note it automatically names the summarized variables based on the functions used to summarize.
@@ -907,13 +911,13 @@ There are additional `dplyr` functions similar to `summarize_at()`:
 * `summarize_all()` and `mutate_all()` summarize / mutate *all* variables sent to them in the same way. For instance, getting the mean and standard deviation of an entire dataframe:
 
 ```{r, eval=FALSE}
-dataframe %>% summarize_all(funs(mean, sd))
+dataframe %>% summarize_all(list(~ mean(.), ~ sd(.)))
 ```
 
 * `summarize_if()` and `mutate_if()` summarize / mutate all variables that satisfy some logical condition. For instance, summarizing every numeric column in a dataframe at once:
 
 ```{r, eval=FALSE}
-dataframe %>% summarize_if(is.numeric, funs(mean, sd))
+dataframe %>% summarize_if(is.numeric, list(~ mean(.), ~ sd(.)))
 ```
 
 You can use all of these to avoid typing out the same code repeatedly!
@@ -1288,6 +1292,37 @@ billboard_2000 <- billboard_2000 %>%
 .footnote[Note that because the "highest" rank is *numerically lowest* (1), we are summarizing with `min()`.]
 
 ---
+# Charts of 2000: `ggplot2`
+
+```{r, message=FALSE, warning=FALSE}
+library(ggplot2)
+billboard_trajectories <- 
+  ggplot(data = billboard_2000,
+         aes(x = week, y = rank, group = track,
+             color = `Peak rank`)
+         ) +
+  geom_line(aes(size = `Peak rank`), alpha = 0.4) +
+    # rescale time: early weeks more important
+  scale_x_log10(breaks = seq(0, 70, 10)) + 
+  scale_y_reverse() + # want rank 1 on top, not bottom
+  theme_classic() +
+  xlab("Week") + ylab("Rank") +
+  scale_color_manual(values = c("black", "red")) +
+  scale_size_manual(values = c(0.25, 1)) +
+  theme(legend.position = c(0.90, 0.25),
+        legend.background = element_rect(fill="transparent"))
+```
+
+---
+# Charts of 2000: Beauty!
+
+```{r, cache=FALSE, echo=FALSE, dev="svg", fig.height=4}
+billboard_trajectories
+```
+
+Observation: There appears to be censoring around week 20 for songs falling out of the top 50 that I'd want to follow up on.
+
+---
 ## Which Were #1 the Most Weeks?
 
 ```{r}
@@ -1434,9 +1469,24 @@ data(airports)
 # and so on...
 ```
 
+
+
 ---
 ## Join Example 1
 
+Which airlines had the most flights to Seattle from NYC?
+```{r}
+flights %>% filter(dest == "SEA") %>% 
+    select(carrier) %>%
+    left_join(airlines, by = "carrier") %>%
+    count(name) %>% #<<
+    arrange(desc(n))
+```
+
+`count(name)` is a shortcut for `group_by(name) %>% summarize(n(.))`: It creates a variable `n` equal to the number of rows in each group.
+
+---
+## Join Example 2
 Who manufactures the planes that flew to SeaTac?
 
 ```{r}
@@ -1450,7 +1500,7 @@ flights %>% filter(dest == "SEA") %>% select(tailnum) %>%
 Note you can perform operations on the data inside functions such as `left_join()` and the *output* will be used by the function.
 
 ---
-## Join Example 2
+## Join Example 3
 
 Is there a relationship between departure delays and wind gusts?
 
@@ -1488,6 +1538,5 @@ flights %>% select(origin, year, month, day, hour, dep_delay) %>%
    * [UW CSSS508](https://clanfear.github.io/CSSS508/): My University of Washington Introduction to R course which forms the basis for this workshop. All content including lecture videos is freely available.
    * [R for Data Science](http://r4ds.had.co.nz/) online textbook by Garrett Grolemund and Hadley Wickham. One of many good R texts available, but importantly it is free and focuses on the [`tidyverse`](http://tidyverse.org/) collection of R packages which are the modern standard for data manipulation and visualization in R.
    * [Advanced R](http://adv-r.had.co.nz/) online textbook by Hadley Wickham. A great source for more in-depth and advanced R programming.
-   * [DataCamp](https://www.datacamp.com/): A source for interactive R tutorials (some free of charge).
    * [`swirl`](http://swirlstats.com/students.html): Interactive tutorials inside R.
    * [Useful RStudio cheatsheets](https://www.rstudio.com/resources/cheatsheets/) on R Markdown, RStudio shortcuts, etc.
