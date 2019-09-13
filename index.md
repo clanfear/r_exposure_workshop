@@ -10,7 +10,9 @@ layout: default
 
    * [R and RStudio Installation Instructions](https://clanfear.github.io/CSSS508/docs/installation.html)
    * [Enabling compilation of packages](https://clanfear.github.io/CSSS508/docs/compiling.html)
-   
+
+## [Pre-Workshop Assignments](https://clanfear.github.io/r_exposure_workshop/preassignment/preassignment.html)
+
 ## Part 1: RStudio and Basic R
 
    * [Presentation Slides](https://clanfear.github.io/r_exposure_workshop/introduction/introduction_slides.html)
@@ -20,6 +22,8 @@ layout: default
 
    * [Presentation Slides](https://clanfear.github.io/r_exposure_workshop/intermediate/intermediate_slides.html)
    * [.R Script to follow along](https://clanfear.github.io/r_exposure_workshop/intermediate/intermediate_slides.R) (Save as to download)
+
+## [Post-Workshop Assignments](https://clanfear.github.io/r_exposure_workshop/postassignment/postassignment.html)
 
 ## General R Resources:
 

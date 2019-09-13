@@ -111,7 +111,7 @@ ggplot(data = China,
   xlab("Year") + 
   ylab("Life expectancy") +
   ggtitle("Life expectancy in China") +
-  theme_bw(base_size=18) #<<
+  theme_bw(base_size=18)
 ```
 ]
 ]
@@ -124,12 +124,12 @@ ggplot(data = China,
   xlab("Year") + 
   ylab("Life expectancy") +
   ggtitle("Life expectancy in China") +
-  theme_bw(base_size=18) #<<
+  theme_bw(base_size=18)
 ```
 ]
 
 ---
-# Structure of a ggplot
+# Structure of a `ggplot`
 
 `ggplot2` graphics objects consist of two primary components:
 
@@ -722,8 +722,47 @@ ggplot(data = gapminder,
 ```
 ]
 
-.footnote[Looking good!]
+.footnote[Better... but do we even need it?]
+---
+count: false
 
+# Plotting All Countries
+
+### 9: No Legend
+.pull-left[
+ .small[
+```{r, fig.height=4, dev='svg', eval=FALSE}
+ggplot(data = gapminder, 
+       aes(x = year, y = lifeExp, 
+           group = country, 
+           color = continent)) +
+  geom_line() +
+  xlab("Year") + 
+  ylab("Life expectancy") +
+  ggtitle("Life expectancy over time") +
+  theme_bw() +  
+  facet_wrap(~ continent) +
+  theme(legend.position = "none") #<<
+```
+]
+]
+.pull-right[
+```{r,  dev='svg', echo=FALSE}
+ggplot(data = gapminder, 
+       aes(x = year, y = lifeExp, 
+           group = country, 
+           color = continent)) +
+  geom_line() +
+  xlab("Year") + 
+  ylab("Life expectancy") +
+  ggtitle("Life expectancy over time") +
+  theme_bw() + 
+  facet_wrap(~ continent) +
+  theme(legend.position = "none") #<<
+```
+]
+
+.footnote[Looking good!]
 ---
 
 # Storing Plots
@@ -742,7 +781,7 @@ lifeExp_by_year <-
   ggtitle("Life expectancy over time") +
   theme_bw() + 
   facet_wrap(~ continent) +
-  theme(legend.position = c(0.8, 0.25))
+  theme(legend.position = "none")
 ```
 
 The graph won't be displayed when you do this. You can show the graph using a single line of code with just the object name, *or take the object and add more layers*.
@@ -1058,10 +1097,17 @@ We're going to work with some *ugly* data: *The Billboard Hot 100 for the year 2
 
 We can load it like so:
 
-```{r, warning=FALSE, message=FALSE}
+```{r, eval=FALSE, warning=FALSE, message=FALSE}
 library(readr) # Contains read_csv()
 billboard_2000_raw <- 
   read_csv(file = "https://github.com/clanfear/Intermediate_R_Workshop/raw/master/data/billboard.csv",
+           col_types = paste(c("icccD", rep("i", 76)), collapse="")) #<<
+```
+
+```{r, include=FALSE, warning=FALSE, message=FALSE}
+library(readr) # Contains read_csv()
+billboard_2000_raw <- 
+  read_csv(file = "../data/billboard.csv",
            col_types = paste(c("icccD", rep("i", 76)), collapse="")) #<<
 ```
 
@@ -1132,42 +1178,43 @@ The `tidyr` package provides functions to tidy up data, similar to `reshape` in 
 
 --
 
-* **`gather()`**: takes a set of columns and rotates them down to make two new columns (which you can name yourself): 
-    * A `key` that stores the original column names
+* **`pivot_longer()`**: takes a set of columns and pivots them down to make two new columns (which you can name yourself): 
+    * A `name` column that stores the original column names
     * A `value` with the values in those original columns
 
 --
 
-* **`spread()`**: inverts `gather()` by taking two columns and rotating them up into multiple columns
+* **`pivot_wider()`**: inverts `pivot_longer()` by taking two columns and pivoting them up into multiple columns
 
 --
 
-* **`separate()`**: pulls apart one column into multiple columns (common with `gather`ed data where values had been embedded in column names)
+* **`separate()`**: pulls apart one column into multiple columns (common after `pivot_longer()` where values are embedded in column names)
     * `extract_numeric()` does a simple version of this for the common case when you just want grab the number part
 
 --
 
-* **`extract()`** for spreading a column into multiple *sets* of columns.
+* **`extract()`** for pivoting a column into multiple *sets* of columns.
    * See [Hadley's response to this question](https://stackoverflow.com/questions/25925556/gather-multiple-sets-of-columns) for an example.
 
 ---
-# `gather()`
+# `pivot_longer()`
 
-Let's use `gather()` to get the week and rank variables out of their current layout into two columns (big increase in rows, big drop in columns):
+Let's use `pivot_longer()` to get the week and rank variables out of their current layout into two columns (big increase in rows, big drop in columns):
 
 ```{r, message=FALSE, warning=FALSE}
 library(tidyr)
 billboard_2000 <- billboard_2000_raw %>%
-    gather(key = week, value = rank, starts_with("wk")) #<<
+  pivot_longer(starts_with("wk"), 
+               names_to ="week", values_to = "rank") #<<
 dim(billboard_2000)
 ```
 
 `starts_with()` and other helper functions from `dplyr::select()` work here too.
 
-We could instead use: `gather(key = week, value = rank, wk1:wk76)` to pull out these contiguous columns.
+We could instead use: `pivot_longer(wk1:wk76, names_to = "week", values_to = "rank")` to pull out these contiguous columns.
 
 ---
-# `gather`ed Weeks
+# `pivot`ed Weeks
 
 .smallish[
 ```{r, message=FALSE, warning=FALSE}
@@ -1178,7 +1225,7 @@ head(billboard_2000)
 Now we have a single week column!
 
 ---
-# Gathering Better?
+# Pivoting Better?
 
 ```{r}
 summary(billboard_2000$rank)
@@ -1187,14 +1234,41 @@ summary(billboard_2000$rank)
 This is an improvement, but we don't want to keep the `r sum(is.na(billboard_2000$rank))` rows with missing ranks (i.e. observations for weeks since entering the Hot 100 that the song was no longer on the Hot 100).
 
 ---
-# Gathering Better: `na.rm`
+# Pivoting Better: `values_drop_na`
 
-The argument `na.rm = TRUE` to `gather()` will remove rows with missing ranks.
+The argument `values_drop_na = TRUE` to `pivot_longer()` will remove rows with missing ranks.
 ```{r}
 billboard_2000 <- billboard_2000_raw %>%
-    gather(key = week, value = rank, starts_with("wk"),
-           na.rm = TRUE) #<<
+  pivot_longer(starts_with("wk"), 
+               names_to ="week", values_to = "rank", 
+               values_drop_na = TRUE) #<<
 summary(billboard_2000$rank)
+```
+
+---
+# `parse_number()`
+
+`tidyr` provides a convenience function to grab just the numeric information from a column that mixes text and numbers:
+
+```{r}
+billboard_2000 <- billboard_2000 %>%
+    mutate(week = parse_number(week)) #<<
+summary(billboard_2000$week)
+```
+
+For more sophisticated conversion or pattern checking, you'll need to use string parsing (to be covered in week 8).
+
+---
+# Or use `names_prefix`
+
+```{r}
+billboard_2000 <- billboard_2000_raw %>%
+  pivot_longer(starts_with("wk"), 
+               names_to ="week", values_to = "rank",
+               values_drop_na = TRUE,
+               names_prefix = "wk", #<<
+               names_ptypes = list("week" =numeric(0))) #<<
+head(billboard_2000)
 ```
 
 ---
@@ -1215,27 +1289,16 @@ summary(billboard_2000$length)
 
 Then we add `seconds / 60` to `minutes` to produce a numeric `length` in minutes.
 
----
-# `parse_number()`
 
-`tidyr` provides a convenience function to grab just the numeric information from a column that mixes text and numbers:
-
-```{r}
-billboard_2000 <- billboard_2000 %>%
-    mutate(week = parse_number(week)) #<<
-summary(billboard_2000$week)
-```
-
-For more sophisticated conversion or pattern checking, you'll need to use string parsing (to be covered in week 8).
 
 ---
-# `spread()` Motivation
+# `pivot_wider()` Motivation
 
-`spread()` is the opposite of `gather()`, which you use if you have data for the same observation taking up multiple rows.
+`pivot_wider()` is the opposite of `pivot_longer()`, which you use if you have data for the same observation taking up multiple rows.
 
 --
 
-Example of data that we probably want to spread (unless we want to plot each statistic in its own facet):
+Example of data that we probably want to pivot wider (unless we want to plot each statistic in its own facet):
 
 .small[
 | **Group** | **Statistic** | **Value** |
@@ -1248,10 +1311,10 @@ Example of data that we probably want to spread (unless we want to plot each sta
 | B     | SD        |  1.33 |
 ]
 
-A common cue to use `spread()` is having measurements of different quantities in the same column. 
+A common cue to use `pivot_wider()` is having measurements of different quantities in the same column. 
 
 ---
-# Before `spread()`
+# Before `pivot_wider()`
 
 .smallish[
 ```{r}
@@ -1262,11 +1325,11 @@ A common cue to use `spread()` is having measurements of different quantities in
 ]
 
 ---
-# After `spread()`
+# After `pivot_wider()`
 
 ```{r}
 (just_right_data <- too_long_data %>%
-    spread(key = Statistic, value = Value))
+    pivot_wider(names_from = Statistic, values_from = Value))
 ```
 
 ---
@@ -1286,7 +1349,7 @@ best_rank <- billboard_2000 %>%
 
 # merge onto original data
 billboard_2000 <- billboard_2000 %>%
-    left_join(best_rank, by = c("artist", "track"))
+    left_join(best_rank, by = c("artist", "track")) #<<
 ```
 
 .footnote[Note that because the "highest" rank is *numerically lowest* (1), we are summarizing with `min()`.]
