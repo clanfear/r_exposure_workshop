@@ -1234,7 +1234,7 @@ summary(billboard_2000$rank)
 This is an improvement, but we don't want to keep the `r sum(is.na(billboard_2000$rank))` rows with missing ranks (i.e. observations for weeks since entering the Hot 100 that the song was no longer on the Hot 100).
 
 ---
-# Pivoting Better: `values_drop_na`
+## Pivoting Better: `values_drop_na`
 
 The argument `values_drop_na = TRUE` to `pivot_longer()` will remove rows with missing ranks.
 ```{r}
