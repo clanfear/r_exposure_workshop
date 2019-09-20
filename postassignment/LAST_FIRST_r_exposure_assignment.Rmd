@@ -1,0 +1,53 @@
+---
+title: "R Exposure Assignment"
+author: "YOUR NAME"
+date: "`r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+output: html_document
+---
+
+# Instructions
+
+> Notes from the instructor appear as block quotes like these. Leave these instructions in. If you want to comment on what you've done (such as if you had issues), you can write text below the chunks to explain (as in "Here's some example text!" below the first chunk).
+
+> First, at the top of this document is the YAML header (sometimes called "front matter"). Replace `YOUR NAME` with... your name. Leave the rest alone--the code in the `date` line writes the current date when you knit the document! Once you replace the name, immediately knit the document by pressing the `Knit` button between this editor pane and the file tabs at the top. Note you must save the file--replace `LAST_FIRST` in the filename with your last name and first name (lower case preferred). Once you've see the output, continue on--I recommend knitting frequently as you add new content.
+
+> Below is a code chunk. R code put inside a code chunk will run when you knit the .Rmd document, displaying output below it. This is just an example but you can play with the text inside if you want! Note you can run R code inside these chunks by placing your cursor on the line and hitting `Ctrl-Enter` or `Cmd-Enter` or by pressing the green arrow in the top right of the chunk (the downward-point arrow runs *all previous chunks*; the ). The text after `r` in the chunk header is just a name for the chunk--it can be anything but avoid numbers or punctuation.
+
+```{r firstchunk}
+print("Hello world!")
+```
+
+Here's some example text!
+
+# Assignment
+
+> This next chunk has `include=FALSE` set. This prevents all output and warning messages from being shown when the chunk runs. I recommend loading packages inside a chunk at the start of the document with `include=FALSE`. Inside this chunk, load the packages `gapminder`,  `dplyr`, and `ggplot2`.
+
+```{r secondchunk, include=FALSE}
+# replace this comment with your code!
+```
+
+> Use `dplyr` to subset the `gapminder` data to just rows from Germany, and assign it to an object named `germany`. Then use `glimpse()` or `str()` to look at this object. Note I have no chunk name in the chunk header here--you don't need them, but they're nice for organization: If you click on the navigation button at the bottom left of this editor window, you can browse by chunk and section names!
+
+```{r}
+# replace this comment with your code!
+```
+
+> `echo=FALSE` prevents displaying the code, but still displays output. Make a line plot here using the data from `germany` showing year on the x-axis and GDP per capita on the y-axis. Try to give it a nice looking title and axes.
+
+```{r, echo=FALSE}
+# replace this comment with your code!
+```
+
+> Next, modify the plot so that it works with the entire `gapminder` data. This is similar to a task from lecture--refer to the slides if you need! An easy method is to connect the lines based on country--you'll want to color them as well to separate them. See what happens to the legend if you do this. You might remove the legend to deal with this, or change coloring to follow continents. Also, use `echo=FALSE` to hide your plotting code.
+
+```{r}
+# replace this comment with your code!
+```
+
+> Lastly, let's use `dplyr`'s `group_by()` and `summarize()` commands to aggregate the country-year data to continent-years. Make `gdpPercap` equal to the `mean()` of `gdpPercap` across all the countries in each continent. Assign this to an object named `continents`. Then, make a line plot of gdpPercap by year with a line for each continent.
+
+```{r}
+# replace this comment with your code!
+```
+
