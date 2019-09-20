@@ -25,6 +25,8 @@ layout: default
 
 ## [Post-Workshop Assignments](https://clanfear.github.io/r_exposure_workshop/postassignment/postassignment.html)
 
+   * [R Markdown Assignment Template](https://clanfear.github.io/r_exposure_workshop/postassignment/LAST_FIRST_r_exposure.Rmd)
+
 ## General R Resources:
 
    * [UW CSSS508](https://clanfear.github.io/CSSS508/): My University of Washington Introduction to R course which forms the basis for this workshop. All content including lecture videos are freely available.
