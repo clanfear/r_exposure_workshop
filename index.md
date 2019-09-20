@@ -25,7 +25,7 @@ layout: default
 
 ## [Post-Workshop Assignments](https://clanfear.github.io/r_exposure_workshop/postassignment/postassignment.html)
 
-   * [R Markdown Assignment Template](https://clanfear.github.io/r_exposure_workshop/postassignment/LAST_FIRST_r_exposure.Rmd)
+   * [R Markdown Assignment Template](https://clanfear.github.io/r_exposure_workshop/postassignment/LAST_FIRST_r_exposure_assignment.Rmd)
 
 ## General R Resources:
 

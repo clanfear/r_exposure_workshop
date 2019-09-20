@@ -34,4 +34,4 @@ R Markdown is possibly the most useful and powerful capability of the R platform
 
 ### R Markdown Assignment
 
-R Markdown is one of the most useful features of R, as you should know from the above special topics reading. [Download this R Markdown template](https://clanfear.github.io/r_exposure_workshop/postassignment/LAST_FIRST_r_exposure.Rmd) (*Right-Click, then Save As...*) and follow the instructions within. Submit it via Canvas by 11:59 PM Friday, October 4th.
+R Markdown is one of the most useful features of R, as you should know from the above special topics reading. [Download this R Markdown template](https://clanfear.github.io/r_exposure_workshop/postassignment/LAST_FIRST_r_exposure_assignment.Rmd) (*Right-Click, then Save As...*) and follow the instructions within. Submit it via Canvas by 11:59 PM Friday, October 4th.
