@@ -5,14 +5,14 @@ layout: default
 # Exposure to R
 ## Post-Assignment
 
-This page describes all components of the R Exposure course you are expected to complete *after the lectures on Saturday, September 28th*. You have three tasks: 
+This page describes all components of the R Exposure course you are expected to complete *after the lectures on Saturday, September 28th*. You have four tasks: 
 
 1. Read additional sections from R for Data Science
 2. Read two introductions to special R topics
 3. Complete two (or more) RStudio Primers
 4. Turn in a simple R Markdown and analysis assignment
 
-You may note that all post-assignments are existing content from other providers and are not handed in to me. There are many great R resources online--you should become accustomed to using multiple platforms to continue learning about R. I do not ask for proof of completion of any tasks: If this content is useful to you, you'll complete it and more; if not, you're not forced to work through it.
+You may note that most post-assignments are existing content from other providers. There are many great R resources online--you should become accustomed to using multiple platforms to continue learning about R. I do not ask for proof of completion of any of these tasks (except the R Markdown assignment)/ If this content is useful to you, you'll complete it and more; if not, you're not forced to work through it.
 
 ### [R for Data Science](https://r4ds.had.co.nz/)
 
