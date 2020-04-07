@@ -3,29 +3,46 @@ layout: default
 ---
 
 # R Exposure Workshop
-## Autumn 2019
+## Spring 2020
 ### University of Washington Tacoma
 
 ## Installation
 
    * [R and RStudio Installation Instructions](https://clanfear.github.io/CSSS508/docs/installation.html)
    * [Enabling compilation of packages](https://clanfear.github.io/CSSS508/docs/compiling.html)
+   * [R Exposure Setup](lectures/setup/r_exposure_setup.html)
 
-## [Pre-Workshop Assignments](https://clanfear.github.io/r_exposure_workshop/preassignment/preassignment.html)
+## [Pre-Workshop Assignments](assignments/preassignment.html)
 
-## Part 1: RStudio and Basic R
+# R1
 
-   * [Presentation Slides](https://clanfear.github.io/r_exposure_workshop/introduction/introduction_slides.html)
-   * [.R Script to follow along](https://clanfear.github.io/r_exposure_workshop/introduction/introduction_slides.R) (Save as to download)
+* [Unit 1: RStudio and R Markdown](lectures/R1/Week1/CSSS508_Week1_RStudio_and_RMarkdown.html)
+   + [R Script for Unit 1](lectures/R1/Week1/CSSS508_Week1_RStudio_and_RMarkdown.R)
+* [Unit 2: Visualization with `ggplot2`](lectures/R1/Week2/CSSS508_Week2_ggplot2.html)
+   + [R Script for Unit 2](lectures/R1/Week2/CSSS508_Week2_ggplot2.R)
 
-## Part 2: Data Visualization and Management
+# R2
 
-   * [Presentation Slides](https://clanfear.github.io/r_exposure_workshop/intermediate/intermediate_slides.html)
-   * [.R Script to follow along](https://clanfear.github.io/r_exposure_workshop/intermediate/intermediate_slides.R) (Save as to download)
+* [Unit 3: RStudio and R Markdown](lectures/R2/Week3/CSSS508_Week3_dplyr.html)
+   + [R Script for Unit 3](lectures/R2/Week3/CSSS508_Week3_dplyr.R)
+* [Unit 4: RStudio and R Markdown](lectures/R2/Week4/CSSS508_Week4_data_structures.html)
+   + [R Script for Unit 4](lectures/R2/Week4/CSSS508_Week4_data_structures.R)
+   
+# R3
 
-## [Post-Workshop Assignments](https://clanfear.github.io/r_exposure_workshop/postassignment/postassignment.html)
+* [Unit 5: RStudio and R Markdown](lectures/R3/Week5/CSSS508_Week5_data_import_export_cleaning.html)
+   + [R Script for Unit 5](lectures/R3/Week5/CSSS508_Week5_data_import_export_cleaning.R)
+* [Unit 6: RStudio and R Markdown](lectures/R3/Week6/CSSS508_Week6_loops.html)
+   + [R Script for Unit 6](lectures/R3/Week6/CSSS508_Week6_loops.R)
 
-   * [R Markdown Assignment Template](https://github.com/clanfear/r_exposure_workshop/raw/master/postassignment/LAST_FIRST_r_exposure_assignment.Rmd) (Save as to download)
+# R4
+
+* [Unit 7: RStudio and R Markdown](lectures/R4/Week7/CSSS508_Week7_vectorization.html)
+   + [R Script for Unit 7](lectures/R4/Week7/CSSS508_Week7_vectorization.R)
+* [Unit 8: RStudio and R Markdown](lectures/R4/Week8/CSSS508_Week8_strings.html)
+   + [R Script for Unit 8](lectures/R4/Week8/CSSS508_Week8_strings.R)
+   
+## [Post-Workshop Assignments](assignments/postassignment.html)
 
 ## General R Resources:
 
