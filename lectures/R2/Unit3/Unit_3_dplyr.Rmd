@@ -20,7 +20,6 @@ knitr::opts_chunk$set(comment = "##")
 library(ggplot2)
 ```
 
-
 # Death to Spreadsheets
 
 ```{r set-options, echo=FALSE, cache=FALSE}
@@ -109,8 +108,6 @@ Canada <- gapminder %>%
 ```
 
 Excel analogue: Filter!
-
-![Excel's filter](http://content.gcflearnfree.org/topics/143/ex07_filter.gif)
 
 ---
 # Another Operator: `%in%`
@@ -718,5 +715,3 @@ Pick something to look at in the `nycflights13` data and write up a .Rmd file sh
 This time, *include all your code in your output document* (`echo=TRUE`), using comments and line breaks separating commands so that it is clear to a peer what you are doing (or trying to do!). You must write up your observations briefly in words as well.  
 
 Note: If you want to see the `nycflights13` dataframes in the environment, you will need to load *each one*: `airlines`, `airports`, `flights`, `planes`, and `weather` (e.g. `data(flights)`).
-
-## DUE: 11:59 PM, October 15th

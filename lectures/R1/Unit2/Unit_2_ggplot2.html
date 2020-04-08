@@ -256,23 +256,6 @@ This will install a *large* number of R packages we will use throughout the term
 library(dplyr)
 ```
 
-```
-## 
-## Attaching package: 'dplyr'
-```
-
-```
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
 ---
 
 # Wait, was that an error?
@@ -307,7 +290,7 @@ log(mean(gapminder$pop))
 ```
 
 ```
-## [1] 17.20333
+## [1] 17.2
 ```
 
 --
@@ -320,7 +303,7 @@ gapminder$pop %&gt;% mean() %&gt;% log()
 ```
 
 ```
-## [1] 17.20333
+## [1] 17.2
 ```
 
 --
@@ -600,7 +583,7 @@ Now let's see all this jargon in action.
 ![](Unit_2_ggplot2_files/figure-html/unnamed-chunk-20-1.svg)&lt;!-- --&gt;
 ]
 
-.footnote[We initialize the plot with `ggplot()` and an aesthetic.]
+.footnote[Initialize the plot with `ggplot()` and `x` and `y` aesthetics **mapped** to variables.]
 
 ---
 
@@ -623,7 +606,7 @@ ggplot(data = China,
 ![](Unit_2_ggplot2_files/figure-html/unnamed-chunk-22-1.svg)&lt;!-- --&gt;
 ]
 
-.footnote[Add a scatterplot.]
+.footnote[Add a scatterplot **layer**.]
 ---
 
 
@@ -645,7 +628,7 @@ ggplot(data = China,
 ![](Unit_2_ggplot2_files/figure-html/unnamed-chunk-24-1.svg)&lt;!-- --&gt;
 ]
 
-.footnote[Make the points large and red.]
+.footnote[**Set** aesthetics to make the points large and red.]
 ---
 
 
@@ -668,7 +651,7 @@ ggplot(data = China,
 ![](Unit_2_ggplot2_files/figure-html/unnamed-chunk-26-1.svg)&lt;!-- --&gt;
 ]
 
-.footnote[Capitalize the x-axis label.]
+.footnote[Add a layer to capitalize the x-axis label.]
 ---
 
 
@@ -692,7 +675,7 @@ ggplot(data = China,
 ![](Unit_2_ggplot2_files/figure-html/unnamed-chunk-28-1.svg)&lt;!-- --&gt;
 ]
 
-.footnote[Clean up the y-axis label.]
+.footnote[Add a layer to clean up the y-axis label.]
 ---
 
 
@@ -717,7 +700,7 @@ ggplot(data = China,
 ![](Unit_2_ggplot2_files/figure-html/unnamed-chunk-30-1.svg)&lt;!-- --&gt;
 ]
 
-.footnote[Add a title.]
+.footnote[Add a title layer.]
 ---
 
 
@@ -743,7 +726,7 @@ ggplot(data = China,
 ![](Unit_2_ggplot2_files/figure-html/unnamed-chunk-32-1.svg)&lt;!-- --&gt;
 ]
 
-.footnote[Pick a nicer theme.]
+.footnote[Pick a nicer theme with a new layer.]
 ---
 
 
@@ -1274,13 +1257,6 @@ ggplot(data = gapminder, aes(x = year, y = lifeExp, group = country)) +
   geom_line() +
 * geom_line(stat = "smooth", method = "loess",
 *           aes(group = continent))
-```
-
-```
-## `geom_smooth()` using formula 'y ~ x'
-```
-
-```r
   #
   #
   #
@@ -1304,13 +1280,6 @@ ggplot(data = gapminder, aes(x = year, y = lifeExp, group = country)) +
   geom_line(stat = "smooth", method = "loess", 
             aes(group = continent)) +
 * facet_wrap(~ continent, nrow = 2)
-```
-
-```
-## `geom_smooth()` using formula 'y ~ x'
-```
-
-```r
   #
   #
   #
@@ -1334,13 +1303,6 @@ ggplot(data = gapminder, aes(x = year, y = lifeExp, group = country)) +
 *           aes(group = continent, color = "Continent")) +
   facet_wrap(~ continent, nrow = 2) +
 * scale_color_manual(name = "Life Exp. for:", values = c("Country" = "black", "Continent" = "blue"))
-```
-
-```
-## `geom_smooth()` using formula 'y ~ x'
-```
-
-```r
   #
   #
   #
@@ -1363,13 +1325,6 @@ ggplot(data = gapminder, aes(x = year, y = lifeExp, group = country)) +
   facet_wrap(~ continent, nrow = 2) +
   scale_color_manual(name = "Life Exp. for:", values = c("Country" = "black", "Continent" = "blue")) +
 * scale_size_manual(name = "Life Exp. for:", values = c("Country" = 0.25, "Continent" = 3))
-```
-
-```
-## `geom_smooth()` using formula 'y ~ x'
-```
-
-```r
   #
   #
   #
@@ -1392,13 +1347,6 @@ ggplot(data = gapminder, aes(x = year, y = lifeExp, group = country)) +
   facet_wrap(~ continent, nrow = 2) +
   scale_color_manual(name = "Life Exp. for:", values = c("Country" = "black", "Continent" = "blue")) +
   scale_size_manual(name = "Life Exp. for:", values = c("Country" = 0.25, "Continent" = 3))
-```
-
-```
-## `geom_smooth()` using formula 'y ~ x'
-```
-
-```r
   #
   #
   #
@@ -1423,13 +1371,6 @@ ggplot(data = gapminder, aes(x = year, y = lifeExp, group = country)) +
   scale_color_manual(name = "Life Exp. for:", values = c("Country" = "black", "Continent" = "blue")) +
   scale_size_manual(name = "Life Exp. for:", values = c("Country" = 0.25, "Continent" = 3)) +
 * theme_minimal(base_size = 14) + ylab("Years") + xlab("")
-```
-
-```
-## `geom_smooth()` using formula 'y ~ x'
-```
-
-```r
   #
   #
 ```
@@ -1453,13 +1394,6 @@ ggplot(data = gapminder, aes(x = year, y = lifeExp, group = country)) +
   scale_size_manual(name = "Life Exp. for:", values = c("Country" = 0.25, "Continent" = 3)) +
   theme_minimal(base_size = 14) + ylab("Years") + xlab("") + 
 * ggtitle("Life Expectancy, 1952-2007", subtitle = "By continent and country")
-```
-
-```
-## `geom_smooth()` using formula 'y ~ x'
-```
-
-```r
   #
 ```
 
@@ -1483,10 +1417,6 @@ ggplot(data = gapminder, aes(x = year, y = lifeExp, group = country)) +
   theme_minimal(base_size = 14) + ylab("Years") + xlab("") + 
   ggtitle("Life Expectancy, 1952-2007", subtitle = "By continent and country") +
 * theme(axis.text.x = element_text(angle = 45))
-```
-
-```
-## `geom_smooth()` using formula 'y ~ x'
 ```
 
 ![](Unit_2_ggplot2_files/figure-html/unnamed-chunk-71-1.svg)&lt;!-- --&gt;
@@ -1513,20 +1443,11 @@ ggplot(data = gapminder, aes(x = year, y = lifeExp, group = country)) +
 * theme(legend.position=c(0.82, 0.15), axis.text.x = element_text(angle = 45))
 ```
 
-```
-## `geom_smooth()` using formula 'y ~ x'
-```
-
 ![](Unit_2_ggplot2_files/figure-html/unnamed-chunk-72-1.svg)&lt;!-- --&gt;
 ]
 ---
 
 ## Fussy Manual Legend
-
-
-```
-## `geom_smooth()` using formula 'y ~ x'
-```
 
 ![](Unit_2_ggplot2_files/figure-html/unnamed-chunk-73-1.svg)&lt;!-- --&gt;
 
@@ -1592,7 +1513,7 @@ ggplot(estimated_pes, aes(x = Target, y = PE, group = Reporter)) +
 .center[
 &lt;img src="https://raw.githubusercontent.com/clanfear/CSSS508/master/Lectures/Week2/img/arrest_pe_plot.png" style="width: 80%;"/&gt;
 ]
-.footnote[We'll build this plot in the lecture on model results!]
+.footnote[The process for this plot is documented in my [Advanced Counterfactuals slides](https://clanfear.github.io/CSSS508/Lectures/Week10/CSSS508_Advanced_Counterfactuals.html#1)]
 
 ---
 class: inverse
@@ -1691,30 +1612,20 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
 })();
 (function() {
   "use strict"
-  /* Replace <script> tags in slides area to make them executable
-   *
-   * Runs after post-processing of markdown source into slides and replaces only
-   * <script>s on the last slide of continued slides using the .has-continuation
-   * class added by xaringan. Finally, any <script>s in the slides area that
-   * aren't executed are commented out.
-   */
+  // Replace <script> tags in slides area to make them executable
   var scripts = document.querySelectorAll(
-    '.remark-slides-area .remark-slide-container:not(.has-continuation) script'
+    '.remark-slides-area .remark-slide-container script'
   );
   if (!scripts.length) return;
   for (var i = 0; i < scripts.length; i++) {
     var s = document.createElement('script');
     var code = document.createTextNode(scripts[i].textContent);
     s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
     scripts[i].parentElement.replaceChild(s, scripts[i]);
-  }
-  var scriptsNotExecuted = document.querySelectorAll(
-    '.remark-slides-area .remark-slide-container.has-continuation script'
-  );
-  if (!scriptsNotExecuted.length) return;
-  for (var i = 0; i < scriptsNotExecuted.length; i++) {
-    var comment = document.createComment(scriptsNotExecuted[i].outerHTML)
-    scriptsNotExecuted[i].parentElement.replaceChild(comment, scriptsNotExecuted[i])
   }
 })();
 (function() {
