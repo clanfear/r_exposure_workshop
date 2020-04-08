@@ -16,9 +16,7 @@ if(!requireNamespace("tidyverse")) install.packages("tidyverse")
 if(!requireNamespace("gapminder")) install.packages("gapminder")
 ```
 
-If you are asked if you want to install packages from source, enter *NO* unless you know you have a compiler installed.
-
-If you are wondering what the above code does, it first checks to see if the package in question is installed, and if not, then installs it. For `ggmap` it must install the most recent version from GitHub which requites the `devtools` package.
+If you are asked if you want to install packages from source, enter *NO* unless you know you have a compiler installed. If you'd like to be able to install packages from source, [you can follow the instructions here](https://clanfear.github.io/CSSS508/docs/compiling.html).
 
 # Downloading the Repository
 
