@@ -1,0 +1,8 @@
+base
+ggplot2
+dplyr
+gapminder
+readr
+pander
+tidyr
+nycflights13

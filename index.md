@@ -10,37 +10,29 @@ layout: default
 
    * [R and RStudio Installation Instructions](https://clanfear.github.io/CSSS508/docs/installation.html)
    * [Enabling compilation of packages](https://clanfear.github.io/CSSS508/docs/compiling.html)
-   * [R Exposure Setup](lectures/setup/r_exposure_setup.html)
+   * [R Exposure Setup](setup/r_exposure_setup.html)
 
 ## [Pre-Workshop Assignments](assignments/preassignment.html)
 
-# R1
+# [R1: Introduction to R and RStudio](lectures/r1/r_exposure_1_introduction.html)
+   + [R Script for R1](lectures/r1/r_exposure_1_introduction.R)
 
-* [Unit 1: RStudio and R Markdown](lectures/R1/Unit1/Unit_1_RStudio_and_RMarkdown.html)
-   + [R Script for Unit 1](lectures/R1/Unit1/Unit_1_RStudio_and_RMarkdown.R)
-* [Unit 2: Visualization with `ggplot2`](lectures/R1/Unit2/Unit_2_ggplot2.html)
-   + [R Script for Unit 2](lectures/R1/Unit2/Unit_2_ggplot2.R)
-
-# R2
-
-* [Unit 3: RStudio and R Markdown](lectures/R2/Unit3/Unit_3_dplyr.html)
-   + [R Script for Unit 3](lectures/R2/Unit3/Unit_3_dplyr.R)
-* [Unit 4: RStudio and R Markdown](lectures/R2/Unit4/Unit_4_data_structures.html)
-   + [R Script for Unit 4](lectures/R2/Unit4/Unit_4_data_structures.R)
+# [R2: Data Visualization and Management](lectures/r2/r_exposure_2_intermediate.html)
+   + [R Script for R2](lectures/r2/r_exposure_2_intermediate.R)
    
 # R3
 
-* [Unit 5: RStudio and R Markdown](lectures/R3/Unit5/Unit_5_data_import_export_cleaning.html)
-   + [R Script for Unit 5](lectures/R3/Unit5/Unit_5_data_import_export_cleaning.R)
-* [Unit 6: RStudio and R Markdown](lectures/R3/Unit6/Unit_6_loops.html)
-   + [R Script for Unit 6](lectures/R3/Unit6/Unit_6_loops.R)
-
+* [Unit 1: Loops](lectures/r3/r3_1/r_exposure_3_1_loops.html)
+   + [R Script for R3, Unit 1](lectures/r3/r3_1/r_exposure_3_1_loops.R)
+* [Unit 2: Vectorization](lectures/r3/r3_2/r_exposure_3_2_vectorization.html)
+   + [R Script for R3, Unit 2](lectures/r3/r3_2/r_exposure_3_2_vectorization.R)
+   
 # R4
 
-* [Unit 7: RStudio and R Markdown](lectures/R4/Unit7/Unit_7_vectorization.html)
-   + [R Script for Unit 7](lectures/R4/Unit7/Unit_7_vectorization.R)
-* [Unit 8: RStudio and R Markdown](lectures/R4/Unit8/Unit_8_strings.html)
-   + [R Script for Unit 8](lectures/R4/Unit8/Unit_8_strings.R)
+* [Unit 1: Strings](lectures/r4/r4_1/r_exposure_4_1_strings.html)
+   + [R Script for R4, Unit 1](lectures/r4/r4_1/r_exposure_4_1_strings.R)
+* [Unit 2: Mapping](lectures/r4/r4_2/r_exposure_4_2_mapping.html)
+   + [R Script for R4, Unit 2](lectures/r4/r4_2/r_exposure_4_2_mapping.R)
    
 ## [Post-Workshop Assignments](assignments/postassignment.html)
 

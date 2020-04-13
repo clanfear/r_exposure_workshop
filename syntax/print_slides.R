@@ -1,7 +1,5 @@
 render_and_print_slides <- function(unit){
-    unit_dir     <- paste0(getwd(), "/lectures/R", (unit+1) %/% 2, "/Unit", unit, "/")
-    current_rmd  <- paste0(unit_dir, stringr::str_subset(list.files(unit_dir),
-                                                     "^Unit.*\\.Rmd$"))
+    current_rmd  <- paste0(paste0(getwd(), "/lectures/"), list.files(paste0(getwd(), "/lectures/"), pattern = ".Rmd$", recursive = TRUE))[unit]
     rmarkdown::render(current_rmd, encoding = "UTF-8")
     current_html <- stringr::str_replace(current_rmd,  "\\.Rmd",  "\\.html")
     new_pdf_file <- stringr::str_replace(current_html, "\\.html", "\\.pdf")
@@ -12,11 +10,15 @@ render_and_print_slides <- function(unit){
     knitr::purl(input = current_rmd, output = new_r_script, documentation = 0)
     message("Printing from Chrome.")
     pagedown::chrome_print(current_html, format="pdf")
-    message(paste0("Printing complete at ", unit_dir))
+    message(paste0("Finished rendering ", current_rmd))
 }
 
-build_course <- function(lectures = 1:8){
+build_course <- function(lectures = 1:6){
     for(i in lectures){
         render_and_print_slides(i)
     }
 }
+
+
+render_and_print_slides(2)
+build_course()
