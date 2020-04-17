@@ -15,7 +15,7 @@ output:
 ---
 
 ```{r setup, include=FALSE, purl=FALSE}
-options(htmltools.dir.version = FALSE)
+options(htmltools.dir.version = FALSE, width = 70)
 ```
 
 # Overview
@@ -730,7 +730,7 @@ We can use `%in%` like `==` but for matching *any element* in the vector on its 
 
 ```{r}
 former_yugoslavia <- c("Bosnia and Herzegovina", "Croatia", #<<
-              "Macedonia", "Montenegro", "Serbia", "Slovenia") #<<
+                       "Montenegro", "Serbia", "Slovenia") #<<
 yugoslavia <- gapminder %>% filter(country %in% former_yugoslavia)
 tail(yugoslavia, 2)
 ```
@@ -1010,15 +1010,16 @@ summary(lm_out)
 
 ---
 
-# Model Objects
+## Model Objects
 
 `lm()` produces a lot more information than what is shown by `summary()` however. We can see the **str**ucture of `lm()` output using `str()`:
 
+.smaller[
 ```{r, eval=FALSE}
 str(lm_out)
 ```
 
-.smaller[
+
 ```{r, echo=FALSE}
 str(lm_out, list.len=7, max.level=2) # list.len is used to 
 ```

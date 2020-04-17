@@ -601,8 +601,8 @@ gapminder$gdpPercap[1:10]
 ```
 
 ```
-##  [1] 779.4453 820.8530 853.1007 836.1971 739.9811 786.1134 978.0114 852.3959
-##  [9] 649.3414 635.3414
+##  [1] 779.4453 820.8530 853.1007 836.1971 739.9811 786.1134 978.0114
+##  [8] 852.3959 649.3414 635.3414
 ```
 
 --
@@ -655,11 +655,11 @@ head(gapminder$year==1952, 50) # display first 50 elements
 ```
 
 ```
-##  [1]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [13]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [25]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [37]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [49]  TRUE FALSE
+##  [1]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [12] FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [23] FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [34] FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [45] FALSE FALSE FALSE FALSE  TRUE FALSE
 ```
 
 --
@@ -933,7 +933,7 @@ We can use `%in%` like `==` but for matching *any element* in the vector on its 
 
 ```r
 *former_yugoslavia &lt;- c("Bosnia and Herzegovina", "Croatia",
-*             "Macedonia", "Montenegro", "Serbia", "Slovenia")
+*                      "Montenegro", "Serbia", "Slovenia")
 yugoslavia &lt;- gapminder %&gt;% filter(country %in% former_yugoslavia)
 tail(yugoslavia, 2)
 ```
@@ -1190,12 +1190,12 @@ gapminder %&gt;%
 
 ```
 ## # A tibble: 4 x 7
-##   country     continent  year lifeExp      pop gdpPercap gdpPercap_ordinal
-##   &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;            
-## 1 Afghanistan Asia       1977    38.4 14880372      786. moderate         
-## 2 Afghanistan Asia       1982    39.9 12881816      978. high             
-## 3 Afghanistan Asia       1987    40.8 13867957      852. high             
-## 4 Afghanistan Asia       1992    41.7 16317921      649. low
+##   country   continent  year lifeExp     pop gdpPercap gdpPercap_ordin~
+##   &lt;fct&gt;     &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;           
+## 1 Afghanis~ Asia       1977    38.4  1.49e7      786. moderate        
+## 2 Afghanis~ Asia       1982    39.9  1.29e7      978. high            
+## 3 Afghanis~ Asia       1987    40.8  1.39e7      852. high            
+## 4 Afghanis~ Asia       1992    41.7  1.63e7      649. low
 ```
 ]
 
@@ -1312,8 +1312,8 @@ chisq.test(table(mtcars$cyl, mtcars$am))
 ```
 
 ```
-## Warning in chisq.test(table(mtcars$cyl, mtcars$am)): Chi-squared approximation
-## may be incorrect
+## Warning in chisq.test(table(mtcars$cyl, mtcars$am)): Chi-squared
+## approximation may be incorrect
 ```
 
 ```
@@ -1369,10 +1369,12 @@ lm(lifeExp~pop + gdpPercap + year + continent, data=gapminder)
 ## lm(formula = lifeExp ~ pop + gdpPercap + year + continent, data = gapminder)
 ## 
 ## Coefficients:
-##       (Intercept)                pop          gdpPercap               year  
-##        -5.185e+02          1.791e-09          2.985e-04          2.863e-01  
-## continentAmericas      continentAsia    continentEurope   continentOceania  
-##         1.429e+01          9.375e+00          1.936e+01          2.056e+01
+##       (Intercept)                pop          gdpPercap  
+##        -5.185e+02          1.791e-09          2.985e-04  
+##              year  continentAmericas      continentAsia  
+##         2.863e-01          1.429e+01          9.375e+00  
+##   continentEurope   continentOceania  
+##         1.936e+01          2.056e+01
 ```
 
 Note we get a lot less output here than you may have expected! This is because we're only viewing a tiny bit of the information produced by `lm()`. We need to expore the object `lm()` creates!
@@ -1420,16 +1422,17 @@ summary(lm_out)
 
 ---
 
-# Model Objects
+## Model Objects
 
 `lm()` produces a lot more information than what is shown by `summary()` however. We can see the **str**ucture of `lm()` output using `str()`:
 
+.smaller[
 
 ```r
 str(lm_out)
 ```
 
-.smaller[
+
 
 ```
 ## List of 13
@@ -1476,10 +1479,12 @@ lm_out$coefficients
 ```
 
 ```
-##       (Intercept)               pop         gdpPercap              year 
-##     -5.184555e+02      1.790640e-09      2.984892e-04      2.862583e-01 
-## continentAmericas     continentAsia   continentEurope  continentOceania 
-##      1.429204e+01      9.375486e+00      1.936120e+01      2.055921e+01
+##       (Intercept)               pop         gdpPercap 
+##     -5.184555e+02      1.790640e-09      2.984892e-04 
+##              year continentAmericas     continentAsia 
+##      2.862583e-01      1.429204e+01      9.375486e+00 
+##   continentEurope  continentOceania 
+##      1.936120e+01      2.055921e+01
 ```
 ]
 
