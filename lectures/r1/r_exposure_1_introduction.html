@@ -13,7 +13,7 @@ class: center, top, title-slide
 # RStudio and Basic R
 ## UW Tacoma
 ### Charles Lanfear
-### Apr 18, 2020<br>Updated: Apr 12, 2020
+### Apr 18, 2020<br>Updated: Apr 17, 2020
 
 ---
 
@@ -601,7 +601,7 @@ gapminder$gdpPercap[1:10]
 ```
 
 ```
-##  [1] 779 821 853 836 740 786 978 852 649 635
+##  [1] 779.4453 820.8530 853.1007 836.1971 739.9811 786.1134 978.0114 852.3959 649.3414 635.3414
 ```
 
 --
@@ -654,10 +654,8 @@ head(gapminder$year==1952, 50) # display first 50 elements
 ```
 
 ```
-##  [1]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [12] FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [23] FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [34] FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+##  [1]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [23] FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
 ## [45] FALSE FALSE FALSE FALSE  TRUE FALSE
 ```
 
@@ -1189,12 +1187,12 @@ gapminder %&gt;%
 
 ```
 ## # A tibble: 4 x 7
-##   country   continent  year lifeExp     pop gdpPercap gdpPercap_ordin~
-##   &lt;fct&gt;     &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;           
-## 1 Afghanis~ Asia       1977    38.4  1.49e7      786. moderate        
-## 2 Afghanis~ Asia       1982    39.9  1.29e7      978. high            
-## 3 Afghanis~ Asia       1987    40.8  1.39e7      852. high            
-## 4 Afghanis~ Asia       1992    41.7  1.63e7      649. low
+##   country     continent  year lifeExp      pop gdpPercap gdpPercap_ordinal
+##   &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;            
+## 1 Afghanistan Asia       1977    38.4 14880372      786. moderate         
+## 2 Afghanistan Asia       1982    39.9 12881816      978. high             
+## 3 Afghanistan Asia       1987    40.8 13867957      852. high             
+## 4 Afghanistan Asia       1992    41.7 16317921      649. low
 ```
 ]
 
@@ -1266,7 +1264,7 @@ new_formula
 
 ```
 ## y ~ x1 + x2 + x3
-## &lt;environment: 0x000001e27a4a0120&gt;
+## &lt;environment: 0x0000023edf097488&gt;
 ```
 
 ```r
@@ -1312,8 +1310,7 @@ chisq.test(table(mtcars$cyl, mtcars$am))
 ```
 
 ```
-## Warning in chisq.test(table(mtcars$cyl, mtcars$am)): Chi-squared
-## approximation may be incorrect
+## Warning in chisq.test(table(mtcars$cyl, mtcars$am)): Chi-squared approximation may be incorrect
 ```
 
 ```
@@ -1321,7 +1318,7 @@ chisq.test(table(mtcars$cyl, mtcars$am))
 ## 	Pearson's Chi-squared test
 ## 
 ## data:  table(mtcars$cyl, mtcars$am)
-## X-squared = 9, df = 2, p-value = 0.01
+## X-squared = 8.7407, df = 2, p-value = 0.01265
 ```
 
 Note the warning here. You can use rescaled (`rescale.p=TRUE`) or simulated p-values (`simulate.p.value=TRUE`) if desired.
@@ -1343,13 +1340,13 @@ t.test(lifeExp ~ post_1980, data=gapminder)
 ## 	Welch Two Sample t-test
 ## 
 ## data:  lifeExp by post_1980
-## t = 17, df = 1695, p-value &lt;2e-16
+## t = 17.174, df = 1694.7, p-value &lt; 2.2e-16
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
-##   8.79 11.06
+##   8.791953 11.059068
 ## sample estimates:
 ## mean in group 1 mean in group 2 
-##            64.4            54.5
+##        64.43719        54.51168
 ```
 
 ---
@@ -1369,12 +1366,10 @@ lm(lifeExp~pop + gdpPercap + year + continent, data=gapminder)
 ## lm(formula = lifeExp ~ pop + gdpPercap + year + continent, data = gapminder)
 ## 
 ## Coefficients:
-##       (Intercept)                pop          gdpPercap  
-##         -5.18e+02           1.79e-09           2.98e-04  
-##              year  continentAmericas      continentAsia  
-##          2.86e-01           1.43e+01           9.38e+00  
-##   continentEurope   continentOceania  
-##          1.94e+01           2.06e+01
+##       (Intercept)                pop          gdpPercap               year  continentAmericas      continentAsia    continentEurope  
+##        -5.185e+02          1.791e-09          2.985e-04          2.863e-01          1.429e+01          9.375e+00          1.936e+01  
+##  continentOceania  
+##         2.056e+01
 ```
 
 Note we get a lot less output here than you may have expected! This is because we're only viewing a tiny bit of the information produced by `lm()`. We need to expore the object `lm()` creates!
@@ -1398,25 +1393,25 @@ summary(lm_out)
 ## lm(formula = lifeExp ~ pop + gdpPercap + year + continent, data = gapminder)
 ## 
 ## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -28.405  -4.055   0.232   4.507  20.022 
+##      Min       1Q   Median       3Q      Max 
+## -28.4051  -4.0550   0.2317   4.5073  20.0217 
 ## 
 ## Coefficients:
-##                    Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)       -5.18e+02   1.99e+01   -26.1   &lt;2e-16 ***
-## pop                1.79e-09   1.63e-09     1.1     0.27    
-## gdpPercap          2.98e-04   2.00e-05    14.9   &lt;2e-16 ***
-## year               2.86e-01   1.01e-02    28.5   &lt;2e-16 ***
-## continentAmericas  1.43e+01   4.95e-01    28.9   &lt;2e-16 ***
-## continentAsia      9.38e+00   4.72e-01    19.9   &lt;2e-16 ***
-## continentEurope    1.94e+01   5.18e-01    37.4   &lt;2e-16 ***
-## continentOceania   2.06e+01   1.47e+00    14.0   &lt;2e-16 ***
+##                     Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)       -5.185e+02  1.989e+01 -26.062   &lt;2e-16 ***
+## pop                1.791e-09  1.634e-09   1.096    0.273    
+## gdpPercap          2.985e-04  2.002e-05  14.908   &lt;2e-16 ***
+## year               2.863e-01  1.006e-02  28.469   &lt;2e-16 ***
+## continentAmericas  1.429e+01  4.946e-01  28.898   &lt;2e-16 ***
+## continentAsia      9.375e+00  4.719e-01  19.869   &lt;2e-16 ***
+## continentEurope    1.936e+01  5.182e-01  37.361   &lt;2e-16 ***
+## continentOceania   2.056e+01  1.469e+00  13.995   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 6.88 on 1696 degrees of freedom
-## Multiple R-squared:  0.717,	Adjusted R-squared:  0.716 
-## F-statistic:  614 on 7 and 1696 DF,  p-value: &lt;2e-16
+## Residual standard error: 6.883 on 1696 degrees of freedom
+## Multiple R-squared:  0.7172,	Adjusted R-squared:  0.716 
+## F-statistic: 614.5 on 7 and 1696 DF,  p-value: &lt; 2.2e-16
 ```
 ]
 
@@ -1478,12 +1473,10 @@ lm_out$coefficients
 ```
 
 ```
-##       (Intercept)               pop         gdpPercap 
-##         -5.18e+02          1.79e-09          2.98e-04 
-##              year continentAmericas     continentAsia 
-##          2.86e-01          1.43e+01          9.38e+00 
-##   continentEurope  continentOceania 
-##          1.94e+01          2.06e+01
+##       (Intercept)               pop         gdpPercap              year continentAmericas     continentAsia   continentEurope 
+##     -5.184555e+02      1.790640e-09      2.984892e-04      2.862583e-01      1.429204e+01      9.375486e+00      1.936120e+01 
+##  continentOceania 
+##      2.055921e+01
 ```
 ]
 
@@ -1496,15 +1489,15 @@ summary(lm_out)$coefficients
 ```
 
 ```
-##                    Estimate Std. Error t value  Pr(&gt;|t|)
-## (Intercept)       -5.18e+02   1.99e+01   -26.1 3.25e-126
-## pop                1.79e-09   1.63e-09     1.1  2.73e-01
-## gdpPercap          2.98e-04   2.00e-05    14.9  2.52e-47
-## year               2.86e-01   1.01e-02    28.5 4.80e-146
-## continentAmericas  1.43e+01   4.95e-01    28.9 1.18e-149
-## continentAsia      9.38e+00   4.72e-01    19.9  3.80e-79
-## continentEurope    1.94e+01   5.18e-01    37.4 2.03e-223
-## continentOceania   2.06e+01   1.47e+00    14.0  3.39e-42
+##                        Estimate   Std. Error    t value      Pr(&gt;|t|)
+## (Intercept)       -5.184555e+02 1.989299e+01 -26.062215 3.248472e-126
+## pop                1.790640e-09 1.634107e-09   1.095791  2.733256e-01
+## gdpPercap          2.984892e-04 2.002178e-05  14.908225  2.522143e-47
+## year               2.862583e-01 1.005523e-02  28.468586 4.800797e-146
+## continentAmericas  1.429204e+01 4.945645e-01  28.898241 1.183161e-149
+## continentAsia      9.375486e+00 4.718629e-01  19.869087  3.798275e-79
+## continentEurope    1.936120e+01 5.182170e-01  37.361177 2.025551e-223
+## continentOceania   2.055921e+01 1.469070e+00  13.994707  3.390781e-42
 ```
 ]
 
@@ -1521,7 +1514,7 @@ summary(aov(lifeExp ~ continent, data=gapminder))
 
 ```
 ##               Df Sum Sq Mean Sq F value Pr(&gt;F)    
-## continent      4 139343   34836     409 &lt;2e-16 ***
+## continent      4 139343   34836   408.7 &lt;2e-16 ***
 ## Residuals   1699 144805      85                   
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1

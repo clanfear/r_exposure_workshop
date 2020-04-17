@@ -13,7 +13,7 @@ class: center, top, title-slide
 # Data Visualization and Management
 ## UW Tacoma
 ### Charles Lanfear
-### Apr 18, 2020<br>Updated: Apr 12, 2020
+### Apr 18, 2020<br>Updated: Apr 17, 2020
 
 ---
 
@@ -1206,7 +1206,7 @@ summary(billboard_2000$rank)
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-##       1      26      51      51      76     100   18785
+##    1.00   26.00   51.00   51.05   76.00  100.00   18785
 ```
 
 This is an improvement, but we don't want to keep the 18785 rows with missing ranks (i.e. observations for weeks since entering the Hot 100 that the song was no longer on the Hot 100).
@@ -1226,7 +1226,7 @@ summary(billboard_2000$rank)
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##     1.0    26.0    51.0    51.1    76.0   100.0
+##    1.00   26.00   51.00   51.05   76.00  100.00
 ```
 
 ---
@@ -1243,7 +1243,7 @@ summary(billboard_2000$week)
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##     1.0     5.0    10.0    11.5    16.0    65.0
+##    1.00    5.00   10.00   11.47   16.00   65.00
 ```
 
 For more sophisticated conversion or pattern checking, you'll need to use string parsing (to be covered in week 8).
@@ -1291,7 +1291,7 @@ summary(billboard_2000$length)
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    2.60    3.67    3.93    4.03    4.28    7.83
+##   2.600   3.667   3.933   4.031   4.283   7.833
 ```
 
 `sep = :` tells `separate()` to split the column into two where it finds a colon (`:`).
