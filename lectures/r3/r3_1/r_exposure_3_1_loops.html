@@ -13,7 +13,7 @@ class: center, top, title-slide
 # R Exposure 3
 ## Part 1: Loops
 ### Chuck Lanfear
-### Jan 25, 2020<br>Updated: Apr 17, 2020
+### Apr 19, 2020<br>Updated: Apr 17, 2020
 
 ---
 
@@ -941,7 +941,7 @@ for(position in 1:length(my_vector)) {
 
 ```
 ##    user  system elapsed 
-##   84.44    0.25   85.06
+##    5.20    0.08    5.30
 ```
 
 ---
@@ -958,7 +958,7 @@ new_vector &lt;- my_vector + 1
 
 ```
 ##    user  system elapsed 
-##    0.11    0.06    0.17
+##    0.18    0.09    0.27
 ```
 
 ```r
@@ -967,10 +967,10 @@ for_time / vec_time
 
 ```
 ##    user  system elapsed 
-##  767.64    4.17  500.35
+##  28.889   0.889  19.630
 ```
 
-The vectorized method was 768 times as fast! Vector/matrix arithmetic is implemented using fast, optimized functions that a `for()` loop can't compete with.
+The vectorized method was 29 times as fast! Vector/matrix arithmetic is implemented using fast, optimized functions that a `for()` loop can't compete with.
 
 ---
 # Vectorization Examples

@@ -1,6 +1,6 @@
 ---
-title: "Data Visualization and Management"
-subtitle: "UW Tacoma"  
+title: "R Exposure 2"
+subtitle: "Data Visualization and Management"  
 author: "Charles Lanfear"
 date: "Apr 18, 2020<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:

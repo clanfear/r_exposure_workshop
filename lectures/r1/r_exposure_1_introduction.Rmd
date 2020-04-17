@@ -1,6 +1,6 @@
 ---
-title: "RStudio and Basic R"
-subtitle: "UW Tacoma"  
+title: "R Exposure 1"
+subtitle: "RStudio and Basic R"  
 author: "Charles Lanfear"
 date: "Apr 18, 2020<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
