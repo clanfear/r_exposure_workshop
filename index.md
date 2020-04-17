@@ -14,20 +14,20 @@ layout: default
 
 ## [Pre-Workshop Assignments](assignments/preassignment.html)
 
-# [R1: Introduction to R and RStudio](lectures/r1/r_exposure_1_introduction.html)
+## [R1: Introduction to R and RStudio](lectures/r1/r_exposure_1_introduction.html)
    + [R Script for R1](lectures/r1/r_exposure_1_introduction.R)
 
-# [R2: Data Visualization and Management](lectures/r2/r_exposure_2_intermediate.html)
+## [R2: Data Visualization and Management](lectures/r2/r_exposure_2_intermediate.html)
    + [R Script for R2](lectures/r2/r_exposure_2_intermediate.R)
    
-# R3
+## R3
 
 * [Unit 1: Loops](lectures/r3/r3_1/r_exposure_3_1_loops.html)
    + [R Script for R3, Unit 1](lectures/r3/r3_1/r_exposure_3_1_loops.R)
 * [Unit 2: Vectorization](lectures/r3/r3_2/r_exposure_3_2_vectorization.html)
    + [R Script for R3, Unit 2](lectures/r3/r3_2/r_exposure_3_2_vectorization.R)
    
-# R4
+## R4
 
 * [Unit 1: Strings](lectures/r4/r4_1/r_exposure_4_1_strings.html)
    + [R Script for R4, Unit 1](lectures/r4/r4_1/r_exposure_4_1_strings.R)
