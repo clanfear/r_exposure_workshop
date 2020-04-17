@@ -601,7 +601,8 @@ gapminder$gdpPercap[1:10]
 ```
 
 ```
-##  [1] 779.4453 820.8530 853.1007 836.1971 739.9811 786.1134 978.0114 852.3959 649.3414 635.3414
+##  [1] 779.4453 820.8530 853.1007 836.1971 739.9811 786.1134 978.0114 852.3959
+##  [9] 649.3414 635.3414
 ```
 
 --
@@ -654,9 +655,11 @@ head(gapminder$year==1952, 50) # display first 50 elements
 ```
 
 ```
-##  [1]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [23] FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [45] FALSE FALSE FALSE FALSE  TRUE FALSE
+##  [1]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [13]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [25]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [37]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [49]  TRUE FALSE
 ```
 
 --
@@ -1264,7 +1267,6 @@ new_formula
 
 ```
 ## y ~ x1 + x2 + x3
-## &lt;environment: 0x0000023edf097488&gt;
 ```
 
 ```r
@@ -1310,7 +1312,8 @@ chisq.test(table(mtcars$cyl, mtcars$am))
 ```
 
 ```
-## Warning in chisq.test(table(mtcars$cyl, mtcars$am)): Chi-squared approximation may be incorrect
+## Warning in chisq.test(table(mtcars$cyl, mtcars$am)): Chi-squared approximation
+## may be incorrect
 ```
 
 ```
@@ -1366,10 +1369,10 @@ lm(lifeExp~pop + gdpPercap + year + continent, data=gapminder)
 ## lm(formula = lifeExp ~ pop + gdpPercap + year + continent, data = gapminder)
 ## 
 ## Coefficients:
-##       (Intercept)                pop          gdpPercap               year  continentAmericas      continentAsia    continentEurope  
-##        -5.185e+02          1.791e-09          2.985e-04          2.863e-01          1.429e+01          9.375e+00          1.936e+01  
-##  continentOceania  
-##         2.056e+01
+##       (Intercept)                pop          gdpPercap               year  
+##        -5.185e+02          1.791e-09          2.985e-04          2.863e-01  
+## continentAmericas      continentAsia    continentEurope   continentOceania  
+##         1.429e+01          9.375e+00          1.936e+01          2.056e+01
 ```
 
 Note we get a lot less output here than you may have expected! This is because we're only viewing a tiny bit of the information produced by `lm()`. We need to expore the object `lm()` creates!
@@ -1473,10 +1476,10 @@ lm_out$coefficients
 ```
 
 ```
-##       (Intercept)               pop         gdpPercap              year continentAmericas     continentAsia   continentEurope 
-##     -5.184555e+02      1.790640e-09      2.984892e-04      2.862583e-01      1.429204e+01      9.375486e+00      1.936120e+01 
-##  continentOceania 
-##      2.055921e+01
+##       (Intercept)               pop         gdpPercap              year 
+##     -5.184555e+02      1.790640e-09      2.984892e-04      2.862583e-01 
+## continentAmericas     continentAsia   continentEurope  continentOceania 
+##      1.429204e+01      9.375486e+00      1.936120e+01      2.055921e+01
 ```
 ]
 
