@@ -13,8 +13,10 @@ glimpse(spd_raw)
 
 
 
-## if(!requireNamespace("devtools")) install.packages("devtools")
-## devtools::install_github("dkahle/ggmap", ref = "tidyup")
+## install.packages("ggmap")
+
+## if(!requireNamespace("remotes")) install.packages("remotes")
+## remotes::install_github("dkahle/ggmap", ref = "tidyup")
 
 
 
