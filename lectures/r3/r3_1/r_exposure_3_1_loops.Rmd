@@ -1,6 +1,6 @@
 ---
 title: "R Exposure 3"
-subtitle: "Part 1: Loops"
+subtitle: "Unit 1: Loops"
 author: "Chuck Lanfear"
 date: "Apr 19, 2020<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:

@@ -1,6 +1,6 @@
 ---
 title: "R Exposure 3"
-subtitle: "Part 2: Vectorization and Functions"
+subtitle: "Unit 2: Vectorization and Functions"
 author: "Chuck Lanfear"
 date: "Apr 19, 2020<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
@@ -228,6 +228,7 @@ NAME <- function(ARGUMENT1, ARGUMENT2=DEFAULT){
     + `x`, `na.rm` values won't exist in R outside of the function
 --
 * **Body**: The actual operations inside the function.
+
 --
 * **Return Value**: The output inside `return()`. Could be a vector, list, data frame, another function, or even nothing
     + If unspecified, will be the last thing calculated (maybe not what you want?)
@@ -316,7 +317,7 @@ head(complete_data, 3)
 ---
 # Vectorized Data Loading
 
-Another way to load these files would be to... `lapply()` over the file names then bind the rows together. Faster and easier!
+Another way to load these files would be to... `lapply()` over the file names then bind the rows together. Faster and easier!<sup>1</sup>
 
 ```{r, warning=FALSE, message=FALSE}
 complete_data <- lapply(file_paths, read_csv) %>%
@@ -328,6 +329,7 @@ Most loops can be replaced by a simpler `*apply()` call.
 * No pre-allocation
 * *Usually* much faster
 
+.footnote[[1] *Even faster and easier* would be to use `vroom::vroom()` on the directory.]
 ---
 class: inverse
 # Back to Making functions!
@@ -628,20 +630,26 @@ undebug(gapminder_plot)
 Data processing can be very complicated, with many valid ways of accomplishing it.
 
 I believe the best general approach is the following:
+
 --
 
 1. Look carefully at the **starting data** to figure out what you can get from them.
+
 --
 2. Determine *precisely* what you want the **end product** to look like.
+
 --
 3. Identify individual steps needed to go from Step 1 to Step 2.
+
 --
 4. Make each discrete step its own set of functions or function calls.
    + If any step is confusing or complicated, **break it into more steps**.
+
 --
 5. Complete each step *separately and in order*.
    + Do not continue until a step is producing what you need for the next step.
    + **Do not worry about combining steps for efficiency until everything works**.
+   
 --
 
 Once finished, if you need to do this again, *convert the prior steps into functions*!

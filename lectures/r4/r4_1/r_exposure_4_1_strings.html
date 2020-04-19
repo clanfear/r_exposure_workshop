@@ -11,7 +11,7 @@
 class: center, top, title-slide
 
 # R Exposure 4
-## Part 1: Strings
+## Unit 1: Strings
 ### Chuck Lanfear
 ### Apr 19, 2020<br>Updated: Apr 18, 2020
 
@@ -24,7 +24,7 @@ class: center, top, title-slide
 
 We'll use data on food safety inspections in King County from [data.kingcounty.gov](https://data.kingcounty.gov/Health/Food-Establishment-Inspection-Data/f29f-zza5). 
 
-Note these data are *quite large*. You will want to save them and load them from a *local directory*.
+Note these data are *slightly large*. You may want to save them and load them from a *local directory*.
 
 
 
@@ -58,8 +58,8 @@ glimpse(restaurants)
 ## $ City                       &lt;chr&gt; "Seattle", "Seattle", "Seattle...
 ## $ Zip_Code                   &lt;chr&gt; "98126", "98109", "98109", "98...
 ## $ Phone                      &lt;chr&gt; "(206) 938-5665", NA, NA, NA, ...
-## $ Longitude                  &lt;dbl&gt; -122, -122, -122, -122, -122, ...
-## $ Latitude                   &lt;dbl&gt; 47.6, 47.6, 47.6, 47.6, 47.6, ...
+## $ Longitude                  &lt;dbl&gt; -122.3709, -122.3562, -122.356...
+## $ Latitude                   &lt;dbl&gt; 47.57043, 47.62506, 47.62506, ...
 ## $ Inspection_Business_Name   &lt;chr&gt; NA, "10 MERCER RESTAURANT", "1...
 ## $ Inspection_Type            &lt;chr&gt; NA, "Routine Inspection/Field ...
 ## $ Inspection_Score           &lt;int&gt; NA, 10, 10, 10, 15, 15, 15, 0,...
@@ -569,7 +569,7 @@ Let's break down `"^[0-9]*-?[A-Z]? (1/2 )?"`:
 * `(1/2 )?` optionally matches a 1/2 followed by a space since this is apparently a thing with some address numbers
 
 ---
-# Removing the Street Numbers
+# Removing Street Numbers
 
 
 ```r

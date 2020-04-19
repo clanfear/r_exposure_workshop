@@ -1,6 +1,6 @@
 ---
 title: "R Exposure 4"
-subtitle: "Part 1: Strings"
+subtitle: "Unit 1: Strings"
 author: "Chuck Lanfear"
 date: "Apr 19, 2020<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
@@ -24,7 +24,7 @@ knitr::opts_chunk$set(comment = "##")
 
 We'll use data on food safety inspections in King County from [data.kingcounty.gov](https://data.kingcounty.gov/Health/Food-Establishment-Inspection-Data/f29f-zza5). 
 
-Note these data are *quite large*. You will want to save them and load them from a *local directory*.
+Note these data are *slightly large*. You may want to save them and load them from a *local directory*.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(tidyverse)
@@ -373,7 +373,7 @@ Let's break down `"^[0-9]*-?[A-Z]? (1/2 )?"`:
 * `(1/2 )?` optionally matches a 1/2 followed by a space since this is apparently a thing with some address numbers
 
 ---
-# Removing the Street Numbers
+# Removing Street Numbers
 
 ```{r replace_numbers}
 restaurants <- restaurants %>% 

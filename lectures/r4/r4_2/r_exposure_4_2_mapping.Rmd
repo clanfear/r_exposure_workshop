@@ -1,6 +1,6 @@
 ---
 title: "R Exposure 4"
-subtitle: "Part 2: Mapping"
+subtitle: "Unit 2: Mapping"
 author: "Chuck Lanfear"
 date: "Apr 19, 2020<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
@@ -132,20 +132,26 @@ What this package does for you:
 ---
 # Installation
 
-As of `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`, the current version of `ggmap` must be downloaded from GitHub.
-
-This can be done using the `devtools` package.
+We can install `ggmap` like other packages:
 
 ```{r, eval=FALSE}
-if(!requireNamespace("devtools")) install.packages("devtools")
-devtools::install_github("dkahle/ggmap", ref = "tidyup")
+install.packages("ggmap")
 ```
+
+
+Because the map APIs it uses change frequently, sometimes you may need to get a newer development version of `ggmap` from the author's GitHub. This can be done using the `remotes` package.
+
+```{r, eval=FALSE}
+if(!requireNamespace("remotes")) install.packages("remotes")
+remotes::install_github("dkahle/ggmap", ref = "tidyup")
+```
+
+Note, this may require compilation on your computer.
 
 ```{r, message=FALSE, warning=FALSE, purl=FALSE}
 library(ggmap)
 ```
 
-This may require compilation on your computer. If you get errors during install, check with me after class.
 
 ---
 # Quick Maps with `qmplot()`
@@ -487,7 +493,9 @@ class: inverse
 
 * `st_relate()`: Compute relationships between geometries (like neighbor matrices).
 
-* `st_interpolate_aw()`: Areal-weighted interpolation of polygons.
+* `st_interpolate_aw()`: Areal-weighted interpolation of polygons.<sup>1</sup>
+
+.footnote[[1] I recommend the dedicated `areal` package for this though!]
 
 ---
 # Loading Data
