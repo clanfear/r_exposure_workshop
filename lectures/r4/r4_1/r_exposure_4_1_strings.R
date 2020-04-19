@@ -1,134 +1,89 @@
-## ---- echo=FALSE, warning=FALSE, message=FALSE-------------------------------------------------------------------------------------
 library(tidyverse)
 load("restaurants.Rdata")
 
-
-## ----download_restaurant_data, eval=FALSE------------------------------------------------------------------------------------------
 ## library(tidyverse)
 ## restaurants <-
 ##   read_csv("https://clanfear.github.io/CSSS508/Lectures/Week8/restaurants.csv",
 ##                         col_types = "ccccccccnnccicccciccciD") #<<
 
-
-## ----------------------------------------------------------------------------------------------------------------------------------
 glimpse(restaurants)
 
-
-## ----nchar_zip---------------------------------------------------------------------------------------------------------------------
 restaurants %>% 
   mutate(ZIP_length = nchar(Zip_Code)) %>%
   count(ZIP_length)
 
-
-## ----substr------------------------------------------------------------------------------------------------------------------------
 restaurants <- restaurants %>%
     mutate(ZIP_5 = substr(Zip_Code, 1, 5))
 restaurants %>% distinct(ZIP_5) %>% head()
 
-
-## ----mailing_address---------------------------------------------------------------------------------------------------------------
 restaurants <- restaurants %>%
     mutate(mailing_address = 
            paste(Address, ", ", City, ", WA ", ZIP_5, sep = ""))
 restaurants %>% distinct(mailing_address) %>% head()
 
-
-## ----paste0------------------------------------------------------------------------------------------------------------------------
 paste(1:5, letters[1:5]) # sep is a space by default
 paste(1:5, letters[1:5], sep ="")
 paste0(1:5, letters[1:5])
 
-
-## ----paste_practice, eval=TRUE, results="hold"-------------------------------------------------------------------------------------
 paste(letters[1:5], collapse = "!")
 paste(1:5, letters[1:5], sep = "+")
 paste0(1:5, letters[1:5], collapse = "???")
 paste(1:5, "Z", sep = "*")
 paste(1:5, "Z", sep = "*", collapse = " ~ ")
 
-
-## ----load_stringr------------------------------------------------------------------------------------------------------------------
 library(stringr)
 
-
-## ----str_sub_example---------------------------------------------------------------------------------------------------------------
 str_sub("Washington", 1, -3)
 
-
-## ----str_c_example-----------------------------------------------------------------------------------------------------------------
 str_c(letters[1:5], 1:5)
 
-
-## ----nchar_v_str_length------------------------------------------------------------------------------------------------------------
 nchar("weasels")
 str_length("weasels")
 
-
-## ----make_seattle_uppercase--------------------------------------------------------------------------------------------------------
 head(unique(restaurants$City))
 restaurants <- restaurants %>%
     mutate_at(vars(Name, Address, City), ~str_to_upper(.))
 head(unique(restaurants$City))
 
-
-## ----show_whitespace---------------------------------------------------------------------------------------------------------------
 head(unique(restaurants$Name), 4)
 
-
-## ----clean_whitespace--------------------------------------------------------------------------------------------------------------
 # use mutate_if to trim all the character columns
 restaurants <- restaurants %>% mutate_if(is.character, str_trim) #<<
 head(unique(restaurants$Name), 4)
 
-
-## ----coffee_check------------------------------------------------------------------------------------------------------------------
 coffee <- restaurants %>% 
   filter(str_detect(Name, "COFFEE|ESPRESSO|ROASTER"))
 coffee %>% distinct(Name) %>% head()
 
-
-## ----coffee_histogram, fig.height = 3, dev = "svg"---------------------------------------------------------------------------------
 coffee %>% select(Business_ID, Name, Inspection_Score, Date) %>%
        group_by(Business_ID) %>% filter(Date == max(Date)) %>% 
        distinct(.keep_all=TRUE) %>% ggplot(aes(Inspection_Score)) + 
     geom_histogram(bins=8) + xlab("Most recent inspection score") + ylab("") +
     ggtitle("Histogram of inspection scores for Seattle coffee shops")
 
-
-## ----look_for_206------------------------------------------------------------------------------------------------------------------
 area_code_206_pattern <- "^\\(?206"
 phone_test_examples <- c("2061234567", "(206)1234567",
                          "(206) 123-4567", "555-206-1234")
 str_detect(phone_test_examples, area_code_206_pattern)
 
-
-## ----str_view, eval=FALSE----------------------------------------------------------------------------------------------------------
 ## str_view(phone_test_examples, area_code_206_pattern)
 
-
-## ----look_for_206_rest-------------------------------------------------------------------------------------------------------------
 restaurants %>% 
   mutate(has_206_number = 
            str_detect(Phone, area_code_206_pattern)) %>% 
   group_by(has_206_number) %>% tally()
 
-
-## ----test_direction----------------------------------------------------------------------------------------------------------------
 direction_pattern <- " (N|NW|NE|S|SW|SE|W|E)( |$)"
 direction_examples <- c("2812 THORNDYKE AVE W", "512 NW 65TH ST",
                         "407 CEDAR ST", "15 NICKERSON ST")
 str_extract(direction_examples, direction_pattern)
 
-
-## ----extract_directions------------------------------------------------------------------------------------------------------------
 restaurants %>% 
   distinct(Address) %>% 
   mutate(city_region = 
           str_trim(str_extract(Address, direction_pattern))) %>% 
   count(city_region) %>% arrange(desc(n))
 
-
-## ----test_address_numbers----------------------------------------------------------------------------------------------------------
 address_number_pattern <- "^[0-9]*-?[A-Z]? (1/2 )?"
 address_number_test_examples <- 
   c("2812 THORNDYKE AVE W", "1ST AVE", "10A 1ST AVE", 
@@ -137,15 +92,11 @@ address_number_test_examples <-
 str_replace(address_number_test_examples, 
             address_number_pattern, replacement = "")
 
-
-## ----replace_numbers---------------------------------------------------------------------------------------------------------------
 restaurants <- restaurants %>% 
   mutate(street_only = str_replace(Address, address_number_pattern,
                                    replacement = ""))
 restaurants %>% distinct(street_only) %>% head(11)
 
-
-## ----test_unit_numbers-------------------------------------------------------------------------------------------------------------
 address_unit_pattern <- " (#|STE|SUITE|SHOP|UNIT).*$"
 address_unit_test_examples <-
   c("1ST AVE", "RAINIER AVE S #A", "FAUNTLEROY WAY SW STE 108", 
@@ -153,15 +104,11 @@ address_unit_test_examples <-
 str_replace(address_unit_test_examples, address_unit_pattern,
             replacement = "")
 
-
-## ----replace_units-----------------------------------------------------------------------------------------------------------------
 restaurants <- restaurants %>% 
   mutate(street_only = str_trim(str_replace(street_only, 
                        address_unit_pattern, replacement = "")))
 restaurants %>% distinct(street_only) %>% head(11)
 
-
-## ----failed_inspections------------------------------------------------------------------------------------------------------------
 restaurants %>% 
   distinct(Business_ID, Date, Inspection_Score, street_only) %>% 
   filter(Inspection_Score > 45) %>% 
@@ -169,7 +116,4 @@ restaurants %>%
   arrange(desc(n)) %>% 
   head(n=5)
 
-
-## ----str_split_violation-----------------------------------------------------------------------------------------------------------
 head(str_split_fixed(restaurants$Violation_Description, " - ", n = 2))
-
