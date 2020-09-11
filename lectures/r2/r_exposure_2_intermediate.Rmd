@@ -937,7 +937,7 @@ These new variables are calculated using *all of the rows* in `yugoslavia`
 ### `summarize(across())`
 
 
-Maybe you need to calculate the mean and standard deviation of a bunch of columns. With **`across()`**, put the variables to compute over (using `c()` or `select()` syntax) and put the functions to use in a `list()` after.
+Maybe you need to calculate the mean and standard deviation of a bunch of columns. With **`across()`**, put the variables to compute over first (using `c()` or `select()` syntax) and put the functions to use in a `list()` after.
 
 .smallish[
 ```{r}
@@ -948,6 +948,29 @@ yugoslavia %>%
 ]
 
 Note it automatically names the summarized variables based on the names given in `list()`.
+
+---
+# Whoa, too many `(` and `)`
+
+It can get hard to read code with lots of **nested** functions--functions inside others.
+
+Break things up when it gets confusing!
+
+```{r, eval = FALSE}
+yugoslavia %>%
+  filter(year == 1982) %>%
+  summarize(
+    across( 
+      c(lifeExp, pop), 
+      list(
+        avg = ~mean(.), 
+        sd = ~sd(.)
+      )
+    )
+  )
+```
+
+RStudio also helps you by tracking parentheses: Put your cursor after a `)` and see!
 
 ---
 # Avoiding Repetition
@@ -1616,7 +1639,7 @@ Because the data are the first argument for `ggplot()`, we can pipe them straigh
 ---
 ## Wind Gusts and Delays
 
-```{r, warning=FALSE, message=FALSE, echo=FALSE, cache=FALSE, fig.height=4, dev='png', dpi=600}
+```{r, warning=FALSE, message=FALSE, echo=FALSE, cache=TRUE, fig.height=4, dev='png', dpi=600}
 flights %>% select(origin, year, month, day, hour, dep_delay) %>%
     inner_join(weather, by = c("origin", "year", "month", "day", "hour")) %>%
     select(dep_delay, wind_gust) %>%

@@ -1,0 +1,14 @@
+base
+methods
+datasets
+utils
+grDevices
+graphics
+stats
+gapminder
+dplyr
+ggplot2
+readr
+pander
+tidyr
+nycflights13

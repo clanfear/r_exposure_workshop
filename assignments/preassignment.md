@@ -5,7 +5,7 @@ layout: default
 # Exposure to R
 ## Pre-Assignment
 
-This page describes both components of the R Exposure course you are expected to complete *prior to the lectures on Saturday, September 28th*. You have two tasks: 
+This page describes both components of the R Exposure course you are expected to complete *prior to the lectures on Saturday, September 12th*. You have two tasks: 
 
 1. Install R and RStudio
 2. Complete two interactive R tutorials
