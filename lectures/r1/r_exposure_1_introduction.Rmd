@@ -2,7 +2,7 @@
 title: "R Exposure 1"
 subtitle: "RStudio and Basic R"  
 author: "Charles Lanfear"
-date: "Apr 18, 2020<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Sep 12, 2020<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -617,6 +617,10 @@ class: inverse
 
 # Subsetting Data with `dplyr`
 
+.image-full[
+![](img/dplyr.svg)
+]
+
 ---
 
 # `dplyr`
@@ -771,7 +775,7 @@ yugoslavia %>% select(-continent, -pop, -lifeExp) %>% head(4)
 ## Helper Functions for `select()`
 
 
-`select()` has a variety of helper functions like `starts_with()`, `ends_with()`, and `contains()`, or can be given a range of continguous columns `startvar:endvar`. See `?select` for details.
+`select()` has a variety of helper functions like `starts_with()`, `ends_with()`, and `matches()`, or can be given a range of contiguous columns `startvar:endvar`. See `?select` for details.
 
 These are very useful if you have a "wide" data frame with column names following a pattern or ordering. 
 
@@ -781,6 +785,25 @@ These are very useful if you have a "wide" data frame with column names followin
 DYS %>% select(starts_with("married"))
 DYS %>% select(ends_with("18"))
 ```
+
+---
+## `select(where())`
+
+An especially useful helper for select is `where()` which can be used for selecting columns based on functions that check column types.
+
+```{r}
+gapminder %>% select(where(is.numeric)) %>% head(3)
+```
+
+.pull-right[.footnote[`int` (integer) and `dbl` (double) are both types of `numeric` data.]]
+
+--
+
+```{r}
+gapminder %>% select(where(is.factor)) %>% head(3)
+```
+
+
 
 ---
 ## Renaming Columns with `select()`

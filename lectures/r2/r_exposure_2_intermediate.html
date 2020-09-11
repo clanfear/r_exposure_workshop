@@ -4,6 +4,7 @@
     <title>R Exposure 2</title>
     <meta charset="utf-8" />
     <meta name="author" content="Charles Lanfear" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -13,7 +14,7 @@ class: center, top, title-slide
 # R Exposure 2
 ## Data Visualization and Management
 ### Charles Lanfear
-### Apr 18, 2020<br>Updated: Apr 17, 2020
+### Sep 13, 2020<br>Updated: Sep 11, 2020
 
 ---
 
@@ -837,50 +838,55 @@ yugoslavia %&gt;% filter(year == 1982) %&gt;%
 These new variables are calculated using *all of the rows* in `yugoslavia`
 
 ---
-# Avoiding Repetition: 
+# Avoiding Repetition
 
-### `summarize_at()`
+### `summarize(across())`
 
 
-Maybe you need to calculate the mean and standard deviation of a bunch of columns. With **`summarize_at()`**, put the variables to compute over first `vars()` (using `select()` syntax) and put the functions to use in `funs()` after.
+Maybe you need to calculate the mean and standard deviation of a bunch of columns. With **`across()`**, put the variables to compute over (using `c()` or `select()` syntax) and put the functions to use in a `list()` after.
 
+.smallish[
 
 ```r
 yugoslavia %&gt;%
-    filter(year == 1982) %&gt;%
-    summarize_at(vars(lifeExp, pop), list(~ mean(.), ~ sd(.)))
+  filter(year == 1982) %&gt;%
+  summarize(across(c(lifeExp, pop), list(avg = ~mean(.), sd = ~sd(.))))
 ```
 
 ```
 ## # A tibble: 1 x 4
-##   lifeExp_mean pop_mean lifeExp_sd   pop_sd
-##          &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;
-## 1         71.3  4008537       1.60 3237282.
+##   lifeExp_avg lifeExp_sd pop_avg   pop_sd
+##         &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+## 1        71.3       1.60 4008537 3237282.
 ```
+]
 
-Note it automatically names the summarized variables based on the functions used to summarize.
+Note it automatically names the summarized variables based on the names given in `list()`.
 
 ---
 # Avoiding Repetition
 
-### Other functions:
+There are additional ways to use `across()` for repetitive operations:
 
+* `across(everything())` will summarize / mutate *all* variables sent to it in the same way. For instance, getting the mean and standard deviation of an entire dataframe:
 
-There are additional `dplyr` functions similar to `summarize_at()`:
-
-* `summarize_all()` and `mutate_all()` summarize / mutate *all* variables sent to them in the same way. For instance, getting the mean and standard deviation of an entire dataframe:
-
+.smallish[
 
 ```r
-dataframe %&gt;% summarize_all(list(~ mean(.), ~ sd(.)))
+dataframe %&gt;% 
+  summarize(across(everything(), list(mean = ~mean(.), sd = ~sd(.))))
 ```
+]
 
-* `summarize_if()` and `mutate_if()` summarize / mutate all variables that satisfy some logical condition. For instance, summarizing every numeric column in a dataframe at once:
+* `across(where())` will summarize / mutate all variables that satisfy some logical condition. For instance, summarizing every numeric column in a dataframe at once:
 
+.smallish[
 
 ```r
-dataframe %&gt;% summarize_if(is.numeric, list(~ mean(.), ~ sd(.)))
+dataframe %&gt;% 
+  summarize(across(where(is.numeric), list(mean = ~mean(.), sd = ~sd(.))))
 ```
+]
 
 You can use all of these to avoid typing out the same code repeatedly!
 
@@ -895,7 +901,7 @@ Functions after `group_by()` are computed *within each group* as defined by uniq
 Typically the variables you group by will be integers, factors, or characters, and *not continuous real values*.
 
 ---
-`group_by()` example
+# `group_by()` example
 
 
 
@@ -953,6 +959,12 @@ yugoslavia %&gt;%
 ---
 class: inverse
 # Tidying Data
+
+
+.image-full[
+![](img/tidyr.svg)
+]
+
 
 ---
 # Initial Spot Checks
@@ -1160,7 +1172,8 @@ Let's use `pivot_longer()` to get the week and rank variables out of their curre
 library(tidyr)
 billboard_2000 &lt;- billboard_2000_raw %&gt;%
   pivot_longer(starts_with("wk"), 
-*              names_to ="week", values_to = "rank")
+*              names_to ="week",
+*              values_to = "rank")
 dim(billboard_2000)
 ```
 
@@ -1168,7 +1181,7 @@ dim(billboard_2000)
 ## [1] 24092     7
 ```
 
-`starts_with()` and other helper functions from `dplyr::select()` work here too.
+`starts_with()` and other syntax and helper functions from `dplyr::select()` work here too.
 
 We could instead use: `pivot_longer(wk1:wk76, names_to = "week", values_to = "rank")` to pull out these contiguous columns.
 
@@ -1219,7 +1232,8 @@ The argument `values_drop_na = TRUE` to `pivot_longer()` will remove rows with m
 ```r
 billboard_2000 &lt;- billboard_2000_raw %&gt;%
   pivot_longer(starts_with("wk"), 
-               names_to ="week", values_to = "rank", 
+               names_to ="week", 
+               values_to = "rank", 
 *              values_drop_na = TRUE)
 summary(billboard_2000$rank)
 ```
@@ -1228,6 +1242,18 @@ summary(billboard_2000$rank)
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##    1.00   26.00   51.00   51.05   76.00  100.00
 ```
+
+No more `NA` values!
+
+
+```r
+dim(billboard_2000)
+```
+
+```
+## [1] 5307    7
+```
+And way fewer rows!
 
 ---
 # `parse_number()`
@@ -1246,7 +1272,7 @@ summary(billboard_2000$week)
 ##    1.00    5.00   10.00   11.47   16.00   65.00
 ```
 
-For more sophisticated conversion or pattern checking, you'll need to use string parsing (to be covered in week 8).
+For more sophisticated conversion or pattern checking, you'll need to use string parsing (to be covered in R4).
 
 ---
 # Or use `names_prefix`
@@ -1258,21 +1284,21 @@ billboard_2000 &lt;- billboard_2000_raw %&gt;%
                names_to ="week", values_to = "rank",
                values_drop_na = TRUE,
 *              names_prefix = "wk",
-*              names_ptypes = list("week" =numeric(0)))
-head(billboard_2000)
+*              names_transform = list(week = as.integer))
+head(billboard_2000, 4)
 ```
 
 ```
-## # A tibble: 6 x 7
+## # A tibble: 4 x 7
 ##    year artist track                   time  date.entered  week  rank
-##   &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;                   &lt;chr&gt; &lt;date&gt;       &lt;dbl&gt; &lt;int&gt;
+##   &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;                   &lt;chr&gt; &lt;date&gt;       &lt;int&gt; &lt;int&gt;
 ## 1  2000 2 Pac  Baby Don't Cry (Keep... 4:22  2000-02-26       1    87
 ## 2  2000 2 Pac  Baby Don't Cry (Keep... 4:22  2000-02-26       2    82
 ## 3  2000 2 Pac  Baby Don't Cry (Keep... 4:22  2000-02-26       3    72
 ## 4  2000 2 Pac  Baby Don't Cry (Keep... 4:22  2000-02-26       4    77
-## 5  2000 2 Pac  Baby Don't Cry (Keep... 4:22  2000-02-26       5    87
-## 6  2000 2 Pac  Baby Don't Cry (Keep... 4:22  2000-02-26       6    94
 ```
+
+`names_transform` tells `pivot_longer()` we want to convert `week` into an integer number.
 
 ---
 # `separate()`
@@ -1294,7 +1320,7 @@ summary(billboard_2000$length)
 ##   2.600   3.667   3.933   4.031   4.283   7.833
 ```
 
-`sep = :` tells `separate()` to split the column into two where it finds a colon (`:`).
+`sep = ":"` tells `separate()` to split the column into two where it finds a colon (`:`).
 
 Then we add `seconds / 60` to `minutes` to produce a numeric `length` in minutes.
 
@@ -1325,12 +1351,13 @@ A common cue to use `pivot_wider()` is having measurements of different quantiti
 ---
 # Before `pivot_wider()`
 
-.smallish[
+
 
 ```r
-(too_long_data &lt;- data.frame(Group = c(rep("A", 3), rep("B", 3)),
-                             Statistic = rep(c("Mean", "Median", "SD"), 2),
-                             Value = c(1.28, 1.0, 0.72, 2.81, 2, 1.33)))
+(too_long_data &lt;- 
+   data.frame(Group     = c(rep("A", 3), rep("B", 3)),
+              Statistic = rep(c("Mean", "Median", "SD"), 2),
+              Value     = c(1.28, 1.0, 0.72, 2.81, 2, 1.33)))
 ```
 
 ```
@@ -1342,7 +1369,7 @@ A common cue to use `pivot_wider()` is having measurements of different quantiti
 ## 5     B    Median  2.00
 ## 6     B        SD  1.33
 ```
-]
+
 
 ---
 # After `pivot_wider()`
@@ -1356,7 +1383,7 @@ A common cue to use `pivot_wider()` is having measurements of different quantiti
 ```
 ## # A tibble: 2 x 4
 ##   Group  Mean Median    SD
-##   &lt;fct&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+##   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
 ## 1 A      1.28      1  0.72
 ## 2 B      2.81      2  1.33
 ```
@@ -1410,7 +1437,7 @@ billboard_trajectories &lt;-
 ---
 # Charts of 2000: Beauty!
 
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-68-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-69-1.svg)&lt;!-- --&gt;
 
 Observation: There appears to be censoring around week 20 for songs falling out of the top 50 that I'd want to follow up on.
 
@@ -1455,7 +1482,7 @@ billboard_2000 %&gt;% arrange(artist, track, week) %&gt;%
 ```
 ## # A tibble: 4 x 5
 ##   artist date.entered  week date        rank
-##   &lt;chr&gt;  &lt;date&gt;       &lt;dbl&gt; &lt;date&gt;     &lt;int&gt;
+##   &lt;chr&gt;  &lt;date&gt;       &lt;int&gt; &lt;date&gt;     &lt;int&gt;
 ## 1 2 Pac  2000-02-26       1 2000-02-26    87
 ## 2 2 Pac  2000-02-26       2 2000-03-04    82
 ## 3 2 Pac  2000-02-26       3 2000-03-11    72
@@ -1489,7 +1516,7 @@ plot_by_day &lt;-
 ---
 # Calendar Time Plot!
 
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-72-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-73-1.svg)&lt;!-- --&gt;
 
 We see some of the entry dates are before 2000---presumably songs still charting during 2000 that came out earlier. 
 
@@ -1666,7 +1693,7 @@ Because the data are the first argument for `ggplot()`, we can pipe them straigh
 ---
 ## Wind Gusts and Delays
 
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-78-1.png)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-79-1.png)&lt;!-- --&gt;
 
 ---
 # Resources

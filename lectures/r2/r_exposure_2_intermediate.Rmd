@@ -2,7 +2,7 @@
 title: "R Exposure 2"
 subtitle: "Data Visualization and Management"  
 author: "Charles Lanfear"
-date: "Apr 18, 2020<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Sep 13, 2020<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -16,6 +16,7 @@ output:
 
 ```{r setup, include=FALSE, purl=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+options(dplyr.summarise.inform = FALSE)
 ```
 
 # Overview
@@ -931,40 +932,45 @@ yugoslavia %>% filter(year == 1982) %>%
 These new variables are calculated using *all of the rows* in `yugoslavia`
 
 ---
-# Avoiding Repetition: 
+# Avoiding Repetition
 
-### `summarize_at()`
+### `summarize(across())`
 
 
-Maybe you need to calculate the mean and standard deviation of a bunch of columns. With **`summarize_at()`**, put the variables to compute over first `vars()` (using `select()` syntax) and put the functions to use in `funs()` after.
+Maybe you need to calculate the mean and standard deviation of a bunch of columns. With **`across()`**, put the variables to compute over (using `c()` or `select()` syntax) and put the functions to use in a `list()` after.
 
+.smallish[
 ```{r}
 yugoslavia %>%
-    filter(year == 1982) %>%
-    summarize_at(vars(lifeExp, pop), list(~ mean(.), ~ sd(.)))
+  filter(year == 1982) %>%
+  summarize(across(c(lifeExp, pop), list(avg = ~mean(.), sd = ~sd(.))))
 ```
+]
 
-Note it automatically names the summarized variables based on the functions used to summarize.
+Note it automatically names the summarized variables based on the names given in `list()`.
 
 ---
 # Avoiding Repetition
 
-### Other functions:
+There are additional ways to use `across()` for repetitive operations:
 
+* `across(everything())` will summarize / mutate *all* variables sent to it in the same way. For instance, getting the mean and standard deviation of an entire dataframe:
 
-There are additional `dplyr` functions similar to `summarize_at()`:
-
-* `summarize_all()` and `mutate_all()` summarize / mutate *all* variables sent to them in the same way. For instance, getting the mean and standard deviation of an entire dataframe:
-
+.smallish[
 ```{r, eval=FALSE}
-dataframe %>% summarize_all(list(~ mean(.), ~ sd(.)))
+dataframe %>% 
+  summarize(across(everything(), list(mean = ~mean(.), sd = ~sd(.))))
 ```
+]
 
-* `summarize_if()` and `mutate_if()` summarize / mutate all variables that satisfy some logical condition. For instance, summarizing every numeric column in a dataframe at once:
+* `across(where())` will summarize / mutate all variables that satisfy some logical condition. For instance, summarizing every numeric column in a dataframe at once:
 
+.smallish[
 ```{r, eval=FALSE}
-dataframe %>% summarize_if(is.numeric, list(~ mean(.), ~ sd(.)))
+dataframe %>% 
+  summarize(across(where(is.numeric), list(mean = ~mean(.), sd = ~sd(.))))
 ```
+]
 
 You can use all of these to avoid typing out the same code repeatedly!
 
@@ -979,7 +985,7 @@ Functions after `group_by()` are computed *within each group* as defined by uniq
 Typically the variables you group by will be integers, factors, or characters, and *not continuous real values*.
 
 ---
-`group_by()` example
+# `group_by()` example
 
 
 ```{r}
@@ -1013,6 +1019,12 @@ yugoslavia %>%
 ---
 class: inverse
 # Tidying Data
+
+
+.image-full[
+![](img/tidyr.svg)
+]
+
 
 ---
 # Initial Spot Checks
@@ -1212,11 +1224,12 @@ Let's use `pivot_longer()` to get the week and rank variables out of their curre
 library(tidyr)
 billboard_2000 <- billboard_2000_raw %>%
   pivot_longer(starts_with("wk"), 
-               names_to ="week", values_to = "rank") #<<
+               names_to ="week", #<<
+               values_to = "rank") #<<
 dim(billboard_2000)
 ```
 
-`starts_with()` and other helper functions from `dplyr::select()` work here too.
+`starts_with()` and other syntax and helper functions from `dplyr::select()` work here too.
 
 We could instead use: `pivot_longer(wk1:wk76, names_to = "week", values_to = "rank")` to pull out these contiguous columns.
 
@@ -1247,10 +1260,18 @@ The argument `values_drop_na = TRUE` to `pivot_longer()` will remove rows with m
 ```{r}
 billboard_2000 <- billboard_2000_raw %>%
   pivot_longer(starts_with("wk"), 
-               names_to ="week", values_to = "rank", 
+               names_to ="week", 
+               values_to = "rank", 
                values_drop_na = TRUE) #<<
 summary(billboard_2000$rank)
 ```
+
+No more `NA` values!
+
+```{r}
+dim(billboard_2000)
+```
+And way fewer rows!
 
 ---
 # `parse_number()`
@@ -1263,7 +1284,7 @@ billboard_2000 <- billboard_2000 %>%
 summary(billboard_2000$week)
 ```
 
-For more sophisticated conversion or pattern checking, you'll need to use string parsing (to be covered in week 8).
+For more sophisticated conversion or pattern checking, you'll need to use string parsing (to be covered in R4).
 
 ---
 # Or use `names_prefix`
@@ -1274,9 +1295,11 @@ billboard_2000 <- billboard_2000_raw %>%
                names_to ="week", values_to = "rank",
                values_drop_na = TRUE,
                names_prefix = "wk", #<<
-               names_ptypes = list("week" =numeric(0))) #<<
-head(billboard_2000)
+               names_transform = list(week = as.integer)) #<<
+head(billboard_2000, 4)
 ```
+
+`names_transform` tells `pivot_longer()` we want to convert `week` into an integer number.
 
 ---
 # `separate()`
@@ -1292,7 +1315,7 @@ billboard_2000 <- billboard_2000 %>%
 summary(billboard_2000$length)
 ```
 
-`sep = :` tells `separate()` to split the column into two where it finds a colon (`:`).
+`sep = ":"` tells `separate()` to split the column into two where it finds a colon (`:`).
 
 Then we add `seconds / 60` to `minutes` to produce a numeric `length` in minutes.
 
@@ -1323,13 +1346,14 @@ A common cue to use `pivot_wider()` is having measurements of different quantiti
 ---
 # Before `pivot_wider()`
 
-.smallish[
+
 ```{r}
-(too_long_data <- data.frame(Group = c(rep("A", 3), rep("B", 3)),
-                             Statistic = rep(c("Mean", "Median", "SD"), 2),
-                             Value = c(1.28, 1.0, 0.72, 2.81, 2, 1.33)))
+(too_long_data <- 
+   data.frame(Group     = c(rep("A", 3), rep("B", 3)),
+              Statistic = rep(c("Mean", "Median", "SD"), 2),
+              Value     = c(1.28, 1.0, 0.72, 2.81, 2, 1.33)))
 ```
-]
+
 
 ---
 # After `pivot_wider()`

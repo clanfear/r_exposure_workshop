@@ -4,6 +4,7 @@
     <title>R Exposure 1</title>
     <meta charset="utf-8" />
     <meta name="author" content="Charles Lanfear" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -13,7 +14,7 @@ class: center, top, title-slide
 # R Exposure 1
 ## RStudio and Basic R
 ### Charles Lanfear
-### Apr 18, 2020<br>Updated: Apr 17, 2020
+### Sep 12, 2020<br>Updated: Sep 11, 2020
 
 ---
 
@@ -781,6 +782,10 @@ class: inverse
 
 # Subsetting Data with `dplyr`
 
+.image-full[
+![](img/dplyr.svg)
+]
+
 ---
 
 # `dplyr`
@@ -1022,7 +1027,7 @@ yugoslavia %&gt;% select(-continent, -pop, -lifeExp) %&gt;% head(4)
 ## Helper Functions for `select()`
 
 
-`select()` has a variety of helper functions like `starts_with()`, `ends_with()`, and `contains()`, or can be given a range of continguous columns `startvar:endvar`. See `?select` for details.
+`select()` has a variety of helper functions like `starts_with()`, `ends_with()`, and `matches()`, or can be given a range of contiguous columns `startvar:endvar`. See `?select` for details.
 
 These are very useful if you have a "wide" data frame with column names following a pattern or ordering. 
 
@@ -1033,6 +1038,45 @@ These are very useful if you have a "wide" data frame with column names followin
 DYS %&gt;% select(starts_with("married"))
 DYS %&gt;% select(ends_with("18"))
 ```
+
+---
+## `select(where())`
+
+An especially useful helper for select is `where()` which can be used for selecting columns based on functions that check column types.
+
+
+```r
+gapminder %&gt;% select(where(is.numeric)) %&gt;% head(3)
+```
+
+```
+## # A tibble: 3 x 4
+##    year lifeExp      pop gdpPercap
+##   &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+## 1  1952    28.8  8425333      779.
+## 2  1957    30.3  9240934      821.
+## 3  1962    32.0 10267083      853.
+```
+
+.pull-right[.footnote[`int` (integer) and `dbl` (double) are both types of `numeric` data.]]
+
+--
+
+
+```r
+gapminder %&gt;% select(where(is.factor)) %&gt;% head(3)
+```
+
+```
+## # A tibble: 3 x 2
+##   country     continent
+##   &lt;fct&gt;       &lt;fct&gt;    
+## 1 Afghanistan Asia     
+## 2 Afghanistan Asia     
+## 3 Afghanistan Asia
+```
+
+
 
 ---
 ## Renaming Columns with `select()`
@@ -1218,7 +1262,7 @@ hist(gapminder$lifeExp,
 *    main = "Observed Life Expectancies of Countries")
 ```
 
-&lt;img src="r_exposure_1_introduction_files/figure-html/unnamed-chunk-40-1.png" height="320px" /&gt;
+&lt;img src="r_exposure_1_introduction_files/figure-html/unnamed-chunk-107-1.png" height="320px" /&gt;
 
 .pull-right[
 .footnote[
@@ -1244,7 +1288,7 @@ Use `?hist` to see additional options available for customizing a histogram.
 *abline(v = mean(gapminder$gdpPercap), col = "cornflowerblue")
 ```
 
-&lt;img src="r_exposure_1_introduction_files/figure-html/unnamed-chunk-41-1.png" height="320px" /&gt;
+&lt;img src="r_exposure_1_introduction_files/figure-html/unnamed-chunk-108-1.png" height="320px" /&gt;
 ]
 
 .pull-right[
@@ -1267,6 +1311,7 @@ new_formula
 
 ```
 ## y ~ x1 + x2 + x3
+## &lt;environment: 0x0000023df550ac20&gt;
 ```
 
 ```r

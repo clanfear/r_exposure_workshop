@@ -87,7 +87,7 @@ gapminder %>%
            year <= 2000 )
 
 former_yugoslavia <- c("Bosnia and Herzegovina", "Croatia", #<<
-              "Macedonia", "Montenegro", "Serbia", "Slovenia") #<<
+                       "Montenegro", "Serbia", "Slovenia") #<<
 yugoslavia <- gapminder %>% filter(country %in% former_yugoslavia)
 tail(yugoslavia, 2)
 
@@ -99,6 +99,10 @@ yugoslavia %>% select(-continent, -pop, -lifeExp) %>% head(4)
 
 ## DYS %>% select(starts_with("married"))
 ## DYS %>% select(ends_with("18"))
+
+gapminder %>% select(where(is.numeric)) %>% head(3)
+
+gapminder %>% select(where(is.factor)) %>% head(3)
 
 yugoslavia %>%
     select(Life_Expectancy = lifeExp) %>%
