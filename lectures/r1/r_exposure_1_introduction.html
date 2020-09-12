@@ -14,7 +14,7 @@ class: center, top, title-slide
 # R Exposure 1
 ## RStudio and Basic R
 ### Charles Lanfear
-### Sep 12, 2020<br>Updated: Sep 11, 2020
+### Sep 12, 2020<br>Updated: Sep 12, 2020
 
 ---
 
@@ -432,22 +432,18 @@ The easiest way to work with external data—that isn't in R format—is for it 
 
 --
 
+
 R has a variety of built-in functions for importing data stored in text files, like `read.table()` and `read.csv()`.&lt;sup&gt;1&lt;/sup&gt;
-
-.footnote[
-[1] Use "write" versions (e.g. `write.csv()`) to create these files from R objects.
-]
-
---
-
-By default, these functions will read *character* (string) columns in as a *factor*.
-
-To disable this, use the argument `stringsAsFactors = FALSE`, like so:
 
 
 ```r
 new_df &lt;- read.csv("some_spreadsheet.csv", stringsAsFactors = FALSE)
 ```
+
+.footnote[
+[1] Use "write" versions (e.g. `write.csv()`) to create these files from R objects.
+]
+
 
 ---
 # Data from Other Software
@@ -1311,7 +1307,7 @@ new_formula
 
 ```
 ## y ~ x1 + x2 + x3
-## &lt;environment: 0x0000023d8320d440&gt;
+## &lt;environment: 0x0000010be7ba9048&gt;
 ```
 
 ```r

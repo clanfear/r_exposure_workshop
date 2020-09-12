@@ -363,21 +363,17 @@ The easiest way to work with external data—that isn't in R format—is for it 
 
 --
 
+
 R has a variety of built-in functions for importing data stored in text files, like `read.table()` and `read.csv()`.<sup>1</sup>
+
+```{r, eval=FALSE}
+new_df <- read.csv("some_spreadsheet.csv", stringsAsFactors = FALSE)
+```
 
 .footnote[
 [1] Use "write" versions (e.g. `write.csv()`) to create these files from R objects.
 ]
 
---
-
-By default, these functions will read *character* (string) columns in as a *factor*.
-
-To disable this, use the argument `stringsAsFactors = FALSE`, like so:
-
-```{r, eval=FALSE}
-new_df <- read.csv("some_spreadsheet.csv", stringsAsFactors = FALSE)
-```
 
 ---
 # Data from Other Software
