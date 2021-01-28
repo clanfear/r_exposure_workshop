@@ -1201,7 +1201,7 @@ Week columns continue up to `wk76`!
 2. The values for a single variable are in their own column.
 --
 
-3. The observations are all of the same nature.
+3. There is only one value per cell.
 
 --
 
