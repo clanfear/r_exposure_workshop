@@ -20,5 +20,5 @@ build_course <- function(lectures = 1:6){
 }
 
 
-render_and_print_slides(2)
+render_and_print_slides(1)
 build_course()
