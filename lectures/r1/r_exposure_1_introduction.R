@@ -34,7 +34,7 @@ getwd()
 
 ## setwd("C:/Users/cclan/Documents")
 
-## new_df <- read.csv("some_spreadsheet.csv", stringsAsFactors = FALSE)
+## new_df <- read.csv("some_spreadsheet.csv")
 
 ## install.packages("tidyverse")
 
@@ -77,13 +77,14 @@ gapminder %>% filter(country == "Canada") %>% head(2)
 ## gapminder %>% lm(pop ~ year, data = .)
 
 ## lm_pop_year <- gapminder %>%
+##   filter(continent == "Americas") %>%
 ##   lm(pop ~ year, data = .)
 
 gapminder %>% filter(country == "Oman") %>% head(8)
 
 gapminder %>%
     filter(country == "Oman" &
-           year > 1980 &
+           year >  1980 &
            year <= 2000 )
 
 former_yugoslavia <- c("Bosnia and Herzegovina", "Croatia", #<<
@@ -126,10 +127,9 @@ ifelse(example > 0, "Positive", "Not Positive")
 
 yugoslavia %>% mutate(short_country = 
                  ifelse(country == "Bosnia and Herzegovina", 
-                        "B and H", as.character(country))) %>%
-    select(short_country, year, pop) %>%
-    arrange(year, short_country) %>%
-    head(3)
+                        "B and H", as.character(country))) %>% #<<
+    select(country, short_country, year, pop) %>%
+    arrange(year, short_country) %>% head(3)
 
 gapminder %>% 
   mutate(gdpPercap_ordinal = 

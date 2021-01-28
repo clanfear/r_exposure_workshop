@@ -2,7 +2,7 @@
 title: "R Exposure 1"
 subtitle: "RStudio and Basic R"  
 author: "Charles Lanfear"
-date: "Sep 12, 2020<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Jan 30, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -367,7 +367,7 @@ The easiest way to work with external data—that isn't in R format—is for it 
 R has a variety of built-in functions for importing data stored in text files, like `read.table()` and `read.csv()`.<sup>1</sup>
 
 ```{r, eval=FALSE}
-new_df <- read.csv("some_spreadsheet.csv", stringsAsFactors = FALSE)
+new_df <- read.csv("some_spreadsheet.csv")
 ```
 
 .footnote[
@@ -682,17 +682,19 @@ gapminder %>% lm(pop ~ year, data = .)
 ```
 
 ---
-
 # Pipe Assignment
 
-When creating a new object from the output of piped functions, you place the assignment operator *at the beginning*.
+When creating a new object from the output of piped functions, place the assignment operator at the beginning.
 
 ```{r, eval=FALSE}
 lm_pop_year <- gapminder %>% 
+  filter(continent == "Americas") %>%
   lm(pop ~ year, data = .)
 ```
 
-No matter how long the chain of functions is, assignment is always done *at the top*.
+No matter how long the chain of functions is, assignment is always done at the top.<sup>1</sup>
+
+.footnote[[1] Note this is just a stylistic convention: If you prefer, you *can* do assignment at the end of the chain.]
 
 ---
 
@@ -717,7 +719,7 @@ Let's say we want observations from Oman after 1980 and through 2000.
 ```{r}
 gapminder %>%
     filter(country == "Oman" &
-           year > 1980 &
+           year >  1980 &
            year <= 2000 )
 ```
 
@@ -875,19 +877,21 @@ ifelse(example > 0, "Positive", "Not Positive")
 ---
 # `ifelse()` Example
 
-
+.smallish[
 ```{r}
 yugoslavia %>% mutate(short_country = 
                  ifelse(country == "Bosnia and Herzegovina", 
-                        "B and H", as.character(country))) %>%
-    select(short_country, year, pop) %>%
-    arrange(year, short_country) %>%
-    head(3)
+                        "B and H", as.character(country))) %>% #<<
+    select(country, short_country, year, pop) %>%
+    arrange(year, short_country) %>% head(3)
 ```
+]
 
-Read this as "For each row, if country equals 'Bosnia and Herzegovina', make `short_country` equal to 'B and H', otherwise make it equal to that row's value of `country`."
+Read this as "For each row, if `country` equals 'Bosnia and Herzegovina, make `short_country` equal to 'B and H', otherwise make it equal to that row's value of `country`."
 
 This is a simple way to change some values but not others!
+
+Note: `country` is a factor--use `as.character()` to convert to character.
 
 ---
 # `case_when()`

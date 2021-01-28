@@ -14,7 +14,7 @@ class: center, top, title-slide
 # R Exposure 1
 ## RStudio and Basic R
 ### Charles Lanfear
-### Sep 12, 2020<br>Updated: Sep 12, 2020
+### Jan 30, 2021<br>Updated: Jan 28, 2021
 
 ---
 
@@ -437,7 +437,7 @@ R has a variety of built-in functions for importing data stored in text files, l
 
 
 ```r
-new_df &lt;- read.csv("some_spreadsheet.csv", stringsAsFactors = FALSE)
+new_df &lt;- read.csv("some_spreadsheet.csv")
 ```
 
 .footnote[
@@ -858,18 +858,20 @@ gapminder %&gt;% lm(pop ~ year, data = .)
 ```
 
 ---
-
 # Pipe Assignment
 
-When creating a new object from the output of piped functions, you place the assignment operator *at the beginning*.
+When creating a new object from the output of piped functions, place the assignment operator at the beginning.
 
 
 ```r
 lm_pop_year &lt;- gapminder %&gt;% 
+  filter(continent == "Americas") %&gt;%
   lm(pop ~ year, data = .)
 ```
 
-No matter how long the chain of functions is, assignment is always done *at the top*.
+No matter how long the chain of functions is, assignment is always done at the top.&lt;sup&gt;1&lt;/sup&gt;
+
+.footnote[[1] Note this is just a stylistic convention: If you prefer, you *can* do assignment at the end of the chain.]
 
 ---
 
@@ -910,7 +912,7 @@ Let's say we want observations from Oman after 1980 and through 2000.
 ```r
 gapminder %&gt;%
     filter(country == "Oman" &amp;
-           year &gt; 1980 &amp;
+           year &gt;  1980 &amp;
            year &lt;= 2000 )
 ```
 
@@ -1188,29 +1190,31 @@ ifelse(example &gt; 0, "Positive", "Not Positive")
 ---
 # `ifelse()` Example
 
-
+.smallish[
 
 ```r
 yugoslavia %&gt;% mutate(short_country = 
                  ifelse(country == "Bosnia and Herzegovina", 
-                        "B and H", as.character(country))) %&gt;%
-    select(short_country, year, pop) %&gt;%
-    arrange(year, short_country) %&gt;%
-    head(3)
+*                       "B and H", as.character(country))) %&gt;%
+    select(country, short_country, year, pop) %&gt;%
+    arrange(year, short_country) %&gt;% head(3)
 ```
 
 ```
-## # A tibble: 3 x 3
-##   short_country  year     pop
-##   &lt;chr&gt;         &lt;int&gt;   &lt;int&gt;
-## 1 B and H        1952 2791000
-## 2 Croatia        1952 3882229
-## 3 Montenegro     1952  413834
+## # A tibble: 3 x 4
+##   country                short_country  year     pop
+##   &lt;fct&gt;                  &lt;chr&gt;         &lt;int&gt;   &lt;int&gt;
+## 1 Bosnia and Herzegovina B and H        1952 2791000
+## 2 Croatia                Croatia        1952 3882229
+## 3 Montenegro             Montenegro     1952  413834
 ```
+]
 
-Read this as "For each row, if country equals 'Bosnia and Herzegovina', make `short_country` equal to 'B and H', otherwise make it equal to that row's value of `country`."
+Read this as "For each row, if `country` equals 'Bosnia and Herzegovina, make `short_country` equal to 'B and H', otherwise make it equal to that row's value of `country`."
 
 This is a simple way to change some values but not others!
+
+Note: `country` is a factor--use `as.character()` to convert to character.
 
 ---
 # `case_when()`
@@ -1307,7 +1311,7 @@ new_formula
 
 ```
 ## y ~ x1 + x2 + x3
-## &lt;environment: 0x0000010be7ba9048&gt;
+## &lt;environment: 0x00000165924b6800&gt;
 ```
 
 ```r
