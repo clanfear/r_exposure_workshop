@@ -2,7 +2,7 @@
 title: "R Exposure 2"
 subtitle: "Data Visualization and Management"  
 author: "Charles Lanfear"
-date: "Sep 13, 2020<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Feb 7, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -861,11 +861,26 @@ ggplot(estimated_pes, aes(x = Target, y = PE, group = Reporter)) +
 .footnote[
 [1] [Lanfear, Charles C., Lindsey R. Beach, Timothy A. Thomas. 2018. "Formal Social Control in Changing Neighborhoods: Racial Implications of Neighborhood Context on Reactive Policing." *City & Community* 17(4):1075-1099](https://onlinelibrary.wiley.com/doi/10.1111/cico.12346)
 ]
+
 ---
 
-.center[
-<img src="img/arrest_pe_plot.png" style="width: 80%;"/>
+.image-full[
+![](img/arrest_pe_plot.png)
 ]
+
+.footnote[The process for this plot is documented in my [Advanced Counterfactuals slides](https://clanfear.github.io/CSSS508/Lectures/Week10/CSSS508_Advanced_Counterfactuals.html#1)]
+
+--
+
+*You can also gussy things up a bit...*
+
+---
+
+.image-full[
+![](img/crime_rr_plot.svg)
+]
+
+.footnote[The code for this one is a bit *trickier*.]
 
 ---
 class: inverse
@@ -883,6 +898,32 @@ class: inverse
 * Uses R, `ggplot2`, and `tidyverse`
 
 * [Free online version!](https://socviz.co/)
+
+* Affordable in print
+]
+
+---
+class: inverse
+
+# Another
+
+.pull-left[
+.image-full[
+![](img/wilke_cover.png)
+]
+]
+
+.pull-right[
+
+* Targeted generally at analysts and scientists
+
+* Teaches good visualization principles
+
+* Not focused on coding--applicable to any platform
+
+   + Open source though!
+
+* [Also free online!](https://clauswilke.com/dataviz/)
 
 * Affordable in print
 ]
@@ -1299,6 +1340,14 @@ And way fewer rows!
 ---
 # `parse_number()`
 
+The week column is character, but should be numeric.
+
+```{r}
+summary(billboard_2000$week)
+```
+
+--
+
 `tidyr` provides a convenience function to grab just the numeric information from a column that mixes text and numbers:
 
 ```{r}
@@ -1315,14 +1364,15 @@ For more sophisticated conversion or pattern checking, you'll need to use string
 ```{r}
 billboard_2000 <- billboard_2000_raw %>%
   pivot_longer(starts_with("wk"), 
-               names_to ="week", values_to = "rank",
+               names_to ="week", 
+               values_to = "rank",
                values_drop_na = TRUE,
                names_prefix = "wk", #<<
-               names_transform = list(week = as.integer)) #<<
-head(billboard_2000, 4)
+               names_transform = list(week = as.integer))  #<<
+head(billboard_2000, 3)
 ```
 
-`names_transform` tells `pivot_longer()` we want to convert `week` into an integer number.
+We use `names_prefix` to remove `"wk"` from the values, and `names_transform` to convert into an integer number. 
 
 ---
 # `separate()`
@@ -1341,7 +1391,6 @@ summary(billboard_2000$length)
 `sep = ":"` tells `separate()` to split the column into two where it finds a colon (`:`).
 
 Then we add `seconds / 60` to `minutes` to produce a numeric `length` in minutes.
-
 
 
 ---
@@ -1392,21 +1441,20 @@ A common cue to use `pivot_wider()` is having measurements of different quantiti
 Let's look at songs that hit #1 at some point and look how they got there versus songs that did not:
 
 ```{r}
-# find best rank for each song
-best_rank <- billboard_2000 %>%
-    group_by(artist, track) %>%
-    summarize(min_rank = min(rank), #<<
-              weeks_at_1 = sum(rank == 1)) %>%
-    mutate(`Peak rank` = ifelse(min_rank == 1,
-                                "Hit #1",
-                                "Didn't #1"))
-
-# merge onto original data
 billboard_2000 <- billboard_2000 %>%
-    left_join(best_rank, by = c("artist", "track")) #<<
+    group_by(artist, track) %>%
+    mutate(`Weeks at #1` = sum(rank == 1),
+           `Peak Rank`   = ifelse(any(rank == 1), #<<
+                                  "Hit #1",
+                                  "Didn't #1")) %>%
+    ungroup() #<<
 ```
 
-.footnote[Note that because the "highest" rank is *numerically lowest* (1), we are summarizing with `min()`.]
+Things to note:
+
+* `any(min_rank==1)` checks to see if *any* value of `rank` is equal to one for the given `artist` and `track`
+
+* `ungroup()` here removes the grouping made by `group_by()`.
 
 ---
 # Charts of 2000: `ggplot2`
@@ -1416,9 +1464,9 @@ library(ggplot2)
 billboard_trajectories <- 
   ggplot(data = billboard_2000,
          aes(x = week, y = rank, group = track,
-             color = `Peak rank`)
+             color = `Peak Rank`)
          ) +
-  geom_line(aes(size = `Peak rank`), alpha = 0.4) +
+  geom_line(aes(size = `Peak Rank`), alpha = 0.4) +
     # rescale time: early weeks more important
   scale_x_log10(breaks = seq(0, 70, 10)) + 
   scale_y_reverse() + # want rank 1 on top, not bottom
@@ -1444,9 +1492,9 @@ Observation: There appears to be censoring around week 20 for songs falling out 
 
 ```{r}
 billboard_2000 %>%
-    select(artist, track, weeks_at_1) %>%
-    distinct(artist, track, weeks_at_1) %>%
-    arrange(desc(weeks_at_1)) %>%
+    select(artist, track, `Weeks at #1`) %>%
+    distinct(artist, track, `Weeks at #1`) %>%
+    arrange(desc(`Weeks at #1`)) %>%
     head(7)
 ```
 
