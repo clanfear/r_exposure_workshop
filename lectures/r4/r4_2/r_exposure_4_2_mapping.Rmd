@@ -2,7 +2,7 @@
 title: "R Exposure 4"
 subtitle: "Unit 2: Mapping"
 author: "Chuck Lanfear"
-date: "Apr 19, 2020<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Feb 28, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -15,8 +15,7 @@ output:
 ---
 
 ```{r setup, include=FALSE, purl=FALSE}
-options(htmltools.dir.version = FALSE)
-options(width=70)
+options(htmltools.dir.version = FALSE, width = 70)
 knitr::opts_chunk$set(comment = "##")
 ```
 
@@ -29,7 +28,7 @@ knitr::opts_chunk$set(comment = "##")
 
 ### Advanced Mapping
 * `sf`: [Simple Features](https://en.wikipedia.org/wiki/Simple_Features) geometry for R
-* `tidycensus` for obtaining Census Bureau data
+* `tidycensus` and `tigris` for obtaining Census Bureau data and shapefiles
 
 ---
 # Mapping in R: A quick plug
@@ -152,7 +151,6 @@ Note, this may require compilation on your computer.
 library(ggmap)
 ```
 
-
 ---
 # Quick Maps with `qmplot()`
 
@@ -262,20 +260,18 @@ downtown <- spd_raw %>%
 Then make a dataframe of just assaults and robberies:
 ```{r}
 assaults <- downtown %>% 
-  mutate(assault_label = 
-           ifelse(`Event Clearance Group` %in%
-                  c("ASSAULTS", "ROBBERY"), 
-                  `Event Clearance Description`, "")) %>% 
-  filter(assault_label != "")
+  filter(`Event Clearance Group` %in%
+                  c("ASSAULTS", "ROBBERY")) %>%
+  mutate(assault_label = `Event Clearance Description`)
 ```
 
 ---
-# Plotting with Labels
-
 .pull-left[
+# Labels
+
 Now let's plot the events and label them with `geom_label()` (`geom_text()` without background or border):
 
-.small[
+.smallish[
 ```{r labels_1, eval=FALSE, purl=FALSE}
 qmplot(data = downtown,
        x = Longitude,
@@ -285,7 +281,7 @@ qmplot(data = downtown,
        alpha = I(0.5)) +  #<<
   geom_label(data = assaults,
        aes(label = assault_label),
-       size=2.5)
+       size=2)
 ```
 ]
 
@@ -293,7 +289,7 @@ Placing the arguments for `color=` and `alpha=` inside `I()` prevents them from 
 ]
 
 .pull-right[
-```{r labels_2, echo=FALSE, message = FALSE, cache=TRUE, fig.height = 5, fig.width=2.5, dev="svg"}
+```{r labels_2, echo=FALSE, message = FALSE, cache=TRUE, fig.height = 6, fig.width=3, dev="svg"}
 qmplot(data = downtown,
        x = Longitude,
        y = Latitude,
@@ -302,7 +298,7 @@ qmplot(data = downtown,
        alpha = I(0.5)) + 
   geom_label(data = assaults,
        aes(label = assault_label),
-       size=2.5)
+       size=2)
 ```
 ]
 
@@ -328,13 +324,13 @@ qmplot(data =
     fill = "black", 
     color = "white", 
     segment.color = "black",
-    size=2.5)
+    size=2)
 ```
 ]
 ]
 
 .pull-right[
-```{r ggrepel_2, echo=FALSE, message = FALSE, cache=TRUE, warning=FALSE, fig.height = 5, fig.width=2.5, dev="svg"}
+```{r ggrepel_2, echo=FALSE, message = FALSE, cache=TRUE, warning=FALSE, fig.height = 5, fig.width=3, dev="svg"}
 library(ggrepel)
 qmplot(data = 
     downtown,
@@ -349,7 +345,7 @@ qmplot(data =
     fill = "black", 
     color = "white", 
     segment.color = "black",
-    size=2.5)
+    size=2)
 ```
 ]
 
@@ -436,21 +432,24 @@ The most commonly used is [**WGS84**](https://en.wikipedia.org/wiki/World_Geodet
 
 --
 
-There are two common ways to define a CRS:
+There are two common ways to define a CRS in `sf`:
 
 * [**EPSG codes**](http://spatialreference.org/ref/epsg/) (`epsg` in R)
-   * Numeric codes which *refer to a predefined projection*
-   * Ex: WGS84 is `4326`
+
+   * Numeric codes which *refer to a predefined CRS*
+   * Example: WGS84 is `4326`
 
 --
 
 * [**PROJ.4 strings**](https://proj4.org/usage/quickstart.html) (`proj4string` in R)
-   * Text strings which *define a projection*
-   * WGS84 looks like this:
+
+   * Text strings of parameters that *define a CRS*
+   * Example: NAD83(NSRS2007) / Washington North
 
 ```
-+init=epsg:4326 +proj=longlat +ellps=WGS84
-+datum=WGS84 +no_defs +towgs84=0,0,0
++proj=lcc +lat_1=48.73333333333333 +lat_2=47.5 +lat_0=47 
++lon_0=-120.8333333333333 +x_0=500000 +y_0=0 +ellps=GRS80 
++towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
 ```
 
 ---
@@ -485,11 +484,13 @@ class: inverse
 
 * `geom_sf()`: `ggplot()` layer for `sf` objects.
 
+* `st_as_sf()`: Convert a data frame into an `sf` object.
+
 * `st_join()`: Join data by spatial relationship.
 
 * `st_transform()`: Convert between CRS.
 
-* `st_set_geometry(., NULL)`: Remove geometry from a `sf` data frame. 
+* `st_drop_geometry()`: Remove geometry from a `sf` data frame. 
 
 * `st_relate()`: Compute relationships between geometries (like neighbor matrices).
 
@@ -573,30 +574,31 @@ We can plot `sf` geometry using `geom_sf()`.
 ```{r, eval=FALSE, purl=FALSE}
 ggplot(precincts_votes_sf, 
        aes(fill=P_Dem)) + #<<
-  geom_sf(color="white", #<<
-          size=0.1) +
+  geom_sf(size=NA) +
   theme_void() +
   theme(legend.position = 
           "bottom")
 ```
 
 * `fill=P_Dem` maps color inside precincts to `P_Dem`.
-* `color="white"` sets boundaries to white.
+* `size=NA` removes precinct outlines.
 * `theme_void()` removes axes and background.
 
 ]
 
 .pull-right[
-```{r, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE, dev="svg", fig.height=5.5, fig.width=2.75}
+.image-100[
+```{r, echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE, dev="png", fig.retina=5, fig.width = 5, fig.height=8}
 ggplot(precincts_votes_sf, 
        aes(fill=P_Dem)) + #<<
-  geom_sf(color="white", #<<
-          size=0.1) +
+  geom_sf(size=NA) +
   theme_void() +
   theme(legend.position = 
-          "bottom")
+          "right")
 ```
 ]
+]
+
 
 ---
 class: inverse
@@ -707,31 +709,32 @@ glimpse(king_county)
 
 ```{r, eval=FALSE, purl=FALSE}
 king_county %>% 
-  ggplot(aes(fill=`Any Black`)) + 
-  geom_sf(size=0.1, color="white") + 
+  ggplot(aes(fill = `Any Black`)) + 
+  geom_sf(size = NA) + 
   coord_sf(crs = "+proj=longlat +datum=WGS84", datum=NA) + 
-  scale_fill_continuous(name="Any Black\n", 
-                        low="#d4d5f9",
-                        high="#00025b") + 
+  scale_fill_continuous(name = "Any Black\n", 
+                        low  = "#d4d5f9",
+                        high = "#00025b") + 
   theme_minimal() + ggtitle("Proportion Any Black")
 ```
 
 New functions:
 
 * `geom_sf()` draws Simple Features coordinate data.
+   * `size = NA` removes outlines
 * `coord_sf()` is used here with these arguments:
    * `crs`: Modifies the coordinate reference system (CRS); WGS84 is possibly the most commonly used CRS.
    * `datum=NA`: Removes graticule lines, which are geographical lines such as meridians and parallels.
 
 ---
-```{r king_plot, eval=TRUE, echo=FALSE, fig.height = 6, dev="svg"}
+```{r king_plot, eval=TRUE, echo=FALSE, dev="svg", fig.height = 6}
 king_county %>% 
-  ggplot(aes(fill=`Any Black`)) + 
-  geom_sf(size=0.1, color="white") + 
-  coord_sf(crs = "+proj=longlat +datum=WGS84", datum=NA) + 
-  scale_fill_continuous(name="Any Black\n", 
-                        low="#d4d5f9",
-                        high="#00025b") + 
+  ggplot(aes(fill = `Any Black`)) + 
+  geom_sf(size = NA) + 
+  coord_sf(crs = "+proj=longlat +datum=WGS84", datum = NA) + 
+  scale_fill_continuous(name = "Any Black\n", 
+                        low  = "#d4d5f9",
+                        high = "#00025b") + 
   theme_minimal() + ggtitle("Proportion Any Black")
 ```
 
@@ -767,16 +770,16 @@ kc_nowater <- king_county %>%
 Then we can reproduce the same plot using `kc_nowater`...
 
 ---
-```{r, cache=TRUE, echo=FALSE, fig.height = 6, dev="svg"}
+```{r, eval=TRUE, echo=FALSE, dev="svg", dpi = 300, fig.height = 6}
   ggplot(kc_nowater, 
          aes(fill=`Any Black`)) + 
-  geom_sf(size=0, color="white") + 
+  geom_sf(size = NA) + 
   coord_sf(crs = "+proj=longlat +datum=WGS84", datum=NA) + 
   scale_fill_continuous(name="Any Black\n", 
                         low="#d4d5f9",
                         high="#00025b") + 
   theme_minimal() + ggtitle("Proportion Any Black")
-```						
+```				
 
 ---
 # State Example Data
@@ -814,25 +817,98 @@ pb_state <-
 
 ```{r, eval=FALSE, purl=FALSE}
 pb_state %>% 
-  ggplot(aes(fill=`Any Black`)) + 
-  geom_sf(lwd=0) + 
+  ggplot(aes(fill = `Any Black`)) + 
+  geom_sf(size = NA) + 
   coord_sf(crs = "+proj=longlat +datum=WGS84", datum=NA) + 
-  scale_fill_continuous(name="Any Black\n", 
-                        low="#d4d5f9",
-                        high="#00025b") + 
+  scale_fill_continuous(name = "Any Black\n", 
+                        low  = "#d4d5f9",
+                        high = "#00025b") + 
   theme_minimal()
 ```
 
 ---
 
-```{r, cache=TRUE, echo=FALSE, fig.height = 6, dev="svg"}
+```{r, cache=FALSE, echo=FALSE, fig.height = 6, dev="svg"}
+pb_state %>% 
+  ggplot(aes(fill = `Any Black`)) + 
+  geom_sf(size = NA) + 
+  coord_sf(crs = "+proj=longlat +datum=WGS84", datum=NA) + 
+  scale_fill_continuous(name = "Any Black\n", 
+                        low  = "#d4d5f9",
+                        high = "#00025b") + 
+  theme_minimal()
+```
+
+---
+# Multiple `geom_sf` Layers
+
+As with other `ggplot2` layers, we can add additional `geom_sf()` layers using new data.
+
+This is useful for...
+
+* Adding points
+    + Cities in states
+    + Crimes in police beats
+* Adding lines
+    + Street grids over tracts
+* Adding outlines or highlights
+    + Elevation contours
+    + *Showing urban boundaries*
+
+---
+# Add Urban Outlines
+
+We can use `tigris` to download urban boundaries and add them to our prior map.
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, results='hide'}
+urbans <- tigris::urban_areas(cb = TRUE, class = "sf")
+glimpse(urbans)
+```
+
+.small[
+```{r, echo=FALSE}
+glimpse(urbans)
+```
+]
+
+```{r}
+urban_il <- urbans %>% filter(str_detect(NAME10, "IL"))
+```
+
+
+---
+# With Urban Outlines
+
+```{r, eval=FALSE, purl=FALSE}
 pb_state %>% 
   ggplot(aes(fill=`Any Black`)) + 
-  geom_sf(lwd=0) + 
+  geom_sf(size = NA) + 
+  geom_sf(data = urban_il, color = "black", #<<
+          fill = NA, size = 0.1, inherit.aes=FALSE) + #<<
   coord_sf(crs = "+proj=longlat +datum=WGS84", datum=NA) + 
-  scale_fill_continuous(name="Any Black\n", 
-                        low="#d4d5f9",
-                        high="#00025b") + 
+  scale_fill_continuous(name = "Any Black\n", 
+                        low  = "#d4d5f9",
+                        high = "#00025b") + 
+  theme_minimal()
+```
+
+We add the `urban_il` data as a new layer:
+
+* `fill=NA` removes the polygon fill
+* `size=0.1` and `color="black"` give a thin outline
+
+
+---
+
+```{r, eval=TRUE, echo=FALSE, cache=FALSE, echo=FALSE, fig.height = 6, dev="svg"}
+pb_state %>% 
+  ggplot(aes(fill=`Any Black`)) + 
+  geom_sf(size = NA) + 
+  geom_sf(data = urban_il, color = "black", fill = NA, size = 0.1, inherit.aes=FALSE) +
+  coord_sf(crs = "+proj=longlat +datum=WGS84", datum=NA) + 
+  scale_fill_continuous(name = "Any Black\n", 
+                        low  = "#d4d5f9",
+                        high = "#00025b") + 
   theme_minimal()
 ```
 

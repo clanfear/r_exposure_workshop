@@ -217,3 +217,7 @@ rowSums(a_matrix)
 cumsum(1:7)
 
 pmax(c(0, 2, 4), c(1, 1, 1), c(2, 2, 2))
+
+complete_data_vroom <- vroom::vroom(list.files("./example_data/", full.names=T))
+
+glimpse(complete_data_vroom)

@@ -65,6 +65,20 @@ complete_data <- lapply(file_paths, read_csv) %>%
   bind_rows()
 head(complete_data, 3)
 
+library(vroom)
+complete_data <- vroom(file_paths)
+head(complete_data, 3)
+
+loop_vec <- numeric(5)         # Preallocation!
+for(x in seq_along(loop_vec)){ # Change x to 1,2,3,4,5
+  loop_vec[x] <- x^2           # Write x squared to loop_vec
+}
+loop_vec
+
+# No preallocation, just iterate over 1:5 and assign output!
+apply_vec <- sapply(1:5, function(x){x^2})
+apply_vec
+
 bucket <- function(x, quants = c(0.333, 0.667)) { #<<
     # set low extreme, quantile points, high extreme
     new_breaks <- c(min(x)-1, quantile(x, probs = quants), max(x)+1) #<<
@@ -92,14 +106,14 @@ remove_extremes(school_data$pr_passing_exam, low = 0, high = 1)
 
 library(dplyr)
 school_data %>%
-   mutate_at(vars(-school), ~ remove_extremes(x = ., low = 0, high = 1))
+   mutate(across(-school, ~ remove_extremes(x = ., low = 0, high = 1)))
 
 swiss %>%
   select("Fertility", "Catholic") %>%
   head(2)
 
 swiss %>%
-    summarize_all( ~ mean(., na.rm = TRUE) / sd(., na.rm = TRUE))
+    summarize(across(everything(), ~ mean(., na.rm=TRUE) / sd(., na.rm=TRUE)))
 
 ## lapply(swiss, function(x) mean(x, na.rm = TRUE) / sd(x, na.rm = TRUE))
 
@@ -141,22 +155,22 @@ gapminder_lifeplot <- function(cntry) {
 
 gapminder_lifeplot(cntry = "Turkey")
 
-y_axis_label <- c("lifeExp" = "Life expectancy",
-                  "pop" = "Population (millions)",
+y_axis_label <- c("lifeExp"   = "Life expectancy",
+                  "pop"       = "Population (millions)",
                   "gdpPercap" = "GDP per capita, USD")
-title_text <- c("lifeExp" = "Life expectancy in ",
-                "pop" = "Population of ",
-                "gdpPercap" = "GDP per capita in ")
+title_text   <- c("lifeExp"   = "Life expectancy in ",
+                  "pop"       = "Population of ",
+                  "gdpPercap" = "GDP per capita in ")
 # example use:
 y_axis_label["pop"]
 title_text["pop"]
 
 gapminder_plot <- function(cntry, yvar) {
-    y_axis_label <- c("lifeExp" = "Life expectancy",
-                      "pop" = "Population (millions)",
+    y_axis_label <- c("lifeExp"   = "Life expectancy",
+                      "pop"       = "Population (millions)",
                       "gdpPercap" = "GDP per capita, USD")[yvar] #<<
-    title_text   <- c("lifeExp" = "Life expectancy in ",
-                      "pop" = "Population of ",
+    title_text   <- c("lifeExp"   = "Life expectancy in ",
+                      "pop"       = "Population of ",
                       "gdpPercap" = "GDP per capita in ")[yvar] #<<
     ggplot(gapminder %>% filter(country == cntry) %>% #<<
              mutate(pop = pop / 1000000),
@@ -169,6 +183,14 @@ gapminder_plot <- function(cntry, yvar) {
 
 gapminder_plot(cntry = "Turkey", yvar = "pop")
 
-## debug(gapminder_plot)
+us_ca <- c("Canada", "United States")
+gapminder %>% filter(country %in% us_ca) %>% distinct(country) %>% head(2)
 
-## undebug(gapminder_plot)
+gapminder %>% filter(!country %in% us_ca) %>% distinct(country) %>% head(2)
+
+`%!in%` <- Negate(`%in%`)
+
+gapminder %>% 
+  filter(country %!in% us_ca) %>% # Our new operator! #<<
+  distinct(country) %>% 
+  head(2)

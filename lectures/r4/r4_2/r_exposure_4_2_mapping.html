@@ -4,6 +4,7 @@
     <title>R Exposure 4</title>
     <meta charset="utf-8" />
     <meta name="author" content="Chuck Lanfear" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -13,7 +14,7 @@ class: center, top, title-slide
 # R Exposure 4
 ## Unit 2: Mapping
 ### Chuck Lanfear
-### Apr 19, 2020<br>Updated: Apr 19, 2020
+### Feb 28, 2021<br>Updated: Feb 25, 2021
 
 ---
 
@@ -29,7 +30,7 @@ class: center, top, title-slide
 
 ### Advanced Mapping
 * `sf`: [Simple Features](https://en.wikipedia.org/wiki/Simple_Features) geometry for R
-* `tidycensus` for obtaining Census Bureau data
+* `tidycensus` and `tigris` for obtaining Census Bureau data and shapefiles
 
 ---
 # Mapping in R: A quick plug
@@ -80,8 +81,8 @@ glimpse(spd_raw)
 ## Rows: 706
 ## Columns: 19
 ## $ `CAD CDW ID`                  &lt;dbl&gt; 1701856, 1701857, 1701853, ...
-## $ `CAD Event Number`            &lt;dbl&gt; 16000104006, 16000103970, 1...
-## $ `General Offense Number`      &lt;dbl&gt; 2016104006, 2016103970, 201...
+## $ `CAD Event Number`            &lt;dbl&gt; 1.6e+10, 1.6e+10, 1.6e+10, ...
+## $ `General Offense Number`      &lt;dbl&gt; 2.02e+09, 2.02e+09, 2.02e+0...
 ## $ `Event Clearance Code`        &lt;chr&gt; "063", "064", "161", "245",...
 ## $ `Event Clearance Description` &lt;chr&gt; "THEFT - CAR PROWL", "SHOPL...
 ## $ `Event Clearance SubGroup`    &lt;chr&gt; "CAR PROWL", "THEFT", "TRES...
@@ -90,9 +91,9 @@ glimpse(spd_raw)
 ## $ `Hundred Block Location`      &lt;chr&gt; "S KING ST / 8 AV S", "92XX...
 ## $ `District/Sector`             &lt;chr&gt; "K", "S", "D", "M", "M", "B...
 ## $ `Zone/Beat`                   &lt;chr&gt; "K3", "S3", "D2", "M1", "M3...
-## $ `Census Tract`                &lt;dbl&gt; 9100.102, 11800.602, 7200.1...
-## $ Longitude                     &lt;dbl&gt; -122.3225, -122.2680, -122....
-## $ Latitude                      &lt;dbl&gt; 47.59835, 47.51985, 47.6142...
+## $ `Census Tract`                &lt;dbl&gt; 9100, 11801, 7200, 8002, 81...
+## $ Longitude                     &lt;dbl&gt; -122, -122, -122, -122, -12...
+## $ Latitude                      &lt;dbl&gt; 47.6, 47.5, 47.6, 47.6, 47....
 ## $ `Incident Location`           &lt;chr&gt; "(47.598347, -122.32245)", ...
 ## $ `Initial Type Description`    &lt;chr&gt; "THEFT (DOES NOT INCLUDE SH...
 ## $ `Initial Type Subgroup`       &lt;chr&gt; "OTHER PROPERTY", "SHOPLIFT...
@@ -176,7 +177,6 @@ Note, this may require compilation on your computer.
 ```r
 library(ggmap)
 ```
-
 
 ---
 # Quick Maps with `qmplot()`
@@ -271,20 +271,18 @@ Then make a dataframe of just assaults and robberies:
 
 ```r
 assaults &lt;- downtown %&gt;% 
-  mutate(assault_label = 
-           ifelse(`Event Clearance Group` %in%
-                  c("ASSAULTS", "ROBBERY"), 
-                  `Event Clearance Description`, "")) %&gt;% 
-  filter(assault_label != "")
+  filter(`Event Clearance Group` %in%
+                  c("ASSAULTS", "ROBBERY")) %&gt;%
+  mutate(assault_label = `Event Clearance Description`)
 ```
 
 ---
-# Plotting with Labels
-
 .pull-left[
+# Labels
+
 Now let's plot the events and label them with `geom_label()` (`geom_text()` without background or border):
 
-.small[
+.smallish[
 
 ```r
 qmplot(data = downtown,
@@ -295,7 +293,7 @@ qmplot(data = downtown,
 *      alpha = I(0.5)) +
   geom_label(data = assaults,
        aes(label = assault_label),
-       size=2.5)
+       size=2)
 ```
 ]
 
@@ -329,7 +327,7 @@ qmplot(data =
     fill = "black", 
     color = "white", 
     segment.color = "black",
-    size=2.5)
+    size=2)
 ```
 ]
 ]
@@ -420,21 +418,24 @@ The most commonly used is [**WGS84**](https://en.wikipedia.org/wiki/World_Geodet
 
 --
 
-There are two common ways to define a CRS:
+There are two common ways to define a CRS in `sf`:
 
 * [**EPSG codes**](http://spatialreference.org/ref/epsg/) (`epsg` in R)
-   * Numeric codes which *refer to a predefined projection*
-   * Ex: WGS84 is `4326`
+
+   * Numeric codes which *refer to a predefined CRS*
+   * Example: WGS84 is `4326`
 
 --
 
 * [**PROJ.4 strings**](https://proj4.org/usage/quickstart.html) (`proj4string` in R)
-   * Text strings which *define a projection*
-   * WGS84 looks like this:
+
+   * Text strings of parameters that *define a CRS*
+   * Example: NAD83(NSRS2007) / Washington North
 
 ```
-+init=epsg:4326 +proj=longlat +ellps=WGS84
-+datum=WGS84 +no_defs +towgs84=0,0,0
++proj=lcc +lat_1=48.73333333333333 +lat_2=47.5 +lat_0=47 
++lon_0=-120.8333333333333 +x_0=500000 +y_0=0 +ellps=GRS80 
++towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
 ```
 
 ---
@@ -469,11 +470,13 @@ class: inverse
 
 * `geom_sf()`: `ggplot()` layer for `sf` objects.
 
+* `st_as_sf()`: Convert a data frame into an `sf` object.
+
 * `st_join()`: Join data by spatial relationship.
 
 * `st_transform()`: Convert between CRS.
 
-* `st_set_geometry(., NULL)`: Remove geometry from a `sf` data frame. 
+* `st_drop_geometry()`: Remove geometry from a `sf` data frame. 
 
 * `st_relate()`: Compute relationships between geometries (like neighbor matrices).
 
@@ -549,9 +552,9 @@ glimpse(precincts_votes_sf)
 ## Columns: 5
 ## Groups: Precinct [960]
 ## $ Precinct &lt;chr&gt; "SEA 11-1256", "SEA 11-1550", "SEA 11-1552", "SE...
-## $ P_Dem    &lt;dbl&gt; 0.7707510, 0.8168421, 0.7507987, 0.8376328, 0.83...
-## $ P_Rep    &lt;dbl&gt; 0.15612648, 0.07789474, 0.13418530, 0.08649469, ...
-## $ Turnout  &lt;dbl&gt; 0.6931507, 0.7274119, 0.7347418, 0.7522831, 0.75...
+## $ P_Dem    &lt;dbl&gt; 0.771, 0.817, 0.751, 0.838, 0.833, 0.815, 0.828,...
+## $ P_Rep    &lt;dbl&gt; 0.1561, 0.0779, 0.1342, 0.0865, 0.0859, 0.0803, ...
+## $ Turnout  &lt;dbl&gt; 0.693, 0.727, 0.735, 0.752, 0.758, 0.771, 0.687,...
 ## $ geometry &lt;MULTIPOLYGON [US_survey_foot]&gt; MULTIPOLYGON (((127369...
 ```
 ]
@@ -572,22 +575,24 @@ We can plot `sf` geometry using `geom_sf()`.
 ```r
 ggplot(precincts_votes_sf, 
 *      aes(fill=P_Dem)) +
-* geom_sf(color="white",
-          size=0.1) +
+  geom_sf(size=NA) +
   theme_void() +
   theme(legend.position = 
           "bottom")
 ```
 
 * `fill=P_Dem` maps color inside precincts to `P_Dem`.
-* `color="white"` sets boundaries to white.
+* `size=NA` removes precinct outlines.
 * `theme_void()` removes axes and background.
 
 ]
 
 .pull-right[
-![](r_exposure_4_2_mapping_files/figure-html/unnamed-chunk-16-1.svg)&lt;!-- --&gt;
+.image-100[
+&lt;img src="r_exposure_4_2_mapping_files/figure-html/unnamed-chunk-16-1.png" width="360" /&gt;
 ]
+]
+
 
 ---
 class: inverse
@@ -691,7 +696,7 @@ glimpse(king_county)
 ## $ B02001_001M &lt;dbl&gt; 457, 299, 365, 322, 275, 417, 602, 580, 311, ...
 ## $ B02009_001E &lt;dbl&gt; 375, 633, 294, 128, 26, 80, 53, 2117, 456, 62...
 ## $ B02009_001M &lt;dbl&gt; 246, 356, 260, 127, 37, 108, 65, 602, 287, 40...
-## $ geometry    &lt;MULTIPOLYGON [°]&gt; MULTIPOLYGON (((-122.1532 4..., ...
+## $ geometry    &lt;MULTIPOLYGON [°]&gt; MULTIPOLYGON (((-122 47.7, ..., ...
 ```
 ]
 
@@ -718,8 +723,8 @@ glimpse(king_county)
 ## $ GEOID              &lt;chr&gt; "53033032309", "53033031704", "5303303...
 ## $ NAME               &lt;chr&gt; "Census Tract 323.09, King County, Was...
 ## $ `Total Population` &lt;dbl&gt; 8249, 5728, 6551, 5941, 6365, 5292, 61...
-## $ `Any Black`        &lt;dbl&gt; 0.045460056, 0.110509777, 0.044878644,...
-## $ geometry           &lt;MULTIPOLYGON [°]&gt; MULTIPOLYGON (((-122.1532...
+## $ `Any Black`        &lt;dbl&gt; 0.04546, 0.11051, 0.04488, 0.02155, 0....
+## $ geometry           &lt;MULTIPOLYGON [°]&gt; MULTIPOLYGON (((-122 47.7...
 ```
 
 ---
@@ -728,18 +733,19 @@ glimpse(king_county)
 
 ```r
 king_county %&gt;% 
-  ggplot(aes(fill=`Any Black`)) + 
-  geom_sf(size=0.1, color="white") + 
+  ggplot(aes(fill = `Any Black`)) + 
+  geom_sf(size = NA) + 
   coord_sf(crs = "+proj=longlat +datum=WGS84", datum=NA) + 
-  scale_fill_continuous(name="Any Black\n", 
-                        low="#d4d5f9",
-                        high="#00025b") + 
+  scale_fill_continuous(name = "Any Black\n", 
+                        low  = "#d4d5f9",
+                        high = "#00025b") + 
   theme_minimal() + ggtitle("Proportion Any Black")
 ```
 
 New functions:
 
 * `geom_sf()` draws Simple Features coordinate data.
+   * `size = NA` removes outlines
 * `coord_sf()` is used here with these arguments:
    * `crs`: Modifies the coordinate reference system (CRS); WGS84 is possibly the most commonly used CRS.
    * `datum=NA`: Removes graticule lines, which are geographical lines such as meridians and parallels.
@@ -802,18 +808,95 @@ pb_state &lt;-
 
 ```r
 pb_state %&gt;% 
-  ggplot(aes(fill=`Any Black`)) + 
-  geom_sf(lwd=0) + 
+  ggplot(aes(fill = `Any Black`)) + 
+  geom_sf(size = NA) + 
   coord_sf(crs = "+proj=longlat +datum=WGS84", datum=NA) + 
-  scale_fill_continuous(name="Any Black\n", 
-                        low="#d4d5f9",
-                        high="#00025b") + 
+  scale_fill_continuous(name = "Any Black\n", 
+                        low  = "#d4d5f9",
+                        high = "#00025b") + 
   theme_minimal()
 ```
 
 ---
 
 ![](r_exposure_4_2_mapping_files/figure-html/unnamed-chunk-31-1.svg)&lt;!-- --&gt;
+
+---
+# Multiple `geom_sf` Layers
+
+As with other `ggplot2` layers, we can add additional `geom_sf()` layers using new data.
+
+This is useful for...
+
+* Adding points
+    + Cities in states
+    + Crimes in police beats
+* Adding lines
+    + Street grids over tracts
+* Adding outlines or highlights
+    + Elevation contours
+    + *Showing urban boundaries*
+
+---
+# Add Urban Outlines
+
+We can use `tigris` to download urban boundaries and add them to our prior map.
+
+
+```r
+urbans &lt;- tigris::urban_areas(cb = TRUE, class = "sf")
+glimpse(urbans)
+```
+
+.small[
+
+```
+## Rows: 3,601
+## Columns: 9
+## $ UACE10     &lt;chr&gt; "18856", "83116", "79363", "96670", "97750", "...
+## $ AFFGEOID10 &lt;chr&gt; "400C100US18856", "400C100US83116", "400C100US...
+## $ GEOID10    &lt;chr&gt; "18856", "83116", "79363", "96670", "97750", "...
+## $ NAME10     &lt;chr&gt; "Colorado Springs, CO", "South Bend, IN--MI", ...
+## $ LSAD10     &lt;chr&gt; "75", "75", "75", "75", "75", "76", "75", "75"...
+## $ UATYP10    &lt;chr&gt; "U", "U", "U", "U", "U", "C", "U", "U", "U", "...
+## $ ALAND10    &lt;dbl&gt; 4.87e+08, 4.17e+08, 1.38e+08, 8.36e+08, 3.42e+...
+## $ AWATER10   &lt;dbl&gt; 962957, 8281569, 141396, 6442279, 1377397, 151...
+## $ geometry   &lt;MULTIPOLYGON [°]&gt; MULTIPOLYGON (((-105 39, -1..., M...
+```
+]
+
+
+```r
+urban_il &lt;- urbans %&gt;% filter(str_detect(NAME10, "IL"))
+```
+
+
+---
+# With Urban Outlines
+
+
+```r
+pb_state %&gt;% 
+  ggplot(aes(fill=`Any Black`)) + 
+  geom_sf(size = NA) + 
+* geom_sf(data = urban_il, color = "black",
+*         fill = NA, size = 0.1, inherit.aes=FALSE) +
+  coord_sf(crs = "+proj=longlat +datum=WGS84", datum=NA) + 
+  scale_fill_continuous(name = "Any Black\n", 
+                        low  = "#d4d5f9",
+                        high = "#00025b") + 
+  theme_minimal()
+```
+
+We add the `urban_il` data as a new layer:
+
+* `fill=NA` removes the polygon fill
+* `size=0.1` and `color="black"` give a thin outline
+
+
+---
+
+![](r_exposure_4_2_mapping_files/figure-html/unnamed-chunk-36-1.svg)&lt;!-- --&gt;
 
 ---
 class: inverse

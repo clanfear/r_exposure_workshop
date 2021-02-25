@@ -4,6 +4,7 @@
     <title>R Exposure 3</title>
     <meta charset="utf-8" />
     <meta name="author" content="Chuck Lanfear" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -13,7 +14,7 @@ class: center, top, title-slide
 # R Exposure 3
 ## Unit 2: Vectorization and Functions
 ### Chuck Lanfear
-### Apr 19, 2020<br>Updated: Apr 18, 2020
+### Feb 27, 2021<br>Updated: Feb 25, 2021
 
 ---
 
@@ -78,7 +79,7 @@ Loops are very powerful and applicable in almost any situation.
 
 --
 
-They are also slow and require writing more code than vectorized commands.
+They are also often slower and require writing more code than vectorized commands.
 
 --
 
@@ -120,13 +121,14 @@ class: inverse
 ---
 # Why Write Your Own Functions?
 
-Functions can encapsulate repeated actions such as:
+Functions can encapsulate actions you might perform often, such as:
 
 --
 
 * Given a vector, compute some special summary stats
 * Given a vector and definition of "invalid" values, replace with `NA`
 * Templates for favorite `ggplot`s used in reports
+* Defining a new logical operator
 
 --
 
@@ -257,7 +259,7 @@ smarter_first_and_last
 ##         return(c("first" = first, "last" = last))        
 ##     }
 ## }
-## &lt;environment: 0x0000021dcfd64910&gt;
+## &lt;environment: 0x000001d1f359a5c0&gt;
 ```
 
 You can also put your cursor over a function in your syntax and hit `F2`.
@@ -284,7 +286,6 @@ NAME &lt;- function(ARGUMENT1, ARGUMENT2=DEFAULT){
     + `x`, `na.rm` values won't exist in R outside of the function
 --
 * **Body**: The actual operations inside the function.
-
 --
 * **Return Value**: The output inside `return()`. Could be a vector, list, data frame, another function, or even nothing
     + If unspecified, will be the last thing calculated (maybe not what you want?)
@@ -311,15 +312,35 @@ quantile_report(rnorm(10000))
 
 ```
 ##  Bottom 1%  Bottom 5% Bottom 10% Bottom 25%     Median    Top 25% 
-##   -2.33024   -1.65438   -1.28137   -0.67938   -0.00764    0.66105 
+##  -2.317475  -1.641327  -1.283939  -0.680520   0.000785   0.671191 
 ##    Top 10%     Top 5%     Top 1% 
-##    1.26276    1.63364    2.37578
+##   1.253448   1.620745   2.282228
 ```
 ]
 
 ---
 class: inverse
 # An Aside on Apply functions
+
+---
+### Don't Loop, `apply()` Yourself Instead
+
+Writing loops is challenging, particularly for new coders.
+
+Loops also require writing a lot of code and are hard to troubleshoot.
+
+--
+
+But loops aren't the only way to iterate in R.
+
+--
+
+Like a loop, `apply` functions iterate over elements of objects, except:
+
+* They don't need preallocation--you can directly assign the output.
+* They *must use a function*
+
+*Nearly anything you can do with an explicit loop can be done more easily with the `apply` family of functions*
 
 ---
 # `lapply()`: List + Functions
@@ -357,7 +378,7 @@ lapply(swiss, FUN = quantile_report)
 ---
 ## `sapply()`: Simplified `lapply()` 
 
-A downside to `lapply()` is that lists are complicated. `sapply()` **s**implifies output by into a matrix or vector:
+A downside to `lapply()` is that lists are hard to work with. `sapply()` **s**implifies the output by making each element a column in a matrix... usually:
 
 .small[
 
@@ -455,9 +476,9 @@ head(complete_data, 3)
 ]
 
 ---
-# Vectorized Data Loading
+# Data Loading with `lapply()`
 
-Another way to load these files would be to... `lapply()` over the file names then bind the rows together. Faster and easier!&lt;sup&gt;1&lt;/sup&gt;
+Another way to load these files would be to... `lapply()` over the file names then bind the rows together. Faster and easier!
 
 
 ```r
@@ -475,14 +496,78 @@ head(complete_data, 3)
 ## 3    50 -0.122 0.711
 ```
 
-Most loops can be replaced by a simpler `*apply()` call.
-* No pre-allocation
-* *Usually* much faster
+---
+# Data Loading with `vroom`
 
-.footnote[[1] *Even faster and easier* would be to use `vroom::vroom()` on the directory.]
+The fastest and easiest way is to use a fully vectorized data loading function, like `vroom::vroom()`!
+
+
+```r
+library(vroom)
+complete_data &lt;- vroom(file_paths)
+head(complete_data, 3)
+```
+
+```
+## # A tibble: 3 x 3
+##      id      x     z
+##   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1    44  0.516 0.381
+## 2    49  2.17  0.346
+## 3    50 -0.122 0.711
+```
+
+Just give `vroom()` a vector of file locations and it determines their delimiter, loads them all (crazy fast), and binds them into one dataframe.
+
+---
+## From Loop to `apply()`
+
+Converting code in a loop to an `apply` function is straightforward:
+
+1. What you iterate over in the loop (e.g. `seq_along(x)`) becomes the first input.
+
+2. The body of the loop becomes a function.
+
+   * This function should take only the iterator index (e.g. `i`) as an input.
+   
+3. Assign the output to what your loop stored values in.
+
+---
+# Loop vs. Apply
+
+
+```r
+loop_vec &lt;- numeric(5)         # Preallocation!
+for(x in seq_along(loop_vec)){ # Change x to 1,2,3,4,5
+  loop_vec[x] &lt;- x^2           # Write x squared to loop_vec
+}
+loop_vec
+```
+
+```
+## [1]  1  4  9 16 25
+```
+
+`seq_along(loop_vec)` is just `1:5`, but we need the empty `loop_vec` to store results.
+
+--
+
+
+```r
+# No preallocation, just iterate over 1:5 and assign output!
+apply_vec &lt;- sapply(1:5, function(x){x^2})
+apply_vec
+```
+
+```
+## [1]  1  4  9 16 25
+```
+
+For apply functions, we don't need to prellocate, so we just `sapply()` over `1:5` directly.
+
 ---
 class: inverse
-# Back to Making functions!
+# Back to making and using functions!
 
 ---
 # Example: Discretizing Continuous Data
@@ -529,6 +614,7 @@ By default this will produce *three buckets*:
 To capture all high/low values, we start with `min(x)-1` and end with `max(x)+1`.
 ]
 ]
+
 ---
 # Trying Out `bucket()`
 
@@ -542,7 +628,7 @@ plot(x = bucketed_dat, y = dat, main = "Buckets and values", pch = 16)
 abline(h = quantile(dat, dat_quants), lty = "dashed", col = "red")
 ```
 
-![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-18-1.svg)&lt;!-- --&gt;
+![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-21-1.svg)&lt;!-- --&gt;
 ]
 
 ---
@@ -601,16 +687,16 @@ remove_extremes(school_data$pr_passing_exam, low = 0, high = 1)
 ```
 
 ---
-# `dplyr::mutate_at()`
+# `dplyr::across()`
 
-`dplyr` function `mutate_at()` applies functions to multiple variables at once. We can use this to update every variable (besides `school`) in `school_data`:
+The `dplyr` function `across()` allows us to a function to every variable (besides `school`) to update the columns in `school_data`:
 
 .smallish[
 
 ```r
 library(dplyr)
 school_data %&gt;%
-   mutate_at(vars(-school), ~ remove_extremes(x = ., low = 0, high = 1))
+   mutate(across(-school, ~ remove_extremes(x = ., low = 0, high = 1)))
 ```
 
 ```
@@ -627,6 +713,7 @@ school_data %&gt;%
 ## 10      j              NA            NA
 ```
 ]
+
 
 ---
 # (Non-)Standard  Evaluation
@@ -649,16 +736,15 @@ swiss %&gt;%
 ```
 
 ---
-# Anonymous `dplyr` Functions
+# Anonymous Functions in `dplyr`
 
-You can skip naming your function in `dplyr` if you won't use it again. 
+You can skip naming your function in `dplyr` if you won't use it again. Code below will return the mean divided by the standard deviation for each variable in `swiss`:
 
-For example, this returns the mean divided by the standard deviation for each variable in `swiss`:
-
+.smallish[
 
 ```r
 swiss %&gt;%
-    summarize_all( ~ mean(., na.rm = TRUE) / sd(., na.rm = TRUE))
+    summarize(across(everything(), ~ mean(., na.rm=TRUE) / sd(., na.rm=TRUE)))
 ```
 
 ```
@@ -667,6 +753,7 @@ swiss %&gt;%
 ##   Infant.Mortality
 ## 1             6.85
 ```
+]
 
 ---
 # Anonymous `lapply()`
@@ -703,8 +790,15 @@ lapply(swiss, function(x) mean(x, na.rm = TRUE) / sd(x, na.rm = TRUE))
 [1] Note that `lapply()` produces a list as output. You could instead use `sapply()` to get a vector.
 ]
 ]
+
 ---
-# Example: `ggplot2` Templates
+class: inverse
+# Extended Example:
+
+## `ggplot2` Templates
+
+---
+# Flexible `ggplot2`
 
 Let's say you have a particular way you like your charts:
 
@@ -730,12 +824,12 @@ ggplot(gapminder %&gt;% filter(country == "Afghanistan"),
 ---
 # Example of Desired Chart
 
-![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-27-1.svg)&lt;!-- --&gt;
+![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-30-1.svg)&lt;!-- --&gt;
 
 ---
 # Another Example
 
-![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-28-1.svg)&lt;!-- --&gt;
+![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-31-1.svg)&lt;!-- --&gt;
 
 ---
 # Making Country Flexible
@@ -767,7 +861,7 @@ What `cntry` does:
 gapminder_lifeplot(cntry = "Turkey")
 ```
 
-![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-30-1.svg)&lt;!-- --&gt;
+![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-33-1.svg)&lt;!-- --&gt;
 
 ---
 # Making `y` Value Flexible
@@ -777,12 +871,12 @@ Now let's allow the user to say which variable they want on the y-axis. How we c
 .smallish[
 
 ```r
-y_axis_label &lt;- c("lifeExp" = "Life expectancy",
-                  "pop" = "Population (millions)",
+y_axis_label &lt;- c("lifeExp"   = "Life expectancy",
+                  "pop"       = "Population (millions)",
                   "gdpPercap" = "GDP per capita, USD")
-title_text &lt;- c("lifeExp" = "Life expectancy in ",
-                "pop" = "Population of ",
-                "gdpPercap" = "GDP per capita in ")
+title_text   &lt;- c("lifeExp"   = "Life expectancy in ",
+                  "pop"       = "Population of ",
+                  "gdpPercap" = "GDP per capita in ")
 # example use:
 y_axis_label["pop"]
 ```
@@ -809,11 +903,11 @@ title_text["pop"]
 
 ```r
 gapminder_plot &lt;- function(cntry, yvar) {
-    y_axis_label &lt;- c("lifeExp" = "Life expectancy",
-                      "pop" = "Population (millions)",
+    y_axis_label &lt;- c("lifeExp"   = "Life expectancy",
+                      "pop"       = "Population (millions)",
 *                     "gdpPercap" = "GDP per capita, USD")[yvar]
-    title_text   &lt;- c("lifeExp" = "Life expectancy in ",
-                      "pop" = "Population of ",
+    title_text   &lt;- c("lifeExp"   = "Life expectancy in ",
+                      "pop"       = "Population of ",
 *                     "gdpPercap" = "GDP per capita in ")[yvar]
 *   ggplot(gapminder %&gt;% filter(country == cntry) %&gt;%
              mutate(pop = pop / 1000000),
@@ -833,24 +927,83 @@ gapminder_plot &lt;- function(cntry, yvar) {
 gapminder_plot(cntry = "Turkey", yvar = "pop")
 ```
 
-![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-33-1.svg)&lt;!-- --&gt;
+![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-36-1.svg)&lt;!-- --&gt;
 
 ---
-# Debugging
+class: inverse
+# Making an Operator
 
-Something not working as hoped? Try using `debug()` on a function, which will show you the world as perceived from inside the function:
+---
+# Opposite of `%in%`
+
+`%in%` returns `TRUE` where elements on its left equal any element on the right.
+
+.smallish[
+
+```r
+us_ca &lt;- c("Canada", "United States")
+gapminder %&gt;% filter(country %in% us_ca) %&gt;% distinct(country) %&gt;% head(2)
+```
+
+```
+## # A tibble: 2 x 1
+##   country      
+##   &lt;fct&gt;        
+## 1 Canada       
+## 2 United States
+```
+]
+
+We can invert this to get the opposite, but it looks a bit awkward:
+
+.smallish[
+
+```r
+gapminder %&gt;% filter(!country %in% us_ca) %&gt;% distinct(country) %&gt;% head(2)
+```
+
+```
+## # A tibble: 2 x 1
+##   country    
+##   &lt;fct&gt;      
+## 1 Afghanistan
+## 2 Albania
+```
+]
+
+---
+# `%!in%`
+
+We can *invert* or **negate**&lt;sup&gt;1&lt;/sup&gt; `%in%` to get a "not in" operator:
 
 
 ```r
-debug(gapminder_plot)
+`%!in%` &lt;- Negate(`%in%`)
 ```
 
-Then when you've fixed your problem, use `undebug()` so that you won't go into debug mode every time you run it:
+To make a new operator, you need to put it in backticks.
 
 
 ```r
-undebug(gapminder_plot)
+gapminder %&gt;% 
+* filter(country %!in% us_ca) %&gt;% # Our new operator!
+  distinct(country) %&gt;% 
+  head(2)
 ```
+
+```
+## # A tibble: 2 x 1
+##   country    
+##   &lt;fct&gt;      
+## 1 Afghanistan
+## 2 Albania
+```
+
+.footnote[[1] `Negate()` produces logical negations of *functions*, inverting their output.&lt;br&gt; e.g.: `isnt.numeric &lt;- Negate(is.numeric)` ]
+
+---
+class: inverse
+# Wrapping Up
 
 ---
 # Overview: The Process

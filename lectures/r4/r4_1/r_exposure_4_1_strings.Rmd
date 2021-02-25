@@ -2,7 +2,7 @@
 title: "R Exposure 4"
 subtitle: "Unit 1: Strings"
 author: "Chuck Lanfear"
-date: "Apr 19, 2020<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Feb 28, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -134,6 +134,8 @@ paste(1:5, "Z", sep = "*", collapse = " ~ ")
 class: inverse
 # `stringr`
 
+.img-full[![](img/stringer.jpg)]
+
 ---
 # `stringr`
 
@@ -187,7 +189,7 @@ str_length("weasels")
 ```{r make_seattle_uppercase}
 head(unique(restaurants$City))
 restaurants <- restaurants %>%
-    mutate_at(vars(Name, Address, City), ~str_to_upper(.))
+    mutate(across(c(Name, Address, City), ~str_to_upper(.)))
 head(unique(restaurants$City))
 ```
 
@@ -205,12 +207,12 @@ head(unique(restaurants$Name), 4)
 Any character column is potentially affected. We can use the `str_trim()` function in `stringr` to clean them up all at once:
 
 ```{r clean_whitespace}
-# use mutate_if to trim all the character columns
-restaurants <- restaurants %>% mutate_if(is.character, str_trim) #<<
+restaurants <- restaurants %>% 
+  mutate(across(where(is.character), ~str_trim(.))) #<<
 head(unique(restaurants$Name), 4)
 ```
 
-.footnote[`mutate_if(x, y)` applies function `y` to every column for which `x` is `TRUE`.]
+.footnote[`across(where(x), ~ y)` applies function `y` to every column for which function `x` returns `TRUE`.]
 
 ---
 class: inverse
@@ -293,20 +295,27 @@ Just be careful to not load an entire long vector / variable or it may crash RSt
 as it tries to render a massive page!
 
 ---
-# How Many Rows Have Non-206 Numbers?
+# `str_detect()`
+
+Perhaps we want to know how many phone numbers aren't in the 206 area code?
 
 ```{r look_for_206_rest}
 restaurants %>% 
   mutate(has_206_number = 
            str_detect(Phone, area_code_206_pattern)) %>% 
-  group_by(has_206_number) %>% tally()
+  count(has_206_number) 
 ```
 
+`str_detect()` returns `NA` for rows with missing (`NA`) phone numbers--you can't search for text in a missing value.
+
 ---
-# Extracting Patterns with `str_extract()`
+# `str_extract()`
+
+`str_extract()` extracts substrings that match a regex.
 
 Let's extract the [directional part of Seattle](https://en.wikipedia.org/wiki/Street_layout_of_Seattle#Directionals) of addresses: N, NW, SE, none, etc.
 
+--
 
 ```{r test_direction}
 direction_pattern <- " (N|NW|NE|S|SW|SE|W|E)( |$)"
@@ -326,9 +335,14 @@ str_extract(direction_examples, direction_pattern)
 restaurants %>% 
   distinct(Address) %>% 
   mutate(city_region = 
-          str_trim(str_extract(Address, direction_pattern))) %>% 
+          str_trim(str_extract(Address, direction_pattern))) %>% #<<
   count(city_region) %>% arrange(desc(n))
 ```
+.pull-right[
+.footnote[
+A common operation is to `str_extract()` something with extra spaces and then `str_trim()` them out.
+]
+]
 
 ---
 # `str_replace()`: Replacing
@@ -336,14 +350,21 @@ restaurants %>%
 Maybe we want to do a street-level analysis of inspections (e.g. compare The Ave to Pike Street). How can we remove building numbers?
 
 ```{r test_address_numbers}
-address_number_pattern <- "^[0-9]*-?[A-Z]? (1/2 )?"
-address_number_test_examples <- 
+number_pattern <- "^[0-9]*-?[A-Z]? (1/2 )?"
+number_examples <- 
   c("2812 THORNDYKE AVE W", "1ST AVE", "10A 1ST AVE", 
     "10-A 1ST AVE", "5201-B UNIVERSITY WAY NE",
     "7040 1/2 15TH AVE NW")
-str_replace(address_number_test_examples, 
-            address_number_pattern, replacement = "")
+str_replace(number_examples, number_pattern, replacement = "")
 ```
+--
+
+We can also use the shortcut `str_remove()`:
+
+```{r}
+str_remove(number_examples, number_pattern)
+```
+
 
 ---
 # How Does the Building Number regex Work?
@@ -377,9 +398,8 @@ Let's break down `"^[0-9]*-?[A-Z]? (1/2 )?"`:
 
 ```{r replace_numbers}
 restaurants <- restaurants %>% 
-  mutate(street_only = str_replace(Address, address_number_pattern,
-                                   replacement = ""))
-restaurants %>% distinct(street_only) %>% head(11)
+  mutate(street_only = str_remove(Address, number_pattern))
+restaurants %>% distinct(street_only) %>% head(10)
 ```
 
 ---
@@ -388,18 +408,17 @@ restaurants %>% distinct(street_only) %>% head(11)
 Getting rid of unit/suite references is tricky, but a decent attempt would be to drop anything including and after "#", "STE", "SUITE", "SHOP", "UNIT":
 
 ```{r test_unit_numbers}
-address_unit_pattern <- " (#|STE|SUITE|SHOP|UNIT).*$"
-address_unit_test_examples <-
+unit_pattern <- " (#|STE|SUITE|SHOP|UNIT).*$"
+unit_examples <-
   c("1ST AVE", "RAINIER AVE S #A", "FAUNTLEROY WAY SW STE 108", 
     "4TH AVE #100C", "NW 54TH ST")
-str_replace(address_unit_test_examples, address_unit_pattern,
-            replacement = "")
+str_remove(unit_examples, unit_pattern)
 ```
 
 ---
 # How'd the Unit regex Work?
 
-Breaking down `" (|#|STE|SUITE|SHOP|UNIT).*$"`:
+Breaking down `" (#|STE|SUITE|SHOP|UNIT).*$"`:
 
 * First we match a space
 
@@ -416,35 +435,24 @@ Breaking down `" (|#|STE|SUITE|SHOP|UNIT).*$"`:
 
 ```{r replace_units}
 restaurants <- restaurants %>% 
-  mutate(street_only = str_trim(str_replace(street_only, 
-                       address_unit_pattern, replacement = "")))
+  mutate(street_only = 
+           str_trim(str_remove(street_only, unit_pattern)))
 restaurants %>% distinct(street_only) %>% head(11)
 ```
 
 ---
 # Where Does Danger Lurk?
 
-Let's get one row per restaurant per date with the score, and see which streets the ones above 45 are on:
+Let's get the number of 45+ point inspections occurring on every street.
 
 ```{r failed_inspections}
 restaurants %>% 
-  distinct(Business_ID, Date, Inspection_Score, street_only) %>% 
   filter(Inspection_Score > 45) %>% 
+  distinct(Business_ID, Date, Inspection_Score, street_only) %>% 
   count(street_only) %>%
   arrange(desc(n)) %>% 
   head(n=5)
 ```
-
----
-# Splitting up Strings
-
-You can split up strings using `tidyr::separate()`, seen in Week 5. Another option is `str_split()`, which will split strings based on a pattern separating parts and put these components in a list. `str_split_fixed()` will do that but with a matrix instead (and thus can't have varying numbers of separators):
-
-.small[
-```{r str_split_violation}
-head(str_split_fixed(restaurants$Violation_Description, " - ", n = 2))
-```
-]
 
 ---
 # Other Useful `stringr` Functions

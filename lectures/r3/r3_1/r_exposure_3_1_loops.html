@@ -4,6 +4,7 @@
     <title>R Exposure 3</title>
     <meta charset="utf-8" />
     <meta name="author" content="Chuck Lanfear" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -13,7 +14,7 @@ class: center, top, title-slide
 # R Exposure 3
 ## Unit 1: Loops
 ### Chuck Lanfear
-### Apr 19, 2020<br>Updated: Apr 18, 2020
+### Feb 27, 2021<br>Updated: Feb 25, 2021
 
 ---
 
@@ -642,6 +643,19 @@ Which looks best to you?
 A model that fits well will have *low mean squared error*. Models that are either too simple or too complicated will tend to make bad predictions and thus high mean squared error.
 
 ---
+
+.image-full[
+![](img/cv1.svg)
+]
+
+---
+
+.image-full[
+![](img/cv2.svg)
+]
+
+
+---
 # Pre-Allocating for CV
 
 Let's split the data into `\(K=10\)` folds. We'll make a new data frame to hold the data and sampled fold numbers that we will add predictions to later.
@@ -910,7 +924,7 @@ num_flips # follows negative binomial distribution
 ```
 
 ```
-## [1] 5
+## [1] 4
 ```
 
 ---
@@ -941,7 +955,7 @@ for(position in 1:length(my_vector)) {
 
 ```
 ##    user  system elapsed 
-##   92.63    0.27   93.34
+##   93.36    0.16   94.20
 ```
 
 ---
@@ -958,7 +972,7 @@ new_vector &lt;- my_vector + 1
 
 ```
 ##    user  system elapsed 
-##    0.14    0.04    0.18
+##    0.11    0.05    0.17
 ```
 
 ```r
@@ -967,10 +981,10 @@ for_time / vec_time
 
 ```
 ##    user  system elapsed 
-##  661.64    6.75  518.56
+##   848.7     3.2   554.1
 ```
 
-The vectorized method was 662 times as fast! Vector/matrix arithmetic is implemented using fast, optimized functions that a `for()` loop can't compete with.
+The vectorized method was 849 times as fast! Vector/matrix arithmetic is implemented using fast, optimized functions that a `for()` loop can't compete with.
 
 ---
 # Vectorization Examples
@@ -1019,6 +1033,45 @@ pmax(c(0, 2, 4), c(1, 1, 1), c(2, 2, 2))
 ```
 ## [1] 2 2 4
 ```
+
+---
+# Vectorized File Loading
+
+`vroom` is a package with vectorized loading of delimited files like `.csv` files.
+
+.smallish[
+
+```r
+complete_data_vroom &lt;- vroom::vroom(list.files("./example_data/", full.names=T))
+```
+
+```
+## Rows: 10,000
+## Columns: 3
+## Delimiter: ","
+## dbl [3]: id, x, z
+## 
+## Use `spec()` to retrieve the guessed column specification
+## Pass a specification to the `col_types` argument to quiet this message
+```
+]
+
+.smallish[
+
+```r
+glimpse(complete_data_vroom)
+```
+
+```
+## Rows: 10,000
+## Columns: 3
+## $ id &lt;dbl&gt; 44, 49, 50, 60, 62, 76, 81, 91, 113, 114, 116, 156, 15...
+## $ x  &lt;dbl&gt; 0.5156, 2.1673, -0.1216, 1.0551, 0.6660, -0.0213, 1.98...
+## $ z  &lt;dbl&gt; 0.3808, 0.3460, 0.7115, 0.4344, 0.6379, 0.6739, 0.9808...
+```
+]
+
+This replaced our entire data loading loop with one line!
 
 ---
 class: inverse
