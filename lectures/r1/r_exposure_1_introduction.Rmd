@@ -2,7 +2,7 @@
 title: "R Exposure 1"
 subtitle: "RStudio and Basic R"  
 author: "Charles Lanfear"
-date: "Jan 30, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Oct 17, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -339,7 +339,7 @@ getwd()
 Similarly, we can set a working directory like so:
 
 ```{r, eval=FALSE}
-setwd("C:/Users/cclan/Documents")
+setwd("C:/Users/")
 ```
 
 ---
@@ -695,6 +695,24 @@ lm_pop_year <- gapminder %>%
 No matter how long the chain of functions is, assignment is always done at the top.<sup>1</sup>
 
 .footnote[[1] Note this is just a stylistic convention: If you prefer, you *can* do assignment at the end of the chain.]
+
+---
+# The Base R Pipe
+
+In R version 4.1.0, a base R pipe was introduced: `|>`
+
+```{r}
+gapminder |>
+  head(3)
+```
+
+It works just like `%>%` but is sometimes faster.
+
+It cannot, however, pipe anywhere but the first argument:
+
+```{r, error = TRUE}
+gapminder |> lm(gdpPercap ~ pop, data = .)
+```
 
 ---
 

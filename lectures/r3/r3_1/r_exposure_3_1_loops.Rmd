@@ -22,6 +22,11 @@ library(ggplot2)
 library(dplyr)
 ```
 
+```{r, eval=FALSE, purl=TRUE}
+library(ggplot2)
+library(dplyr)
+```
+
 # Overview of the Day
 
 * Part 3, Unit 1

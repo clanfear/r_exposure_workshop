@@ -39,6 +39,7 @@ i # in R, this will exist outside of the loop!
 for(a in seq_along(some_letters)) {
     print(paste0("Letter ", a, ": ", some_letters[a]))
 }
+paste0("Letter ", 1, ": ", some_letters[1])
 a # The object `a` contains the number of the last iteration
 
 iters <- 10 # Set number of interations
@@ -77,9 +78,12 @@ fitted_lms        <- vector("list", length(models)) # initialize list
 names(fitted_lms) <- names(models) # give entries good names
 fitted_lms # display the pre-allocated (empty) list
 
+
 for(mod in names(models)) {
     fitted_lms[[mod]] <- lm(formula(models[mod]), data = sim_data)
 }
+
+fitted_lms[["intercept only"]] <- lm(formula(models["intercept only"]), data = sim_data)
 
 # initialize data frame to hold predictions
 predicted_data <- sim_data
@@ -125,6 +129,14 @@ CV_predictions$fold <- sample(rep(1:K, length.out = nrow(CV_predictions)),
                               replace = FALSE)
 CV_predictions[ , names(models)] <- NA
 head(CV_predictions)
+
+ggplot(data = CV_predictions, aes(x = x, y = y, color = factor(fold))) +
+  geom_point() +
+  geom_line(data = tidy_predicted_data,
+            aes(x = x, y = Prediction, group = Model, color = Model),
+            alpha = 0.5, size = 2) +
+  ggtitle("Predicted trends from regression") +
+  theme_bw()
 
 for(mod in names(models)) {
     for(k in 1:K) {

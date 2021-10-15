@@ -32,7 +32,7 @@ load("new_object.RData")
 
 getwd()
 
-## setwd("C:/Users/cclan/Documents")
+## setwd("C:/Users/")
 
 ## new_df <- read.csv("some_spreadsheet.csv")
 
@@ -79,6 +79,11 @@ gapminder %>% filter(country == "Canada") %>% head(2)
 ## lm_pop_year <- gapminder %>%
 ##   filter(continent == "Americas") %>%
 ##   lm(pop ~ year, data = .)
+
+gapminder |>
+  head(3)
+
+gapminder |> lm(gdpPercap ~ pop, data = .)
 
 gapminder %>% filter(country == "Oman") %>% head(8)
 

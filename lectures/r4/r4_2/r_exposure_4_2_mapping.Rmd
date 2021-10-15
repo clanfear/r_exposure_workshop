@@ -147,7 +147,7 @@ remotes::install_github("dkahle/ggmap", ref = "tidyup")
 
 Note, this may require compilation on your computer.
 
-```{r, message=FALSE, warning=FALSE, purl=FALSE}
+```{r, message=FALSE, warning=FALSE, purl=TRUE}
 library(ggmap)
 ```
 
