@@ -355,7 +355,19 @@ yugoslavia %>% filter(year == 1982) %>%
 
 yugoslavia %>%
   filter(year == 1982) %>%
-  summarize(across(c(lifeExp, pop), list(avg = ~mean(.), sd = ~sd(.))))
+  summarize(across(c(lifeExp, pop), list(avg = ~mean(.), sd = ~sd(.)))) #<<
+
+## yugoslavia %>%
+##   filter(year == 1982) %>%
+##   summarize(
+##     across(
+##       c(lifeExp, pop),
+##       list(
+##         avg = ~mean(.),
+##         sd  = ~sd(.)
+##       )
+##     )
+##   )
 
 ## dataframe %>%
 ##   summarize(across(everything(), list(mean = ~mean(.), sd = ~sd(.))))
@@ -365,8 +377,8 @@ yugoslavia %>%
 
 yugoslavia %>%
   group_by(year) %>% #<<
-    summarize(num_countries = n_distinct(country),
-              total_pop = sum(pop),
+    summarize(num_countries     = n_distinct(country),
+              total_pop         = sum(pop),
               total_gdp_per_cap = sum(pop*gdpPercap)/total_pop) %>%
     head(5)
 
@@ -377,6 +389,15 @@ yugoslavia %>%
   mutate(lag_pop = lag(pop, order_by = year),
          pop_chg = pop - lag_pop) %>%
   head(4)
+
+gapminder %>%
+  group_by(continent, year) %>%
+  summarize(mean_gdp = mean(gdpPercap)) %>% head(1)
+
+gapminder %>%
+  group_by(continent, year) %>%
+  summarize(mean_gdp = mean(gdpPercap)) %>%
+  ungroup() %>% head(1)
 
 ## library(readr) # Contains read_csv()
 ## billboard_2000_raw <-
@@ -411,17 +432,20 @@ summary(billboard_2000$rank)
 
 dim(billboard_2000)
 
+summary(billboard_2000$week)
+
 billboard_2000 <- billboard_2000 %>%
     mutate(week = parse_number(week)) #<<
 summary(billboard_2000$week)
 
 billboard_2000 <- billboard_2000_raw %>%
   pivot_longer(starts_with("wk"), 
-               names_to ="week", values_to = "rank",
+               names_to ="week", 
+               values_to = "rank",
                values_drop_na = TRUE,
                names_prefix = "wk", #<<
-               names_transform = list(week = as.integer)) #<<
-head(billboard_2000, 4)
+               names_transform = list(week = as.integer))  #<<
+head(billboard_2000, 3)
 
 billboard_2000 <- billboard_2000 %>%
     separate(time, into = c("minutes", "seconds"),
@@ -438,26 +462,21 @@ summary(billboard_2000$length)
 (just_right_data <- too_long_data %>%
     pivot_wider(names_from = Statistic, values_from = Value))
 
-# find best rank for each song
-best_rank <- billboard_2000 %>%
-    group_by(artist, track) %>%
-    summarize(min_rank = min(rank), #<<
-              weeks_at_1 = sum(rank == 1)) %>%
-    mutate(`Peak rank` = ifelse(min_rank == 1,
-                                "Hit #1",
-                                "Didn't #1"))
-
-# merge onto original data
 billboard_2000 <- billboard_2000 %>%
-    left_join(best_rank, by = c("artist", "track")) #<<
+    group_by(artist, track) %>%
+    mutate(`Weeks at #1` = sum(rank == 1),
+           `Peak Rank`   = ifelse(any(rank == 1), #<<
+                                  "Hit #1",
+                                  "Didn't #1")) %>%
+    ungroup() #<<
 
 library(ggplot2)
 billboard_trajectories <- 
   ggplot(data = billboard_2000,
          aes(x = week, y = rank, group = track,
-             color = `Peak rank`)
+             color = `Peak Rank`)
          ) +
-  geom_line(aes(size = `Peak rank`), alpha = 0.4) +
+  geom_line(aes(size = `Peak Rank`), alpha = 0.4) +
     # rescale time: early weeks more important
   scale_x_log10(breaks = seq(0, 70, 10)) + 
   scale_y_reverse() + # want rank 1 on top, not bottom
@@ -471,9 +490,9 @@ billboard_trajectories <-
 billboard_trajectories
 
 billboard_2000 %>%
-    select(artist, track, weeks_at_1) %>%
-    distinct(artist, track, weeks_at_1) %>%
-    arrange(desc(weeks_at_1)) %>%
+    select(artist, track, `Weeks at #1`) %>%
+    distinct(artist, track, `Weeks at #1`) %>%
+    arrange(desc(`Weeks at #1`)) %>%
     head(7)
 
 billboard_2000 <- billboard_2000 %>%
