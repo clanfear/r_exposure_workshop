@@ -2,7 +2,7 @@
 title: "R Exposure 3"
 subtitle: "Unit 1: Loops"
 author: "Chuck Lanfear"
-date: "Feb 27, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Oct 31, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -16,44 +16,24 @@ output:
 
 ```{r setup, include=FALSE, purl=FALSE}
 options(htmltools.dir.version = FALSE)
-options(width=70)
 knitr::opts_chunk$set(comment = "##")
 library(ggplot2)
 library(dplyr)
 ```
 
-```{r, eval=FALSE, purl=TRUE}
-library(ggplot2)
-library(dplyr)
-```
 
 # Overview of the Day
 
 * Part 3, Unit 1
-  + `for()` and `while()` loops
+  + `for()` and `while()` loops<sup>1</sup>
   + Flow control with `if()` and `else`
 
 * Part 3, Unit 2
   + Vectorization
   + Writing functions
 
-* Part 4, Unit 1
-  + Manipulating strings with `stringr`
-  + Regular expressions
-
-* Part 4, Unit 2
-  + Mapping with `ggplot2` and `ggmap`
-  + `sf` and `tidycensus`
-
----
-## Assumptions
-
-1. You have up-to-date R and RStudio installations
-
-2. You have taken R Exposure 1 & 2 or an equivalent.<sup>1</sup>
-
 .footnote[
-[1] I do *not* expect you remembered everything.
+[1] Note one short portion of the loops lecture makes use of a directory of .csv files. To run this easily, [download the repository .zip file](https://github.com/clanfear/r_exposure_workshop/zipball/master), unzip anywhere on your computer, then double-click the .Rproj file to open in RStudio.
 ]
 
 ---
@@ -61,6 +41,26 @@ class:inverse
 # Repetition
 # Repetition
 # Repetition
+
+---
+# `swiss` Data
+
+Consider the `swiss` data.
+
+```{r, echo = FALSE, purl = FALSE}
+options(width=90)
+```
+
+
+.small[
+```{r}
+head(swiss, 20)
+```
+]
+
+```{r, echo = FALSE, purl = FALSE}
+options(width=70)
+```
 
 ---
 # Bad Repetition
@@ -88,7 +88,7 @@ How upset would they be if the `swiss` data had 200 columns instead of `r ncol(s
 options(digits = 3)
 ```
 
-You will learn general solutions today—and better but more specific ones next week:
+You learned some techniques specific to dataframes last time. Today you will learn general solutions, such as loops:
 
 ```{r}
 swiss_means <- setNames(numeric(ncol(swiss)), colnames(swiss)) #<<
@@ -126,6 +126,7 @@ Lastly, compact code is more readable and easier to troubleshoot.
 I'll be bad and cite Wikipedia:
 
 >A loop is a sequence of statements which is specified once but which may be carried out several times in succession. The code "inside" the loop is obeyed a specified number of times, or once for each of a collection of items, or until some condition is met, or indefinitely.'' ([Wikipedia](https://en.wikipedia.org/wiki/Control_flow#Loops))
+
 
 ---
 class: inverse
@@ -262,7 +263,7 @@ Examples of what to pre-allocate based on what you store:
 # Pre-Allocation: Numeric
 
 ```{r}
-iters <- 10 # Set number of interations
+iters  <- 10 # Set number of interations
 output <- numeric(iters) # Pre-allocate numeric vector 
 
 for(i in 1:iters) { # Run code below iters times
@@ -285,7 +286,7 @@ The function `setNames()` can be handy for pre-allocating a named vector:
 ```{r}
 (names_to_use <- paste0("iter ", letters[1:5]))
 # without setNames:
-a_vector <- numeric(5)
+a_vector        <- numeric(5)
 names(a_vector) <- names_to_use
 
 # with setNames: first arg = values, second = names
@@ -336,9 +337,9 @@ Aside: If you followed the 2014 scandal in political science when a grad student
 # Plot of `sim_data`
 
 ```{r, dev="svg", fig.height=4}
+library(ggplot2)
 ggplot(data = sim_data, aes(x = x, y = y)) +
-  geom_point() + 
-  ggtitle("Simulated Data")
+  geom_point() + ggtitle("Simulated Data")
 ```
 
 ---
@@ -453,12 +454,16 @@ We can use `tidyr::pivot_longer()` to tidy the predictions, then set the levels 
 
 .smallish[
 ```{r, warning=FALSE, message=FALSE}
-library(tidyr)
+library(dplyr); library(tidyr)
 tidy_predicted_data <- predicted_data %>%
     pivot_longer(3:6, names_to="Model", values_to="Prediction") %>% #<<
     mutate(Model = factor(Model, levels = names(models))) #<<
 head(tidy_predicted_data) # Displaying some rows
 ```
+]
+
+.footnote[
+`levels = names(models)` sets the levels to be in the same order as the `models` vector.
 ]
 
 ---
@@ -657,8 +662,12 @@ an entire directory of Excel files—to combine them into one data set.
 (1) Let's say we have a folder filled with .csv files. We can get the file names in a folder using `list.files()`.
 
 ```{r}
-(file_list  <- list.files("./example_data/"))
+(file_list  <- list.files("./example_data/")) #<<
 ```
+
+.footnote[
+[1] Note you cannot run this example with only the .R script as you will not have the example data. If you want to try this out, download the course repository!
+]
 
 ---
 # Loop Load Example 2

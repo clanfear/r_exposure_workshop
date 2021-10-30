@@ -4,7 +4,7 @@
     <title>R Exposure 2</title>
     <meta charset="utf-8" />
     <meta name="author" content="Charles Lanfear" />
-    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.5/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -14,7 +14,7 @@ class: center, top, title-slide
 # R Exposure 2
 ## Data Visualization and Management
 ### Charles Lanfear
-### Oct 24, 2021<br>Updated: Oct 22, 2021
+### Feb 7, 2021<br>Updated: Feb 6, 2021
 
 ---
 
@@ -38,14 +38,14 @@ class: center, top, title-slide
 
 To follow along, you can either:
 
-1. [Download and work from the R script](https://clanfear.github.io/r_exposure_workshop/lectures/r2/r_exposure_2_intermediate.R)&lt;sup&gt;1&lt;/sup&gt;
+1. [Download and work from the R script](https://clanfear.github.io/r_exposure_workshop/lectures/r2/r_exposure_2_intermediate.R)
 
-2. [Download the entire series as a Zip](https://github.com/clanfear/r_exposure_workshop/zipball/master)
+2. [Download the entire series as a Zip](https://github.com/clanfear/r_exposure_workshop/zipball/master)&lt;sup&gt;1&lt;/sup&gt;
 
    * Unzip to a folder
    * Open the RStudio project file
 
-.footnote[[1] This is the easiest!]
+.footnote[[1] If you downloaded it before today, it will be a bit out of date!]
 
 ---
 class: inverse
@@ -53,7 +53,7 @@ class: inverse
 # `ggplot2`
 
 .center[
-&lt;img src="img/ggplot2_logo.png" style="width: 45%;"/&gt;
+&lt;img src="img/ggplot2unit.jpg" style="width: 60%;"/&gt;
 ]
 
 ---
@@ -102,7 +102,7 @@ plot(lifeExp ~ year,
 ]
 
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-35-1.png)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -134,7 +134,7 @@ ggplot(data = China,
 ]
 
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-38-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-6-1.svg)&lt;!-- --&gt;
 ]
 
 ---
@@ -226,7 +226,7 @@ Now let's see all this jargon in action.
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-40-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-8-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Initialize the plot with `ggplot()` and `x` and `y` aesthetics **mapped** to variables.]
@@ -249,7 +249,7 @@ ggplot(data = China,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-42-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-10-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Add a scatterplot **layer**.]
@@ -271,7 +271,7 @@ ggplot(data = China,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-44-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-12-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[**Set** aesthetics to make the points large and red.]
@@ -294,7 +294,7 @@ ggplot(data = China,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-46-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-14-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Add a layer to capitalize the x-axis label.]
@@ -318,7 +318,7 @@ ggplot(data = China,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-48-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-16-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Add a layer to clean up the y-axis label.]
@@ -343,7 +343,7 @@ ggplot(data = China,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-50-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-18-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Add a title layer.]
@@ -369,7 +369,7 @@ ggplot(data = China,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-52-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-20-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Pick a nicer theme with a new layer.]
@@ -395,7 +395,7 @@ ggplot(data = China,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-54-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-22-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Increase the base text size.]
@@ -427,7 +427,7 @@ count: false
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-56-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-24-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[We can't tell countries apart! Maybe we could follow *lines*?]
@@ -453,7 +453,7 @@ ggplot(data = gapminder,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-58-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-26-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[`ggplot2` doesn't know how to connect the lines!]
@@ -480,7 +480,7 @@ ggplot(data = gapminder,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-60-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-28-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[That looks more reasonable... but the lines are too thick!]
@@ -506,7 +506,7 @@ ggplot(data = gapminder,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-62-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-30-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Much better... but maybe we can do highlight regional differences?]
@@ -534,7 +534,7 @@ ggplot(data = gapminder,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-64-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-32-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Patterns are obvious... but why not separate continents completely?]
@@ -563,7 +563,7 @@ ggplot(data = gapminder,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-66-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-34-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Now the text is too big!]
@@ -591,7 +591,7 @@ ggplot(data = gapminder,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-68-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-36-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Better, but could bring that legend in.]
@@ -621,7 +621,7 @@ ggplot(data = gapminder,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-70-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-38-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Better... but do we even need it?]
@@ -650,7 +650,7 @@ ggplot(data = gapminder,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-72-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-40-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Looking good!]
@@ -687,7 +687,7 @@ The graph won't be displayed when you do this. You can show the graph using a si
 lifeExp_by_year
 ```
 
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-74-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-42-1.svg)&lt;!-- --&gt;
 
 ---
 
@@ -699,7 +699,7 @@ lifeExp_by_year +
     theme(legend.position = "bottom")
 ```
 
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-75-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-43-1.svg)&lt;!-- --&gt;
 
 ---
 # Changing the Axes
@@ -724,12 +724,12 @@ ggplot(data = China, aes(x = year, y = gdpPercap)) +
     xlim(1940, 2010) + ggtitle("Chinese GDP per capita")
 ```
 
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-76-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-44-1.svg)&lt;!-- --&gt;
 
 ---
 # Saving `ggplot` Plots
 
-When you knit an R Markdown file, any plots you make are automatically saved in at "[RMD filename]_files/figure-[format]/". If you want to save another copy (perhaps of a different file type for use in a manuscript), use `ggsave()`:
+When you knit an R Markdown file, any plots you make are automatically saved in the "figure" folder in `.png` format. If you want to save another copy (perhaps of a different file type for use in a manuscript), use `ggsave()`:
 
 
 ```r
@@ -890,7 +890,7 @@ yugoslavia %&gt;% filter(year == 1982) %&gt;%
 ```
 ]
 
-These new variables are calculated using *all rows* in `yugoslavia` in 1982.
+These new variables are calculated using *all of the rows* in `yugoslavia`
 
 ---
 # Avoiding Repetition
@@ -905,7 +905,7 @@ Maybe you need to calculate the mean and standard deviation of a bunch of column
 ```r
 yugoslavia %&gt;%
   filter(year == 1982) %&gt;%
-* summarize(across(c(lifeExp, pop), list(avg = ~mean(.), sd = ~sd(.))))
+  summarize(across(c(lifeExp, pop), list(avg = ~mean(.), sd = ~sd(.))))
 ```
 
 ```
@@ -934,7 +934,7 @@ yugoslavia %&gt;%
       c(lifeExp, pop), 
       list(
         avg = ~mean(.), 
-        sd  = ~sd(.)
+        sd = ~sd(.)
       )
     )
   )
@@ -987,8 +987,8 @@ Typically the variables you group by will be integers, factors, or characters, a
 ```r
 yugoslavia %&gt;%
 * group_by(year) %&gt;%
-    summarize(num_countries     = n_distinct(country),
-              total_pop         = sum(pop),
+    summarize(num_countries = n_distinct(country),
+              total_pop = sum(pop),
               total_gdp_per_cap = sum(pop*gdpPercap)/total_pop) %&gt;%
     head(5)
 ```
@@ -1034,47 +1034,6 @@ yugoslavia %&gt;%
 ## 3 Croatia                 2002 4481020      NA      NA
 ## 4 Croatia                 2007 4493312 4481020   12292
 ```
-
----
-## Ungrouping
-
-Multiple groups with `summarize()` will retain all but the last group.
-
-.smallish[
-
-```r
-gapminder %&gt;%
-  group_by(continent, year) %&gt;%
-  summarize(mean_gdp = mean(gdpPercap)) %&gt;% head(1)
-```
-
-```
-## # A tibble: 1 x 3
-## # Groups:   continent [1]
-##   continent  year mean_gdp
-##   &lt;fct&gt;     &lt;int&gt;    &lt;dbl&gt;
-## 1 Africa     1952    1253.
-```
-]
-
-Use `ungroup()` if you want to remove groups!
-
-.smallish[
-
-```r
-gapminder %&gt;%
-  group_by(continent, year) %&gt;%
-  summarize(mean_gdp = mean(gdpPercap)) %&gt;%
-  ungroup() %&gt;% head(1)
-```
-
-```
-## # A tibble: 1 x 3
-##   continent  year mean_gdp
-##   &lt;fct&gt;     &lt;int&gt;    &lt;dbl&gt;
-## 1 Africa     1952    1253.
-```
-]
 
 ---
 class: inverse
@@ -1569,7 +1528,7 @@ billboard_trajectories &lt;-
 ---
 # Charts of 2000: Beauty!
 
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-105-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-71-1.svg)&lt;!-- --&gt;
 
 Observation: There appears to be censoring around week 20 for songs falling out of the top 50 that I'd want to follow up on.
 
@@ -1648,7 +1607,7 @@ plot_by_day &lt;-
 ---
 # Calendar Time Plot!
 
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-109-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-75-1.svg)&lt;!-- --&gt;
 
 We see some of the entry dates are before 2000---presumably songs still charting during 2000 that came out earlier. 
 
@@ -1825,7 +1784,7 @@ Because the data are the first argument for `ggplot()`, we can pipe them straigh
 ---
 ## Wind Gusts and Delays
 
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-115-1.png)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-81-1.png)&lt;!-- --&gt;
 
 ---
 # Resources

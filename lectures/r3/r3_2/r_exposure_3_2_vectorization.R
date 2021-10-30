@@ -33,8 +33,11 @@ smarter_first_and_last
 ## }
 
 quantile_report <- function(x, na.rm = FALSE) {
-    quants <- quantile(x, na.rm = na.rm, 
-       probs = c(0.01, 0.05, 0.10, 0.25, 0.5, 0.75, 0.90, 0.95, 0.99))
+    quants <- quantile(
+      x, 
+      na.rm = na.rm, 
+      probs = c(0.01, 0.05, 0.10, 0.25, 0.5, 0.75, 0.90, 0.95, 0.99)
+      )
     names(quants) <- c("Bottom 1%", "Bottom 5%", "Bottom 10%", "Bottom 25%",
                        "Median", "Top 25%", "Top 10%", "Top 5%", "Top 1%")
     return(quants)
@@ -115,10 +118,15 @@ swiss %>%
 swiss %>%
     summarize(across(everything(), ~ mean(., na.rm=TRUE) / sd(., na.rm=TRUE)))
 
-## lapply(swiss, function(x) mean(x, na.rm = TRUE) / sd(x, na.rm = TRUE))
+## lapply(swiss, function(x) sd(x) / mean(x))
 
 # This is me sneakily restricting output to 5 values
-lapply(swiss, function(x) mean(x, na.rm = TRUE) / sd(x, na.rm = TRUE))[1:5]
+lapply(swiss, function(x) sd(x) / mean(x))[1:5]
+
+## lapply(swiss, \(x) mean(x, na.rm = TRUE))
+
+# This is me sneakily restricting output to 5 values again
+lapply(swiss, \(x) mean(x, na.rm = TRUE))[1:5]
 
 ## library(gapminder); library(ggplot2)
 ## ggplot(gapminder %>% filter(country == "Afghanistan"),

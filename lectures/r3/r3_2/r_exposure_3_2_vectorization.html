@@ -14,7 +14,7 @@ class: center, top, title-slide
 # R Exposure 3
 ## Unit 2: Vectorization and Functions
 ### Chuck Lanfear
-### Feb 27, 2021<br>Updated: Feb 25, 2021
+### Oct 31, 2021<br>Updated: Oct 30, 2021
 
 ---
 
@@ -259,7 +259,7 @@ smarter_first_and_last
 ##         return(c("first" = first, "last" = last))        
 ##     }
 ## }
-## &lt;environment: 0x000001d1f359a5c0&gt;
+## &lt;environment: 0x000001ad0cb77328&gt;
 ```
 
 You can also put your cursor over a function in your syntax and hit `F2`.
@@ -287,9 +287,10 @@ NAME &lt;- function(ARGUMENT1, ARGUMENT2=DEFAULT){
 --
 * **Body**: The actual operations inside the function.
 --
+
 * **Return Value**: The output inside `return()`. Could be a vector, list, data frame, another function, or even nothing
     + If unspecified, will be the last thing calculated (maybe not what you want?)
-    
+
 ---
 # Example: Reporting Quantiles
 
@@ -301,8 +302,11 @@ Here's a starting point:
 
 ```r
 quantile_report &lt;- function(x, na.rm = FALSE) {
-    quants &lt;- quantile(x, na.rm = na.rm, 
-       probs = c(0.01, 0.05, 0.10, 0.25, 0.5, 0.75, 0.90, 0.95, 0.99))
+    quants &lt;- quantile(
+      x, 
+      na.rm = na.rm, 
+      probs = c(0.01, 0.05, 0.10, 0.25, 0.5, 0.75, 0.90, 0.95, 0.99)
+      )
     names(quants) &lt;- c("Bottom 1%", "Bottom 5%", "Bottom 10%", "Bottom 25%",
                        "Median", "Top 25%", "Top 10%", "Top 5%", "Top 1%")
     return(quants)
@@ -312,9 +316,9 @@ quantile_report(rnorm(10000))
 
 ```
 ##  Bottom 1%  Bottom 5% Bottom 10% Bottom 25%     Median    Top 25% 
-##  -2.317475  -1.641327  -1.283939  -0.680520   0.000785   0.671191 
+##   -2.33024   -1.65438   -1.28137   -0.67938   -0.00764    0.66105 
 ##    Top 10%     Top 5%     Top 1% 
-##   1.253448   1.620745   2.282228
+##    1.26276    1.63364    2.37578
 ```
 ]
 
@@ -763,26 +767,26 @@ Like with `dplyr`, you can use anonymous functions in `lapply()`&lt;sup&gt;1&lt;
 .smallish[
 
 ```r
-lapply(swiss, function(x) mean(x, na.rm = TRUE) / sd(x, na.rm = TRUE))
+lapply(swiss, function(x) sd(x) / mean(x))
 ```
 ]
 
 
 ```
 ## $Fertility
-## [1] 5.62
+## [1] 0.178
 ## 
 ## $Agriculture
-## [1] 2.23
+## [1] 0.448
 ## 
 ## $Examination
-## [1] 2.07
+## [1] 0.484
 ## 
 ## $Education
-## [1] 1.14
+## [1] 0.876
 ## 
 ## $Catholic
-## [1] 0.987
+## [1] 1.01
 ```
 
 .pull-right[
@@ -790,6 +794,36 @@ lapply(swiss, function(x) mean(x, na.rm = TRUE) / sd(x, na.rm = TRUE))
 [1] Note that `lapply()` produces a list as output. You could instead use `sapply()` to get a vector.
 ]
 ]
+
+---
+# `function()` shortcut: `\(x)`
+
+R 4.1.0 introduced `\(x)` as shorthand for `function(x)`:
+
+.smallish[
+
+```r
+lapply(swiss, \(x) mean(x, na.rm = TRUE))
+```
+]
+
+
+```
+## $Fertility
+## [1] 70.1
+## 
+## $Agriculture
+## [1] 50.7
+## 
+## $Examination
+## [1] 16.5
+## 
+## $Education
+## [1] 11
+## 
+## $Catholic
+## [1] 41.1
+```
 
 ---
 class: inverse
@@ -824,12 +858,12 @@ ggplot(gapminder %&gt;% filter(country == "Afghanistan"),
 ---
 # Example of Desired Chart
 
-![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-30-1.svg)&lt;!-- --&gt;
+![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-32-1.svg)&lt;!-- --&gt;
 
 ---
 # Another Example
 
-![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-31-1.svg)&lt;!-- --&gt;
+![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-33-1.svg)&lt;!-- --&gt;
 
 ---
 # Making Country Flexible
@@ -861,7 +895,7 @@ What `cntry` does:
 gapminder_lifeplot(cntry = "Turkey")
 ```
 
-![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-33-1.svg)&lt;!-- --&gt;
+![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-35-1.svg)&lt;!-- --&gt;
 
 ---
 # Making `y` Value Flexible
@@ -927,7 +961,7 @@ gapminder_plot &lt;- function(cntry, yvar) {
 gapminder_plot(cntry = "Turkey", yvar = "pop")
 ```
 
-![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-36-1.svg)&lt;!-- --&gt;
+![](r_exposure_3_2_vectorization_files/figure-html/unnamed-chunk-38-1.svg)&lt;!-- --&gt;
 
 ---
 class: inverse

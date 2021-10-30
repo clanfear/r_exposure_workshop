@@ -14,9 +14,10 @@ class: center, top, title-slide
 # R Exposure 3
 ## Unit 1: Loops
 ### Chuck Lanfear
-### Feb 27, 2021<br>Updated: Feb 25, 2021
+### Oct 31, 2021<br>Updated: Oct 30, 2021
 
 ---
+
 
 
 
@@ -24,30 +25,15 @@ class: center, top, title-slide
 # Overview of the Day
 
 * Part 3, Unit 1
-  + `for()` and `while()` loops
+  + `for()` and `while()` loops&lt;sup&gt;1&lt;/sup&gt;
   + Flow control with `if()` and `else`
 
 * Part 3, Unit 2
   + Vectorization
   + Writing functions
 
-* Part 4, Unit 1
-  + Manipulating strings with `stringr`
-  + Regular expressions
-
-* Part 4, Unit 2
-  + Mapping with `ggplot2` and `ggmap`
-  + `sf` and `tidycensus`
-
----
-## Assumptions
-
-1. You have up-to-date R and RStudio installations
-
-2. You have taken R Exposure 1 &amp; 2 or an equivalent.&lt;sup&gt;1&lt;/sup&gt;
-
 .footnote[
-[1] I do *not* expect you remembered everything.
+[1] Note one short portion of the loops lecture makes use of a directory of .csv files. To run this easily, [download the repository .zip file](https://github.com/clanfear/r_exposure_workshop/zipball/master), unzip anywhere on your computer, then double-click the .Rproj file to open in RStudio.
 ]
 
 ---
@@ -55,6 +41,47 @@ class:inverse
 # Repetition
 # Repetition
 # Repetition
+
+---
+# `swiss` Data
+
+Consider the `swiss` data.
+
+
+
+
+.small[
+
+```r
+head(swiss, 20)
+```
+
+```
+##              Fertility Agriculture Examination Education Catholic Infant.Mortality
+## Courtelary        80.2        17.0          15        12     9.96             22.2
+## Delemont          83.1        45.1           6         9    84.84             22.2
+## Franches-Mnt      92.5        39.7           5         5    93.40             20.2
+## Moutier           85.8        36.5          12         7    33.77             20.3
+## Neuveville        76.9        43.5          17        15     5.16             20.6
+## Porrentruy        76.1        35.3           9         7    90.57             26.6
+## Broye             83.8        70.2          16         7    92.85             23.6
+## Glane             92.4        67.8          14         8    97.16             24.9
+## Gruyere           82.4        53.3          12         7    97.67             21.0
+## Sarine            82.9        45.2          16        13    91.38             24.4
+## Veveyse           87.1        64.5          14         6    98.61             24.5
+## Aigle             64.1        62.0          21        12     8.52             16.5
+## Aubonne           66.9        67.5          14         7     2.27             19.1
+## Avenches          68.9        60.7          19        12     4.43             22.7
+## Cossonay          61.7        69.3          22         5     2.82             18.7
+## Echallens         68.3        72.6          18         2    24.20             21.2
+## Grandson          71.7        34.0          17         8     3.30             20.0
+## Lausanne          55.7        19.4          26        28    12.11             20.2
+## La Vallee         54.3        15.2          31        20     2.15             10.8
+## Lavaux            65.1        73.0          19         9     2.84             20.0
+```
+]
+
+
 
 ---
 # Bad Repetition
@@ -81,7 +108,7 @@ How upset would they be if the `swiss` data had 200 columns instead of 6?
 
 
 
-You will learn general solutions today—and better but more specific ones next week:
+You learned some techniques specific to dataframes last time. Today you will learn general solutions, such as loops:
 
 
 ```r
@@ -127,6 +154,7 @@ Lastly, compact code is more readable and easier to troubleshoot.
 I'll be bad and cite Wikipedia:
 
 &gt;A loop is a sequence of statements which is specified once but which may be carried out several times in succession. The code "inside" the loop is obeyed a specified number of times, or once for each of a collection of items, or until some condition is met, or indefinitely.'' ([Wikipedia](https://en.wikipedia.org/wiki/Control_flow#Loops))
+
 
 ---
 class: inverse
@@ -320,7 +348,7 @@ Examples of what to pre-allocate based on what you store:
 
 
 ```r
-iters &lt;- 10 # Set number of interations
+iters  &lt;- 10 # Set number of interations
 output &lt;- numeric(iters) # Pre-allocate numeric vector 
 
 for(i in 1:iters) { # Run code below iters times
@@ -355,7 +383,7 @@ The function `setNames()` can be handy for pre-allocating a named vector:
 
 ```r
 # without setNames:
-a_vector &lt;- numeric(5)
+a_vector        &lt;- numeric(5)
 names(a_vector) &lt;- names_to_use
 
 # with setNames: first arg = values, second = names
@@ -413,12 +441,12 @@ Aside: If you followed the 2014 scandal in political science when a grad student
 
 
 ```r
+library(ggplot2)
 ggplot(data = sim_data, aes(x = x, y = y)) +
-  geom_point() + 
-  ggtitle("Simulated Data")
+  geom_point() + ggtitle("Simulated Data")
 ```
 
-![](r_exposure_3_1_loops_files/figure-html/unnamed-chunk-11-1.svg)&lt;!-- --&gt;
+![](r_exposure_3_1_loops_files/figure-html/unnamed-chunk-15-1.svg)&lt;!-- --&gt;
 
 ---
 # Candidate Regression Models
@@ -566,7 +594,7 @@ We can use `tidyr::pivot_longer()` to tidy the predictions, then set the levels 
 .smallish[
 
 ```r
-library(tidyr)
+library(dplyr); library(tidyr)
 tidy_predicted_data &lt;- predicted_data %&gt;%
 *   pivot_longer(3:6, names_to="Model", values_to="Prediction") %&gt;%
 *   mutate(Model = factor(Model, levels = names(models)))
@@ -584,6 +612,10 @@ head(tidy_predicted_data) # Displaying some rows
 ## 5  5.98  1.44 intercept only     -0.464
 ## 6  5.98  1.44 linear             -0.426
 ```
+]
+
+.footnote[
+`levels = names(models)` sets the levels to be in the same order as the `models` vector.
 ]
 
 ---
@@ -611,7 +643,7 @@ ggplot(data = sim_data, # Original data!
 ---
 # Plotted Predictions
 
-![](r_exposure_3_1_loops_files/figure-html/unnamed-chunk-19-1.svg)&lt;!-- --&gt;
+![](r_exposure_3_1_loops_files/figure-html/unnamed-chunk-23-1.svg)&lt;!-- --&gt;
 
 Which looks best to you?
 
@@ -797,7 +829,7 @@ an entire directory of Excel files—to combine them into one data set.
 
 
 ```r
-(file_list  &lt;- list.files("./example_data/"))
+*(file_list  &lt;- list.files("./example_data/"))
 ```
 
 ```
@@ -805,6 +837,10 @@ an entire directory of Excel files—to combine them into one data set.
 ##  [5] "ex_dat_4.csv"  "ex_dat_5.csv"  "ex_dat_6.csv"  "ex_dat_7.csv" 
 ##  [9] "ex_dat_8.csv"  "ex_dat_9.csv"
 ```
+
+.footnote[
+[1] Note you cannot run this example with only the .R script as you will not have the example data. If you want to try this out, download the course repository!
+]
 
 ---
 # Loop Load Example 2
@@ -889,9 +925,9 @@ glimpse(complete_data)
 ```
 ## Rows: 10,000
 ## Columns: 3
-## $ id &lt;dbl&gt; 44, 49, 50, 60, 62, 76, 81, 91, 113, 114, 116, 156, 15...
-## $ x  &lt;dbl&gt; 0.5156, 2.1673, -0.1216, 1.0551, 0.6660, -0.0213, 1.98...
-## $ z  &lt;dbl&gt; 0.3808, 0.3460, 0.7115, 0.4344, 0.6379, 0.6739, 0.9808...
+## $ id &lt;dbl&gt; 44, 49, 50, 60, 62, 76, 81, 91, 113, 114, 116, 156, 157, ~
+## $ x  &lt;dbl&gt; 0.5156, 2.1673, -0.1216, 1.0551, 0.6660, -0.0213, 1.9835,~
+## $ z  &lt;dbl&gt; 0.3808, 0.3460, 0.7115, 0.4344, 0.6379, 0.6739, 0.9808, 0~
 ```
 
 ---
@@ -924,7 +960,7 @@ num_flips # follows negative binomial distribution
 ```
 
 ```
-## [1] 4
+## [1] 5
 ```
 
 ---
@@ -955,7 +991,7 @@ for(position in 1:length(my_vector)) {
 
 ```
 ##    user  system elapsed 
-##   93.36    0.16   94.20
+##   91.86    0.06   92.20
 ```
 
 ---
@@ -972,7 +1008,7 @@ new_vector &lt;- my_vector + 1
 
 ```
 ##    user  system elapsed 
-##    0.11    0.05    0.17
+##    0.12    0.03    0.16
 ```
 
 ```r
@@ -981,10 +1017,10 @@ for_time / vec_time
 
 ```
 ##    user  system elapsed 
-##   848.7     3.2   554.1
+##     765       2     576
 ```
 
-The vectorized method was 849 times as fast! Vector/matrix arithmetic is implemented using fast, optimized functions that a `for()` loop can't compete with.
+The vectorized method was 765 times as fast! Vector/matrix arithmetic is implemented using fast, optimized functions that a `for()` loop can't compete with.
 
 ---
 # Vectorization Examples
@@ -1046,13 +1082,19 @@ complete_data_vroom &lt;- vroom::vroom(list.files("./example_data/", full.names=
 ```
 
 ```
-## Rows: 10,000
-## Columns: 3
+## Rows: 10000 Columns: 3
+```
+
+```
+## -- Column specification ----------------------------------------------
 ## Delimiter: ","
-## dbl [3]: id, x, z
+## dbl (3): id, x, z
+```
+
+```
 ## 
-## Use `spec()` to retrieve the guessed column specification
-## Pass a specification to the `col_types` argument to quiet this message
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
 ]
 
@@ -1065,9 +1107,9 @@ glimpse(complete_data_vroom)
 ```
 ## Rows: 10,000
 ## Columns: 3
-## $ id &lt;dbl&gt; 44, 49, 50, 60, 62, 76, 81, 91, 113, 114, 116, 156, 15...
-## $ x  &lt;dbl&gt; 0.5156, 2.1673, -0.1216, 1.0551, 0.6660, -0.0213, 1.98...
-## $ z  &lt;dbl&gt; 0.3808, 0.3460, 0.7115, 0.4344, 0.6379, 0.6739, 0.9808...
+## $ id &lt;dbl&gt; 44, 49, 50, 60, 62, 76, 81, 91, 113, 114, 116, 156, 157, ~
+## $ x  &lt;dbl&gt; 0.5156, 2.1673, -0.1216, 1.0551, 0.6660, -0.0213, 1.9835,~
+## $ z  &lt;dbl&gt; 0.3808, 0.3460, 0.7115, 0.4344, 0.6379, 0.6739, 0.9808, 0~
 ```
 ]
 

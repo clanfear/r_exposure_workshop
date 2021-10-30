@@ -2,7 +2,7 @@
 title: "R Exposure 4"
 subtitle: "Unit 2: Mapping"
 author: "Chuck Lanfear"
-date: "Feb 28, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Nov 7, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs

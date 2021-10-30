@@ -2,7 +2,7 @@
 title: "R Exposure 3"
 subtitle: "Unit 2: Vectorization and Functions"
 author: "Chuck Lanfear"
-date: "Feb 27, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Oct 31, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -230,9 +230,10 @@ NAME <- function(ARGUMENT1, ARGUMENT2=DEFAULT){
 --
 * **Body**: The actual operations inside the function.
 --
+
 * **Return Value**: The output inside `return()`. Could be a vector, list, data frame, another function, or even nothing
     + If unspecified, will be the last thing calculated (maybe not what you want?)
-    
+
 ---
 # Example: Reporting Quantiles
 
@@ -243,8 +244,11 @@ Here's a starting point:
 .smallish[
 ```{r}
 quantile_report <- function(x, na.rm = FALSE) {
-    quants <- quantile(x, na.rm = na.rm, 
-       probs = c(0.01, 0.05, 0.10, 0.25, 0.5, 0.75, 0.90, 0.95, 0.99))
+    quants <- quantile(
+      x, 
+      na.rm = na.rm, 
+      probs = c(0.01, 0.05, 0.10, 0.25, 0.5, 0.75, 0.90, 0.95, 0.99)
+      )
     names(quants) <- c("Bottom 1%", "Bottom 5%", "Bottom 10%", "Bottom 25%",
                        "Median", "Top 25%", "Top 10%", "Top 5%", "Top 1%")
     return(quants)
@@ -537,13 +541,13 @@ Like with `dplyr`, you can use anonymous functions in `lapply()`<sup>1</sup>, bu
 
 .smallish[
 ```{r, eval=FALSE}
-lapply(swiss, function(x) mean(x, na.rm = TRUE) / sd(x, na.rm = TRUE))
+lapply(swiss, function(x) sd(x) / mean(x))
 ```
 ]
 
 ```{r, echo=FALSE}
 # This is me sneakily restricting output to 5 values
-lapply(swiss, function(x) mean(x, na.rm = TRUE) / sd(x, na.rm = TRUE))[1:5]
+lapply(swiss, function(x) sd(x) / mean(x))[1:5]
 ```
 
 .pull-right[
@@ -551,6 +555,22 @@ lapply(swiss, function(x) mean(x, na.rm = TRUE) / sd(x, na.rm = TRUE))[1:5]
 [1] Note that `lapply()` produces a list as output. You could instead use `sapply()` to get a vector.
 ]
 ]
+
+---
+# `function()` shortcut: `\(x)`
+
+R 4.1.0 introduced `\(x)` as shorthand for `function(x)`:
+
+.smallish[
+```{r, eval=FALSE}
+lapply(swiss, \(x) mean(x, na.rm = TRUE))
+```
+]
+
+```{r, echo=FALSE}
+# This is me sneakily restricting output to 5 values again
+lapply(swiss, \(x) mean(x, na.rm = TRUE))[1:5]
+```
 
 ---
 class: inverse

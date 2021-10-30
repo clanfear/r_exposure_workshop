@@ -1,3 +1,7 @@
+head(swiss, 20)
+
+
+
 ## mean1 <- mean(swiss$Fertility)
 ## mean2 <- mean(swiss$Agriculture)
 ## mean3 <- mean(swissExamination)
@@ -39,10 +43,9 @@ i # in R, this will exist outside of the loop!
 for(a in seq_along(some_letters)) {
     print(paste0("Letter ", a, ": ", some_letters[a]))
 }
-paste0("Letter ", 1, ": ", some_letters[1])
 a # The object `a` contains the number of the last iteration
 
-iters <- 10 # Set number of interations
+iters  <- 10 # Set number of interations
 output <- numeric(iters) # Pre-allocate numeric vector 
 
 for(i in 1:iters) { # Run code below iters times
@@ -52,7 +55,7 @@ output # Display output
 
 (names_to_use <- paste0("iter ", letters[1:5]))
 # without setNames:
-a_vector <- numeric(5)
+a_vector        <- numeric(5)
 names(a_vector) <- names_to_use
 
 # with setNames: first arg = values, second = names
@@ -65,9 +68,9 @@ sim_data <-
   data.frame(x = x,
              y = -0.5 * x + 0.05 * x^2 + rnorm(n, sd = 1))
 
+library(ggplot2)
 ggplot(data = sim_data, aes(x = x, y = y)) +
-  geom_point() + 
-  ggtitle("Simulated Data")
+  geom_point() + ggtitle("Simulated Data")
 
 models <- c("intercept only" = "y ~ 1", # Name on left, formula on right
             "linear"         = "y ~ x",
@@ -78,12 +81,9 @@ fitted_lms        <- vector("list", length(models)) # initialize list
 names(fitted_lms) <- names(models) # give entries good names
 fitted_lms # display the pre-allocated (empty) list
 
-
 for(mod in names(models)) {
     fitted_lms[[mod]] <- lm(formula(models[mod]), data = sim_data)
 }
-
-fitted_lms[["intercept only"]] <- lm(formula(models["intercept only"]), data = sim_data)
 
 # initialize data frame to hold predictions
 predicted_data <- sim_data
@@ -95,7 +95,7 @@ for(mod in names(models)) {
 
 head(predicted_data, 10)
 
-library(tidyr)
+library(dplyr); library(tidyr)
 tidy_predicted_data <- predicted_data %>%
     pivot_longer(3:6, names_to="Model", values_to="Prediction") %>% #<<
     mutate(Model = factor(Model, levels = names(models))) #<<
@@ -129,14 +129,6 @@ CV_predictions$fold <- sample(rep(1:K, length.out = nrow(CV_predictions)),
                               replace = FALSE)
 CV_predictions[ , names(models)] <- NA
 head(CV_predictions)
-
-ggplot(data = CV_predictions, aes(x = x, y = y, color = factor(fold))) +
-  geom_point() +
-  geom_line(data = tidy_predicted_data,
-            aes(x = x, y = Prediction, group = Model, color = Model),
-            alpha = 0.5, size = 2) +
-  ggtitle("Predicted trends from regression") +
-  theme_bw()
 
 for(mod in names(models)) {
     for(k in 1:K) {
@@ -178,7 +170,7 @@ for(i in 1:10) {
   }
 }
 
-(file_list  <- list.files("./example_data/"))
+(file_list  <- list.files("./example_data/")) #<<
 
 data_list  <- vector("list", length(file_list))
 
