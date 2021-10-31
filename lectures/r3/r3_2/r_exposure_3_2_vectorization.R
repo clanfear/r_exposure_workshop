@@ -116,7 +116,7 @@ swiss %>%
   head(2)
 
 swiss %>%
-    summarize(across(everything(), ~ mean(., na.rm=TRUE) / sd(., na.rm=TRUE)))
+    summarize(across(everything(), ~ sd(., na.rm=TRUE) / mean(., na.rm=TRUE)))
 
 ## lapply(swiss, function(x) sd(x) / mean(x))
 

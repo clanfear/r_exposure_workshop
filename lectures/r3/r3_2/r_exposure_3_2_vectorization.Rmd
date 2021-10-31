@@ -530,7 +530,7 @@ You can skip naming your function in `dplyr` if you won't use it again. Code bel
 .smallish[
 ```{r}
 swiss %>%
-    summarize(across(everything(), ~ mean(., na.rm=TRUE) / sd(., na.rm=TRUE)))
+    summarize(across(everything(), ~ sd(., na.rm=TRUE) / mean(., na.rm=TRUE)))
 ```
 ]
 
