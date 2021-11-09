@@ -2,7 +2,7 @@
 title: "R Exposure 4"
 subtitle: "Unit 1: Strings"
 author: "Chuck Lanfear"
-date: "Nov 7, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Nov 14, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -30,7 +30,7 @@ knitr::opts_chunk$set(comment = "##")
   + Mapping with `ggplot2` and `ggmap`
   + `sf` and `tidycensus`
 
---
+---
 
 # Data for this Unit
 

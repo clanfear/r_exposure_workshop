@@ -2,7 +2,7 @@
 title: "R Exposure 4"
 subtitle: "Unit 2: Mapping"
 author: "Chuck Lanfear"
-date: "Nov 7, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Nov 14, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -743,21 +743,14 @@ king_county %>%
 
 With a simple function and boundaries of water bodies in King County, we can replace water with empty space.
 
-```{r, include=FALSE, cache=TRUE}
+```{r, eval=TRUE, message = FALSE, warning = FALSE, results='hide'}
 st_erase <- function(x, y) {
   st_difference(x, st_make_valid(st_union(st_combine(y))))
 }
-kc_water <- tigris::area_water("WA", "King", class = "sf")
+kc_water <- tigris::area_water("WA", "King", class = "sf") %>% 
+  st_transform(3689)
 kc_nowater <- king_county %>% 
-  st_erase(kc_water)
-```
-
-```{r, eval=FALSE, purl=FALSE}
-st_erase <- function(x, y) {
-  st_difference(x, st_make_valid(st_union(st_combine(y))))
-}
-kc_water <- tigris::area_water("WA", "King", class = "sf")
-kc_nowater <- king_county %>% 
+  st_transform(3689) %>%
   st_erase(kc_water)
 ```
 
@@ -766,8 +759,7 @@ kc_nowater <- king_county %>%
 * `st_difference()` subtracts `y` geometry from `x`
 * `st_make_valid()` fixes geometry errors from subtraction
 * `area_water()` obtains `sf` geometry of water bodies
-
-Then we can reproduce the same plot using `kc_nowater`...
+* `st_transform()` to place both geometries on a spherical projection to [deal with this problem](https://stackoverflow.com/questions/68478179/how-to-resolve-spherical-geometry-failures-when-joining-spatial-data).
 
 ---
 ```{r, eval=TRUE, echo=FALSE, dev="svg", dpi = 300, fig.height = 6}
