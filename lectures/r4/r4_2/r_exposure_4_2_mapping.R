@@ -13,12 +13,14 @@ glimpse(spd_raw)
 
 
 
-install.packages("ggmap")
+## install.packages("ggmap")
 
-if(!requireNamespace("remotes")) install.packages("remotes")
-remotes::install_github("dkahle/ggmap", ref = "tidyup")
+## if(!requireNamespace("remotes")) install.packages("remotes")
+## remotes::install_github("dkahle/ggmap", ref = "tidyup")
 
 library(ggmap)
+
+
 
 qmplot(data = spd_raw, x = Longitude, y = Latitude, color = I("#342c5c"), alpha = I(0.5))
 
@@ -82,15 +84,15 @@ qmplot(data =
     size=2)
 
 
-install.packages("sf")
+
 library(sf)
 
-precinct_shape <- st_read("./lectures/r4/r4_2/data/district/votdst.shp",
+precinct_shape <- st_read("./data/district/votdst.shp",
                           stringsAsFactors = F) %>% 
   select(Precinct=NAME, geometry)
 
 precincts_votes_sf <- 
-  read_csv("./lectures/r4/r4_2/data/king_county_elections_2016.txt") %>%
+  read_csv("./data/king_county_elections_2016.txt") %>%
   filter(Race=="US President & Vice President",
          str_detect(Precinct, "SEA ")) %>% 
   select(Precinct, CounterType, SumOfCount) %>%
@@ -168,11 +170,11 @@ king_county %>%
 st_erase <- function(x, y) {
   st_difference(x, st_make_valid(st_union(st_combine(y))))
 }
-kc_water <- tigris::area_water("WA", "King", class = "sf")
+kc_water <- tigris::area_water("WA", "King", class = "sf") %>% 
+  st_transform(3689)
 kc_nowater <- king_county %>% 
+  st_transform(3689) %>%
   st_erase(kc_water)
-
-
 
   ggplot(kc_nowater, 
          aes(fill=`Any Black`)) + 

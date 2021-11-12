@@ -1,10 +1,10 @@
 library(tidyverse)
-# load("restaurants.Rdata")
+load("restaurants.Rdata")
 
- library(tidyverse)
- restaurants <-
-   read_csv("https://clanfear.github.io/CSSS508/Lectures/Week8/restaurants.csv",
-                         col_types = "ccccccccnnccicccciccciD") #<<
+## library(tidyverse)
+## restaurants <-
+##   read_csv("https://clanfear.github.io/CSSS508/Lectures/Week8/restaurants.csv",
+##                         col_types = "ccccccccnnccicccciccciD") #<<
 
 glimpse(restaurants)
 
