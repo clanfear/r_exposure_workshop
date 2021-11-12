@@ -87,9 +87,8 @@ qmplot(data =
 
 library(sf)
 
-precinct_shape <- st_read("./data/district/votdst.shp",
-                          stringsAsFactors = F) %>% 
-  select(Precinct=NAME, geometry)
+precinct_shape <- st_read("./data/district/votdst.shp") %>% 
+  select(Precinct = NAME, geometry)
 
 precincts_votes_sf <- 
   read_csv("./data/king_county_elections_2016.txt") %>%
@@ -227,3 +226,7 @@ pb_state %>%
                         low  = "#d4d5f9",
                         high = "#00025b") + 
   theme_minimal()
+
+## sf_df_1 %>%                         # Start with first object
+##   st_transform(st_crs(sf_df_2)) %>% # Apply CRS of second
+##   st_join(sf_df_2)                  # Join first to second

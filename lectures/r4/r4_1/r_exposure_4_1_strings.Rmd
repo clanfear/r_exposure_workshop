@@ -362,7 +362,7 @@ A common operation is to `str_extract()` something with extra spaces and then `s
 Maybe we want to do a street-level analysis of inspections (e.g. compare The Ave to Pike Street). How can we remove building numbers?
 
 ```{r test_address_numbers}
-number_pattern <- "^[0-9]*-?[A-Z]? (1/2 )?"
+number_pattern <- "^[0-9]+-?[A-Z]? (1/2 )?"
 number_examples <- 
   c("2812 THORNDYKE AVE W", "1ST AVE", "10A 1ST AVE", 
     "10-A 1ST AVE", "5201-B UNIVERSITY WAY NE",
@@ -381,13 +381,13 @@ str_remove(number_examples, number_pattern)
 ---
 # How Does the Building Number regex Work?
 
-Let's break down `"^[0-9]*-?[A-Z]? (1/2 )?"`:
+Let's break down `"^[0-9]+-?[A-Z]? (1/2 )?"`:
 
 * `^[0-9]` means look for a digit between 0 and 9 (`[0-9]`) at the beginning (`^`)
 
 --
 
-* `*` means potentially match more digits after that
+* `+` means match *at least one* digit but possibly more
 
 --
 
@@ -440,7 +440,7 @@ Breaking down `" (#|STE|SUITE|SHOP|UNIT).*$"`:
 
 --
 
-* `.*$` matches *any* character (`.`) after those words, zero or more times (`*`), until the end of the string (`$`)
+* `.*$` matches *any* character (`.`) after those words, *zero* or more times (`*`), until the end of the string (`$`)
 
 ---
 # Removing Units/Suites

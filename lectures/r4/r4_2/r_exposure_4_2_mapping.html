@@ -495,9 +495,8 @@ We can load the file using `st_read()`.
 
 
 ```r
-precinct_shape &lt;- st_read("./data/district/votdst.shp",
-                          stringsAsFactors = F) %&gt;% 
-  select(Precinct=NAME, geometry)
+precinct_shape &lt;- st_read("./data/district/votdst.shp") %&gt;% 
+  select(Precinct = NAME, geometry)
 ```
 
 [If following along, click here to download a zip of the shapefile](https://github.com/clanfear/CSSS508/raw/master/Lectures/Week9/data/district.zip) and [here for the voting data](https://github.com/clanfear/CSSS508/raw/master/Lectures/Week9/data/king_county_elections_2016.txt)
@@ -896,6 +895,26 @@ We add the `urban_il` data as a new layer:
 ---
 
 ![](r_exposure_4_2_mapping_files/figure-html/unnamed-chunk-35-1.svg)&lt;!-- --&gt;
+
+---
+# A Note on Projections
+
+Any time you perform a spatial operation using multiple `sf` geometries, they all need be in the same CRS / projection.
+
+This includes plotting with `geom_sf()` or doing spatial joins with `st_join()`.
+
+A common way to do this quickly is to pull the CRS from one of the objects you're using:
+
+
+```r
+sf_df_1 %&gt;%                         # Start with first object
+  st_transform(st_crs(sf_df_2)) %&gt;% # Apply CRS of second
+  st_join(sf_df_2)                  # Join first to second
+```
+
+* `st_crs()` retrieves the CRS
+* `st_transform()` converts the piped-in `sf` dataframe to that CRS
+* `st_join()` performs the spatial join now that they share a common CRS
 
 ---
 class: inverse

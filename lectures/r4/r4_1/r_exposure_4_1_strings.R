@@ -84,7 +84,7 @@ restaurants %>%
           str_trim(str_extract(Address, direction_pattern))) %>% #<<
   count(city_region) %>% arrange(desc(n))
 
-number_pattern <- "^[0-9]*-?[A-Z]? (1/2 )?"
+number_pattern <- "^[0-9]+-?[A-Z]? (1/2 )?"
 number_examples <- 
   c("2812 THORNDYKE AVE W", "1ST AVE", "10A 1ST AVE", 
     "10-A 1ST AVE", "5201-B UNIVERSITY WAY NE",
