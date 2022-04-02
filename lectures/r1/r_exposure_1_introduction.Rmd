@@ -2,7 +2,7 @@
 title: "R Exposure 1"
 subtitle: "RStudio and Basic R"  
 author: "Charles Lanfear"
-date: "Oct 17, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Apr 3, 2022<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -390,10 +390,10 @@ Working with **Stata**, **SPSS**, or **SAS** users? You can use a **package** to
     + Keeps metadata like variable labels
 
 
-For less common formats, Google it. I've yet to encounter a data format without an 
+For less common formats, Google it. I rarely encounter data formats without an 
 R package to handle it (or at least a clever hack).
 
-If you encounter an ambiguous file extension (e.g. `.dat`), try opening it with
+If you have an ambiguous file extension (e.g. `.dat`), try opening it with
 a good text editor first (e.g. Atom, Sublime); there's a good chance it is actually raw text
 with a delimiter or fixed format that R can handle!
 
@@ -459,7 +459,7 @@ class: inverse
 
 # Indices and Dimensions
 
-In base R, there are two main ways to access elements of objects: square brackets (`[]` or `[[]]`) and `$`. How you access an object depends on its *dimensions*.
+In base R, there are two main ways to access object elements: square brackets (`[]` or `[[]]`) and `$`. How you access an object depends on its *dimensions*.
 
 --
 
@@ -499,6 +499,7 @@ Note here I *also* used brackets to select just the first 10 elements of that co
 You can mix subsetting formats! In this case I provided only a single value (no column index) because **vectors** have *only one dimension* (length).
 
 If you try to subset something and get a warning about "incorrect number of dimensions", check your subsetting!
+
 
 ---
 
@@ -604,7 +605,7 @@ mean(vector_w_missing[!is.na(vector_w_missing)]) #<<
 
 .pull-right[
 .footnote[
-`!` *reverses* a logical condition. Read the above as "subset *not* `NA`"
+`!` *reverses* a logical condition. Read the above as "subset to *not* `NA`"
 ]
 ]
 
@@ -692,7 +693,7 @@ lm_pop_year <- gapminder %>%
   lm(pop ~ year, data = .)
 ```
 
-No matter how long the chain of functions is, assignment is always done at the top.<sup>1</sup>
+No matter how long the chain of functions is, assignment is done at the top.<sup>1</sup>
 
 .footnote[[1] Note this is just a stylistic convention: If you prefer, you *can* do assignment at the end of the chain.]
 

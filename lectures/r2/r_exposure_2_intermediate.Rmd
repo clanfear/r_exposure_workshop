@@ -2,7 +2,7 @@
 title: "R Exposure 2"
 subtitle: "Data Visualization and Management"  
 author: "Charles Lanfear"
-date: "Oct 24, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Feb 7, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -36,14 +36,14 @@ options(dplyr.summarise.inform = FALSE)
 
 To follow along, you can either:
 
-1. [Download and work from the R script](https://clanfear.github.io/r_exposure_workshop/lectures/r2/r_exposure_2_intermediate.R)<sup>1</sup>
+1. [Download and work from the R script](https://clanfear.github.io/r_exposure_workshop/lectures/r2/r_exposure_2_intermediate.R)
 
-2. [Download the entire series as a Zip](https://github.com/clanfear/r_exposure_workshop/zipball/master)
+2. [Download the entire series as a Zip](https://github.com/clanfear/r_exposure_workshop/zipball/master)<sup>1</sup>
 
    * Unzip to a folder
    * Open the RStudio project file
 
-.footnote[[1] This is the easiest!]
+.footnote[[1] If you downloaded it before today, it will be a bit out of date!]
 
 ---
 class: inverse
@@ -51,7 +51,7 @@ class: inverse
 # `ggplot2`
 
 .center[
-<img src="img/ggplot2_logo.png" style="width: 45%;"/>
+<img src="img/ggplot2unit.jpg" style="width: 60%;"/>
 ]
 
 ---
@@ -834,7 +834,7 @@ ggplot(data = China, aes(x = year, y = gdpPercap)) +
 ---
 # Saving `ggplot` Plots
 
-When you knit an R Markdown file, any plots you make are automatically saved in at "[RMD filename]_files/figure-[format]/". If you want to save another copy (perhaps of a different file type for use in a manuscript), use `ggsave()`:
+When you knit an R Markdown file, any plots you make are automatically saved in the "figure" folder in `.png` format. If you want to save another copy (perhaps of a different file type for use in a manuscript), use `ggsave()`:
 
 ```{r, eval=FALSE}
 ggsave("I_saved_a_file.pdf", plot = lifeExp_by_year,
@@ -984,7 +984,7 @@ yugoslavia %>% filter(year == 1982) %>%
 ```
 ]
 
-These new variables are calculated using *all rows* in `yugoslavia` in 1982.
+These new variables are calculated using *all of the rows* in `yugoslavia`
 
 ---
 # Avoiding Repetition
@@ -998,7 +998,7 @@ Maybe you need to calculate the mean and standard deviation of a bunch of column
 ```{r}
 yugoslavia %>%
   filter(year == 1982) %>%
-  summarize(across(c(lifeExp, pop), list(avg = ~mean(.), sd = ~sd(.)))) #<<
+  summarize(across(c(lifeExp, pop), list(avg = ~mean(.), sd = ~sd(.))))
 ```
 ]
 
@@ -1019,7 +1019,7 @@ yugoslavia %>%
       c(lifeExp, pop), 
       list(
         avg = ~mean(.), 
-        sd  = ~sd(.)
+        sd = ~sd(.)
       )
     )
   )
@@ -1069,8 +1069,8 @@ Typically the variables you group by will be integers, factors, or characters, a
 ```{r}
 yugoslavia %>%
   group_by(year) %>% #<<
-    summarize(num_countries     = n_distinct(country),
-              total_pop         = sum(pop),
+    summarize(num_countries = n_distinct(country),
+              total_pop = sum(pop),
               total_gdp_per_cap = sum(pop*gdpPercap)/total_pop) %>%
     head(5)
 ```
@@ -1093,30 +1093,6 @@ yugoslavia %>%
          pop_chg = pop - lag_pop) %>%
   head(4)
 ```
-
----
-## Ungrouping
-
-Multiple groups with `summarize()` will retain all but the last group.
-
-.smallish[
-```{r}
-gapminder %>%
-  group_by(continent, year) %>%
-  summarize(mean_gdp = mean(gdpPercap)) %>% head(1)
-```
-]
-
-Use `ungroup()` if you want to remove groups!
-
-.smallish[
-```{r}
-gapminder %>%
-  group_by(continent, year) %>%
-  summarize(mean_gdp = mean(gdpPercap)) %>%
-  ungroup() %>% head(1)
-```
-]
 
 ---
 class: inverse
