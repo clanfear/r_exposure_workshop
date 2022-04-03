@@ -439,7 +439,7 @@ install.packages("nycflights13")
 
 To load a package, use `library()`:
 
-```{r}
+```{r, warning = FALSE, message = FALSE}
 library(gapminder)
 ```
 
