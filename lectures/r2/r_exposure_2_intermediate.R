@@ -355,7 +355,7 @@ yugoslavia %>% filter(year == 1982) %>%
 
 yugoslavia %>%
   filter(year == 1982) %>%
-  summarize(across(c(lifeExp, pop), list(avg = ~mean(.), sd = ~sd(.)))) #<<
+  summarize(across(c(lifeExp, pop), list(avg = ~mean(.), sd = ~sd(.))))
 
 ## yugoslavia %>%
 ##   filter(year == 1982) %>%
@@ -364,7 +364,7 @@ yugoslavia %>%
 ##       c(lifeExp, pop),
 ##       list(
 ##         avg = ~mean(.),
-##         sd  = ~sd(.)
+##         sd = ~sd(.)
 ##       )
 ##     )
 ##   )
@@ -377,8 +377,7 @@ yugoslavia %>%
 
 yugoslavia %>%
   group_by(year) %>% #<<
-    summarize(num_countries     = n_distinct(country),
-              total_pop         = sum(pop),
+    summarize(total_pop = sum(pop),
               total_gdp_per_cap = sum(pop*gdpPercap)/total_pop) %>%
     head(5)
 
@@ -390,24 +389,21 @@ yugoslavia %>%
          pop_chg = pop - lag_pop) %>%
   head(4)
 
-gapminder %>%
-  group_by(continent, year) %>%
-  summarize(mean_gdp = mean(gdpPercap)) %>% head(1)
-
-gapminder %>%
-  group_by(continent, year) %>%
-  summarize(mean_gdp = mean(gdpPercap)) %>%
-  ungroup() %>% head(1)
-
 ## library(readr) # Contains read_csv()
+## billboard_cols <- paste(c("icccD", rep("i", 76)), collapse="")
 ## billboard_2000_raw <-
 ##   read_csv(file = "https://github.com/clanfear/Intermediate_R_Workshop/raw/master/data/billboard.csv",
-##            col_types = paste(c("icccD", rep("i", 76)), collapse="")) #<<
+##            col_types = billboard_cols) #<<
+## billboard_cols
 
+# This hidden chunk loads the data locally so I don't need to keep downloading it.
+# The above one will run if you don't have the data locally
 library(readr) # Contains read_csv()
+billboard_cols <- paste(c("icccD", rep("i", 76)), collapse="")
 billboard_2000_raw <- 
   read_csv(file = "../../data/billboard.csv",
-           col_types = paste(c("icccD", rep("i", 76)), collapse="")) #<<
+           col_types = billboard_cols) #<<
+billboard_cols
 
 library(pander)
 pander(head(billboard_2000_raw[,1:10], 12), split.tables=120, style="rmarkdown")

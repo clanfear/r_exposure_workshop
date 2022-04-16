@@ -1,4 +1,3 @@
-base
 gapminder
 dplyr
 ggplot2
@@ -6,3 +5,8 @@ readr
 pander
 tidyr
 nycflights13
+tidyverse
+tibble
+purrr
+stringr
+forcats

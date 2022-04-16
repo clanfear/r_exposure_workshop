@@ -2,7 +2,7 @@
 title: "R Exposure 2"
 subtitle: "Data Visualization and Management"  
 author: "Charles Lanfear"
-date: "Feb 7, 2021<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Apr 17, 2022<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -38,20 +38,24 @@ To follow along, you can either:
 
 1. [Download and work from the R script](https://clanfear.github.io/r_exposure_workshop/lectures/r2/r_exposure_2_intermediate.R)
 
+   * *Recommended for today*
+
 2. [Download the entire series as a Zip](https://github.com/clanfear/r_exposure_workshop/zipball/master)<sup>1</sup>
 
    * Unzip to a folder
    * Open the RStudio project file
 
-.footnote[[1] If you downloaded it before today, it will be a bit out of date!]
+.footnote[[1] If you downloaded it before today, it may be a bit out of date!]
 
 ---
 class: inverse
 
 # `ggplot2`
 
+<br>
+
 .center[
-<img src="img/ggplot2unit.jpg" style="width: 60%;"/>
+<img src="img/ggplot2_logo.png" style="width: 40%;"/>
 ]
 
 ---
@@ -441,7 +445,6 @@ We have a plot we like for China...
 ... but what if we want *all the countries*?
 
 ---
-count: false
 
 # Plotting All Countries
 
@@ -474,7 +477,6 @@ ggplot(data = gapminder, #<<
 .footnote[We can't tell countries apart! Maybe we could follow *lines*?]
 
 ---
-count: false
 
 # Plotting All Countries
 
@@ -507,7 +509,6 @@ ggplot(data = gapminder,
 .footnote[`ggplot2` doesn't know how to connect the lines!]
 
 ---
-count: false
 
 # Plotting All Countries
 
@@ -540,8 +541,8 @@ ggplot(data = gapminder,
 ]
 
 .footnote[That looks more reasonable... but the lines are too thick!]
+
 ---
-count: false
 
 # Plotting All Countries
 
@@ -576,7 +577,6 @@ ggplot(data = gapminder,
 .footnote[Much better... but maybe we can do highlight regional differences?]
 
 ---
-count: false
 
 # Plotting All Countries
 
@@ -613,7 +613,6 @@ ggplot(data = gapminder,
 .footnote[Patterns are obvious... but why not separate continents completely?]
 
 ---
-count: false
 
 # Plotting All Countries
 
@@ -650,8 +649,8 @@ ggplot(data = gapminder,
 ]
 
 .footnote[Now the text is too big!]
+
 ---
-count: false
 
 # Plotting All Countries
 
@@ -690,7 +689,6 @@ ggplot(data = gapminder,
 .footnote[Better, but could bring that legend in.]
 
 ---
-count: false
 
 # Plotting All Countries
 
@@ -729,8 +727,8 @@ ggplot(data = gapminder,
 ]
 
 .footnote[Better... but do we even need it?]
+
 ---
-count: false
 
 # Plotting All Countries
 
@@ -769,6 +767,7 @@ ggplot(data = gapminder,
 ]
 
 .footnote[Looking good!]
+
 ---
 
 # Storing Plots
@@ -852,7 +851,7 @@ If you didn't manually set font sizes, these will usually come out at a reasonab
 
 `ggplot2` is well suited to making complex, publication ready plots.
 
-This is the complete syntax for one plot from a recent article of mine.<sup>1</sup>
+This is the complete syntax for one plot from an old article of mine.<sup>1</sup>
 
 .small[
 ```{r, eval=FALSE}
@@ -1069,8 +1068,7 @@ Typically the variables you group by will be integers, factors, or characters, a
 ```{r}
 yugoslavia %>%
   group_by(year) %>% #<<
-    summarize(num_countries = n_distinct(country),
-              total_pop = sum(pop),
+    summarize(total_pop = sum(pop),
               total_gdp_per_cap = sum(pop*gdpPercap)/total_pop) %>%
     head(5)
 ```
@@ -1136,7 +1134,7 @@ First things to check after loading new data:
 
 * How are missing values represented: `NA`, `" "` (blank), `.` (period), `999`?
 
-    + Use `mutate()` with `ifelse()` to fix these (perhaps *en masse* with looping)
+    + Use `mutate()` with `ifelse()` or `case_when()` to fix these
 ]
 --
 .smallish[
@@ -1194,19 +1192,27 @@ We're going to work with some *ugly* data: *The Billboard Hot 100 for the year 2
 
 We can load it like so:
 
-```{r, eval=FALSE, warning=FALSE, message=FALSE}
+```{r, eval=!file.exists("../../data/billboard.csv"), echo = TRUE, warning=FALSE, message=FALSE}
 library(readr) # Contains read_csv()
+billboard_cols <- paste(c("icccD", rep("i", 76)), collapse="")
 billboard_2000_raw <- 
   read_csv(file = "https://github.com/clanfear/Intermediate_R_Workshop/raw/master/data/billboard.csv",
-           col_types = paste(c("icccD", rep("i", 76)), collapse="")) #<<
+           col_types = billboard_cols) #<<
+billboard_cols
 ```
 
-```{r, include=FALSE, warning=FALSE, message=FALSE}
+.small[
+```{r, eval = file.exists("../../data/billboard.csv"), echo=FALSE, warning=FALSE, message=FALSE}
+# This hidden chunk loads the data locally so I don't need to keep downloading it.
+# The above one will run if you don't have the data locally
 library(readr) # Contains read_csv()
+billboard_cols <- paste(c("icccD", rep("i", 76)), collapse="")
 billboard_2000_raw <- 
   read_csv(file = "../../data/billboard.csv",
-           col_types = paste(c("icccD", rep("i", 76)), collapse="")) #<<
+           col_types = billboard_cols) #<<
+billboard_cols
 ```
+]
 
 .footnote[`col_types=` is used to specify column types. [See here for details.](https://clanfear.github.io/CSSS508/Lectures/Week5/CSSS508_week5_data_import_export_cleaning.html#29)]
 
@@ -1243,6 +1249,10 @@ Week columns continue up to `wk76`!
 
     + e.g. 2000; 3 Doors Down; Kryptonite; 3 minutes 53 seconds; April 8, 2000; Week 3 (**stuck in column headings**); rank 68 (**spread over many columns**)
 
+--
+
+This is a mess! We want to *tidy* it up.
+
 ---
 # Tidy Data
 
@@ -1277,7 +1287,7 @@ The `tidyr` package provides functions to tidy up data, similar to `reshape` in 
 
 * **`pivot_longer()`**: takes a set of columns and pivots them down to make two new columns (which you can name yourself): 
     * A `name` column that stores the original column names
-    * A `value` with the values in those original columns
+    * A `value` column with the values in those original columns
 
 --
 
@@ -1662,7 +1672,7 @@ flights %>% filter(dest == "SEA") %>%
     arrange(desc(n))
 ```
 
-`count(name)` is a shortcut for `group_by(name) %>% summarize(n(.))`: It creates a variable `n` equal to the number of rows in each group.
+`count(name)` is a shortcut for `group_by(name) %>% summarize(n=n())`: It creates a variable `n` equal to the number of rows in each group (`n()`).
 
 ---
 ## Join Example 2
