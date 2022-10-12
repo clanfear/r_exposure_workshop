@@ -2,7 +2,7 @@
 title: "R Exposure 1"
 subtitle: "RStudio and Basic R"  
 author: "Charles Lanfear"
-date: "Apr 3, 2022<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Oct 16, 2022<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -637,19 +637,19 @@ It also provides functions for summarizing and joining data which are more strai
 While I recommend all users be familiar with base R methods I've just covered, `dplyr` is the dominant platform for data manipulation in R, so we will focus on it for the remainder of this unit.
 
 ---
-# But First, Pipes: `%>%`
+# But First, Pipes: `|>`
 
-`dplyr` uses the [`magrittr`](https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html) forward pipe operator, usually called simply a **pipe**. We write pipes like **`%>%`** (`Ctrl+Shift+M` or `⌘ +Shift+M`).
+Tidyverse approaches to writing code use forward pipe operators, usually called simply a **pipe**. We write pipes like **`|>`**.
 
 --
 
-Pipes take the object on the *left* and apply the function on the *right*: `x %>% f(y) = f(x, y)`. Read out loud: "and then..."
+Pipes take the object on the *left* and apply the function on the *right*: `x |> f(y) = f(x, y)`. Read out loud: "and then..."
 
 --
 
 ```{r, message=FALSE, warning=FALSE}
 library(dplyr)
-gapminder %>% filter(country == "Canada") %>% head(2)
+gapminder |> filter(country == "Canada") |> head(2)
 ```
 
 --
@@ -666,9 +666,9 @@ Pipes are clearest to read when you have each function on a separate line.
 --
 
 ```{r, eval=FALSE}
-take_this_data %>%
-    do_first_thing(with = this_value) %>%
-    do_next_thing(using = that_value) %>% ...
+take_this_data |>
+    do_first_thing(with = this_value) |>
+    do_next_thing(using = that_value) |> ...
 ```
 
 --
@@ -677,9 +677,10 @@ Stuff to the left of the pipe is passed to the *first argument* of the function 
 
 --
 
-If you ever find yourself piping a function where data are not the first argument, use `.` in the data argument instead.
+If you ever find yourself piping a function where data are not the first argument, use `_` in the data argument instead.
+
 ```{r, eval=FALSE}
-gapminder %>% lm(pop ~ year, data = .)
+gapminder |> lm(pop ~ year, data = _)
 ```
 
 ---
@@ -688,32 +689,14 @@ gapminder %>% lm(pop ~ year, data = .)
 When creating a new object from the output of piped functions, place the assignment operator at the beginning.
 
 ```{r, eval=FALSE}
-lm_pop_year <- gapminder %>% 
-  filter(continent == "Americas") %>%
-  lm(pop ~ year, data = .)
+lm_pop_year <- gapminder |> 
+  filter(continent == "Americas") |>
+  lm(pop ~ year, data = _)
 ```
 
 No matter how long the chain of functions is, assignment is done at the top.<sup>1</sup>
 
 .footnote[[1] Note this is just a stylistic convention: If you prefer, you *can* do assignment at the end of the chain.]
-
----
-# The Base R Pipe
-
-In R version 4.1.0, a base R pipe was introduced: `|>`
-
-```{r}
-gapminder |>
-  head(3)
-```
-
-It works just like `%>%` but is sometimes faster.
-
-It cannot, however, pipe anywhere but the first argument:
-
-```{r, error = TRUE}
-gapminder |> lm(gdpPercap ~ pop, data = .)
-```
 
 ---
 
@@ -722,7 +705,7 @@ gapminder |> lm(gdpPercap ~ pop, data = .)
 I used **`filter()`** earlier. We subset *rows* of data using logical conditions with `filter()`!
 
 ```{r}
-gapminder %>% filter(country == "Oman") %>% head(8)
+gapminder |> filter(country == "Oman") |> head(8)
 ```
 
 What is this doing?
@@ -736,7 +719,7 @@ Let's say we want observations from Oman after 1980 and through 2000.
 --
 
 ```{r}
-gapminder %>%
+gapminder |>
     filter(country == "Oman" &
            year >  1980 &
            year <= 2000 )
@@ -752,7 +735,7 @@ We can use `%in%` like `==` but for matching *any element* in the vector on its 
 ```{r}
 former_yugoslavia <- c("Bosnia and Herzegovina", "Croatia", #<<
                        "Montenegro", "Serbia", "Slovenia") #<<
-yugoslavia <- gapminder %>% filter(country %in% former_yugoslavia)
+yugoslavia <- gapminder |> filter(country %in% former_yugoslavia)
 tail(yugoslavia, 2)
 ```
 
@@ -764,7 +747,7 @@ tail(yugoslavia, 2)
 Along with filtering the data to see certain rows, we might want to sort it:
 
 ```{r}
-yugoslavia %>% arrange(year, desc(pop))
+yugoslavia |> arrange(year, desc(pop))
 ```
 
 The data are sorted by ascending `year` and descending `pop`.
@@ -775,7 +758,7 @@ The data are sorted by ascending `year` and descending `pop`.
 Not only can we subset rows, but we can include specific columns (and put them in the order listed) using **`select()`**. 
 
 ```{r}
-yugoslavia %>% select(country, year, pop) %>% head(4)
+yugoslavia |> select(country, year, pop) |> head(4)
 ```
 
 ---
@@ -785,7 +768,7 @@ yugoslavia %>% select(country, year, pop) %>% head(4)
 We can instead drop only specific columns with `select()` using `-` signs:
 
 ```{r}
-yugoslavia %>% select(-continent, -pop, -lifeExp) %>% head(4)
+yugoslavia |> select(-continent, -pop, -lifeExp) |> head(4)
 ```
 
 ---
@@ -799,8 +782,8 @@ These are very useful if you have a "wide" data frame with column names followin
 ![DYS Data Example](http://clanfear.github.io/CSSS508/Lectures/Week3/img/dys_vars.PNG)
 
 ```{r, eval=FALSE}
-DYS %>% select(starts_with("married"))
-DYS %>% select(ends_with("18"))
+DYS |> select(starts_with("married"))
+DYS |> select(ends_with("18"))
 ```
 
 ---
@@ -809,7 +792,7 @@ DYS %>% select(ends_with("18"))
 An especially useful helper for select is `where()` which can be used for selecting columns based on functions that check column types.
 
 ```{r}
-gapminder %>% select(where(is.numeric)) %>% head(3)
+gapminder |> select(where(is.numeric)) |> head(3)
 ```
 
 .pull-right[.footnote[`int` (integer) and `dbl` (double) are both types of `numeric` data.]]
@@ -817,7 +800,7 @@ gapminder %>% select(where(is.numeric)) %>% head(3)
 --
 
 ```{r}
-gapminder %>% select(where(is.factor)) %>% head(3)
+gapminder |> select(where(is.factor)) |> head(3)
 ```
 
 
@@ -829,8 +812,8 @@ gapminder %>% select(where(is.factor)) %>% head(3)
 We can rename columns using `select()`, but that drops everything that isn't mentioned:
 
 ```{r}
-yugoslavia %>%
-    select(Life_Expectancy = lifeExp) %>%
+yugoslavia |>
+    select(Life_Expectancy = lifeExp) |>
     head(4)
 ```
 
@@ -841,9 +824,9 @@ yugoslavia %>%
 **`rename()`** renames variables using the same syntax as `select()` without dropping unmentioned variables.
 
 ```{r}
-yugoslavia %>%
-    select(country, year, lifeExp) %>%
-    rename(Life_Expectancy = lifeExp) %>%
+yugoslavia |>
+    select(country, year, lifeExp) |>
+    rename(Life_Expectancy = lifeExp) |>
     head(4)
 ```
 
@@ -858,10 +841,10 @@ In `dplyr`, you can add new columns to a data frame using **`mutate()`**.
 
 
 ```{r}
-yugoslavia %>% filter(country == "Serbia") %>%
-    select(year, pop, lifeExp) %>%
+yugoslavia |> filter(country == "Serbia") |>
+    select(year, pop, lifeExp) |>
     mutate(pop_million = pop / 1000000, #<<
-           life_exp_past_40 = lifeExp - 40) %>% #<<
+           life_exp_past_40 = lifeExp - 40) |> #<<
     head(5)
 ```
 
@@ -898,11 +881,11 @@ ifelse(example > 0, "Positive", "Not Positive")
 
 .smallish[
 ```{r}
-yugoslavia %>% mutate(short_country = 
+yugoslavia |> mutate(short_country = 
                  ifelse(country == "Bosnia and Herzegovina", 
-                        "B and H", as.character(country))) %>% #<<
-    select(country, short_country, year, pop) %>%
-    arrange(year, short_country) %>% head(3)
+                        "B and H", as.character(country))) |> #<<
+    select(country, short_country, year, pop) |>
+    arrange(year, short_country) |> head(3)
 ```
 ]
 
@@ -918,12 +901,12 @@ Note: `country` is a factor--use `as.character()` to convert to character.
 **`case_when()`** performs multiple `ifelse()` operations at the same time. `case_when()` allows you to create a new variable with values based on multiple logical statements. This is useful for making categorical variables or variables from combinations of other variables.
 .smallish[
 ```{r}
-gapminder %>% 
+gapminder |> 
   mutate(gdpPercap_ordinal = 
     case_when(
       gdpPercap <  700 ~ "low",
       gdpPercap >= 700 & gdpPercap < 800 ~ "moderate",
-      TRUE ~ "high" )) %>% # Value when all other statements are FALSE
+      TRUE ~ "high" )) |> # Value when all other statements are FALSE
   slice(6:9) # get rows 6 through 9
 ```
 ]

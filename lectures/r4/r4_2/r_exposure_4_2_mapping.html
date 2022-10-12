@@ -14,7 +14,7 @@ class: center, top, title-slide
 # R Exposure 4
 ## Unit 2: Mapping
 ### Chuck Lanfear
-### Feb 28, 2021<br>Updated: Feb 25, 2021
+### Nov 14, 2021<br>Updated: Nov 12, 2021
 
 ---
 
@@ -80,25 +80,25 @@ glimpse(spd_raw)
 ```
 ## Rows: 706
 ## Columns: 19
-## $ `CAD CDW ID`                  &lt;dbl&gt; 1701856, 1701857, 1701853, ...
-## $ `CAD Event Number`            &lt;dbl&gt; 1.6e+10, 1.6e+10, 1.6e+10, ...
-## $ `General Offense Number`      &lt;dbl&gt; 2.02e+09, 2.02e+09, 2.02e+0...
-## $ `Event Clearance Code`        &lt;chr&gt; "063", "064", "161", "245",...
-## $ `Event Clearance Description` &lt;chr&gt; "THEFT - CAR PROWL", "SHOPL...
-## $ `Event Clearance SubGroup`    &lt;chr&gt; "CAR PROWL", "THEFT", "TRES...
-## $ `Event Clearance Group`       &lt;chr&gt; "CAR PROWL", "SHOPLIFTING",...
-## $ `Event Clearance Date`        &lt;chr&gt; "03/25/2016 11:58:30 PM", "...
-## $ `Hundred Block Location`      &lt;chr&gt; "S KING ST / 8 AV S", "92XX...
-## $ `District/Sector`             &lt;chr&gt; "K", "S", "D", "M", "M", "B...
-## $ `Zone/Beat`                   &lt;chr&gt; "K3", "S3", "D2", "M1", "M3...
-## $ `Census Tract`                &lt;dbl&gt; 9100, 11801, 7200, 8002, 81...
-## $ Longitude                     &lt;dbl&gt; -122, -122, -122, -122, -12...
-## $ Latitude                      &lt;dbl&gt; 47.6, 47.5, 47.6, 47.6, 47....
-## $ `Incident Location`           &lt;chr&gt; "(47.598347, -122.32245)", ...
-## $ `Initial Type Description`    &lt;chr&gt; "THEFT (DOES NOT INCLUDE SH...
-## $ `Initial Type Subgroup`       &lt;chr&gt; "OTHER PROPERTY", "SHOPLIFT...
-## $ `Initial Type Group`          &lt;chr&gt; "THEFT", "THEFT", "TRESPASS...
-## $ `At Scene Time`               &lt;chr&gt; "03/25/2016 10:25:51 PM", "...
+## $ `CAD CDW ID`                  &lt;dbl&gt; 1701856, 1701857, 1701853, 170~
+## $ `CAD Event Number`            &lt;dbl&gt; 16000104006, 16000103970, 1600~
+## $ `General Offense Number`      &lt;dbl&gt; 2016104006, 2016103970, 201610~
+## $ `Event Clearance Code`        &lt;chr&gt; "063", "064", "161", "245", "2~
+## $ `Event Clearance Description` &lt;chr&gt; "THEFT - CAR PROWL", "SHOPLIFT~
+## $ `Event Clearance SubGroup`    &lt;chr&gt; "CAR PROWL", "THEFT", "TRESPAS~
+## $ `Event Clearance Group`       &lt;chr&gt; "CAR PROWL", "SHOPLIFTING", "T~
+## $ `Event Clearance Date`        &lt;chr&gt; "03/25/2016 11:58:30 PM", "03/~
+## $ `Hundred Block Location`      &lt;chr&gt; "S KING ST / 8 AV S", "92XX BL~
+## $ `District/Sector`             &lt;chr&gt; "K", "S", "D", "M", "M", "B", ~
+## $ `Zone/Beat`                   &lt;chr&gt; "K3", "S3", "D2", "M1", "M3", ~
+## $ `Census Tract`                &lt;dbl&gt; 9100.102, 11800.602, 7200.106,~
+## $ Longitude                     &lt;dbl&gt; -122.3225, -122.2680, -122.342~
+## $ Latitude                      &lt;dbl&gt; 47.59835, 47.51985, 47.61422, ~
+## $ `Incident Location`           &lt;chr&gt; "(47.598347, -122.32245)", "(4~
+## $ `Initial Type Description`    &lt;chr&gt; "THEFT (DOES NOT INCLUDE SHOPL~
+## $ `Initial Type Subgroup`       &lt;chr&gt; "OTHER PROPERTY", "SHOPLIFTING~
+## $ `Initial Type Group`          &lt;chr&gt; "THEFT", "THEFT", "TRESPASS", ~
+## $ `At Scene Time`               &lt;chr&gt; "03/25/2016 10:25:51 PM", "03/~
 ```
 ]
 
@@ -495,9 +495,8 @@ We can load the file using `st_read()`.
 
 
 ```r
-precinct_shape &lt;- st_read("./data/district/votdst.shp",
-                          stringsAsFactors = F) %&gt;% 
-  select(Precinct=NAME, geometry)
+precinct_shape &lt;- st_read("./data/district/votdst.shp") %&gt;% 
+  select(Precinct = NAME, geometry)
 ```
 
 [If following along, click here to download a zip of the shapefile](https://github.com/clanfear/CSSS508/raw/master/Lectures/Week9/data/district.zip) and [here for the voting data](https://github.com/clanfear/CSSS508/raw/master/Lectures/Week9/data/king_county_elections_2016.txt)
@@ -551,11 +550,11 @@ glimpse(precincts_votes_sf)
 ## Rows: 960
 ## Columns: 5
 ## Groups: Precinct [960]
-## $ Precinct &lt;chr&gt; "SEA 11-1256", "SEA 11-1550", "SEA 11-1552", "SE...
-## $ P_Dem    &lt;dbl&gt; 0.771, 0.817, 0.751, 0.838, 0.833, 0.815, 0.828,...
-## $ P_Rep    &lt;dbl&gt; 0.1561, 0.0779, 0.1342, 0.0865, 0.0859, 0.0803, ...
-## $ Turnout  &lt;dbl&gt; 0.693, 0.727, 0.735, 0.752, 0.758, 0.771, 0.687,...
-## $ geometry &lt;MULTIPOLYGON [US_survey_foot]&gt; MULTIPOLYGON (((127369...
+## $ Precinct &lt;chr&gt; "SEA 11-1256", "SEA 11-1550", "SEA 11-1552", "SEA 1~
+## $ P_Dem    &lt;dbl&gt; 0.7707510, 0.8168421, 0.7507987, 0.8376328, 0.83259~
+## $ P_Rep    &lt;dbl&gt; 0.15612648, 0.07789474, 0.13418530, 0.08649469, 0.0~
+## $ Turnout  &lt;dbl&gt; 0.6931507, 0.7274119, 0.7347418, 0.7522831, 0.75792~
+## $ geometry &lt;MULTIPOLYGON [US_survey_foot]&gt; MULTIPOLYGON (((1273698 1~
 ```
 ]
 
@@ -690,13 +689,13 @@ glimpse(king_county)
 ```
 ## Rows: 398
 ## Columns: 7
-## $ GEOID       &lt;chr&gt; "53033032309", "53033031704", "53033032313", ...
-## $ NAME        &lt;chr&gt; "Census Tract 323.09, King County, Washington...
-## $ B02001_001E &lt;dbl&gt; 8249, 5728, 6551, 5941, 6365, 5292, 6132, 663...
-## $ B02001_001M &lt;dbl&gt; 457, 299, 365, 322, 275, 417, 602, 580, 311, ...
-## $ B02009_001E &lt;dbl&gt; 375, 633, 294, 128, 26, 80, 53, 2117, 456, 62...
-## $ B02009_001M &lt;dbl&gt; 246, 356, 260, 127, 37, 108, 65, 602, 287, 40...
-## $ geometry    &lt;MULTIPOLYGON [°]&gt; MULTIPOLYGON (((-122 47.7, ..., ...
+## $ GEOID       &lt;chr&gt; "53033011300", "53033004900", "53033026801", "53~
+## $ NAME        &lt;chr&gt; "Census Tract 113, King County, Washington", "Ce~
+## $ B02001_001E &lt;dbl&gt; 6656, 7489, 6056, 3739, 3687, 3854, 4362, 3991, ~
+## $ B02001_001M &lt;dbl&gt; 447, 605, 642, 192, 236, 271, 388, 430, 442, 286~
+## $ B02009_001E &lt;dbl&gt; 951, 66, 571, 189, 141, 54, 757, 302, 1058, 163,~
+## $ B02009_001M &lt;dbl&gt; 370, 61, 432, 123, 141, 76, 449, 266, 384, 170, ~
+## $ geometry    &lt;MULTIPOLYGON [°]&gt; MULTIPOLYGON (((-122.3551 4..., MUL~
 ```
 ]
 
@@ -720,11 +719,11 @@ glimpse(king_county)
 ```
 ## Rows: 398
 ## Columns: 5
-## $ GEOID              &lt;chr&gt; "53033032309", "53033031704", "5303303...
-## $ NAME               &lt;chr&gt; "Census Tract 323.09, King County, Was...
-## $ `Total Population` &lt;dbl&gt; 8249, 5728, 6551, 5941, 6365, 5292, 61...
-## $ `Any Black`        &lt;dbl&gt; 0.04546, 0.11051, 0.04488, 0.02155, 0....
-## $ geometry           &lt;MULTIPOLYGON [°]&gt; MULTIPOLYGON (((-122 47.7...
+## $ GEOID              &lt;chr&gt; "53033011300", "53033004900", "5303302680~
+## $ NAME               &lt;chr&gt; "Census Tract 113, King County, Washingto~
+## $ `Total Population` &lt;dbl&gt; 6656, 7489, 6056, 3739, 3687, 3854, 4362,~
+## $ `Any Black`        &lt;dbl&gt; 0.142878606, 0.008812926, 0.094286658, 0.~
+## $ geometry           &lt;MULTIPOLYGON [°]&gt; MULTIPOLYGON (((-122.3551 4.~
 ```
 
 ---
@@ -759,14 +758,14 @@ New functions:
 With a simple function and boundaries of water bodies in King County, we can replace water with empty space.
 
 
-
-
 ```r
 st_erase &lt;- function(x, y) {
   st_difference(x, st_make_valid(st_union(st_combine(y))))
 }
-kc_water &lt;- tigris::area_water("WA", "King", class = "sf")
+kc_water &lt;- tigris::area_water("WA", "King", class = "sf") %&gt;% 
+  st_transform(3689)
 kc_nowater &lt;- king_county %&gt;% 
+  st_transform(3689) %&gt;%
   st_erase(kc_water)
 ```
 
@@ -775,11 +774,10 @@ kc_nowater &lt;- king_county %&gt;%
 * `st_difference()` subtracts `y` geometry from `x`
 * `st_make_valid()` fixes geometry errors from subtraction
 * `area_water()` obtains `sf` geometry of water bodies
-
-Then we can reproduce the same plot using `kc_nowater`...
+* `st_transform()` to place both geometries on a spherical projection to [deal with this problem](https://stackoverflow.com/questions/68478179/how-to-resolve-spherical-geometry-failures-when-joining-spatial-data).
 
 ---
-![](r_exposure_4_2_mapping_files/figure-html/unnamed-chunk-27-1.svg)&lt;!-- --&gt;
+![](r_exposure_4_2_mapping_files/figure-html/unnamed-chunk-26-1.svg)&lt;!-- --&gt;
 
 ---
 # State Example Data
@@ -819,7 +817,7 @@ pb_state %&gt;%
 
 ---
 
-![](r_exposure_4_2_mapping_files/figure-html/unnamed-chunk-31-1.svg)&lt;!-- --&gt;
+![](r_exposure_4_2_mapping_files/figure-html/unnamed-chunk-30-1.svg)&lt;!-- --&gt;
 
 ---
 # Multiple `geom_sf` Layers
@@ -853,15 +851,15 @@ glimpse(urbans)
 ```
 ## Rows: 3,601
 ## Columns: 9
-## $ UACE10     &lt;chr&gt; "18856", "83116", "79363", "96670", "97750", "...
-## $ AFFGEOID10 &lt;chr&gt; "400C100US18856", "400C100US83116", "400C100US...
-## $ GEOID10    &lt;chr&gt; "18856", "83116", "79363", "96670", "97750", "...
-## $ NAME10     &lt;chr&gt; "Colorado Springs, CO", "South Bend, IN--MI", ...
-## $ LSAD10     &lt;chr&gt; "75", "75", "75", "75", "75", "76", "75", "75"...
-## $ UATYP10    &lt;chr&gt; "U", "U", "U", "U", "U", "C", "U", "U", "U", "...
-## $ ALAND10    &lt;dbl&gt; 4.87e+08, 4.17e+08, 1.38e+08, 8.36e+08, 3.42e+...
-## $ AWATER10   &lt;dbl&gt; 962957, 8281569, 141396, 6442279, 1377397, 151...
-## $ geometry   &lt;MULTIPOLYGON [°]&gt; MULTIPOLYGON (((-105 39, -1..., M...
+## $ UACE10     &lt;chr&gt; "18856", "83116", "79363", "96670", "97750", "574~
+## $ AFFGEOID10 &lt;chr&gt; "400C100US18856", "400C100US83116", "400C100US793~
+## $ GEOID10    &lt;chr&gt; "18856", "83116", "79363", "96670", "97750", "574~
+## $ NAME10     &lt;chr&gt; "Colorado Springs, CO", "South Bend, IN--MI", "Sa~
+## $ LSAD10     &lt;chr&gt; "75", "75", "75", "75", "75", "76", "75", "75", "~
+## $ UATYP10    &lt;chr&gt; "U", "U", "U", "U", "U", "C", "U", "U", "U", "C",~
+## $ ALAND10    &lt;dbl&gt; 486995256, 417310226, 137815683, 835565506, 34223~
+## $ AWATER10   &lt;dbl&gt; 962957, 8281569, 141396, 6442279, 1377397, 151536~
+## $ geometry   &lt;MULTIPOLYGON [°]&gt; MULTIPOLYGON (((-104.6051 3..., MULT~
 ```
 ]
 
@@ -896,7 +894,27 @@ We add the `urban_il` data as a new layer:
 
 ---
 
-![](r_exposure_4_2_mapping_files/figure-html/unnamed-chunk-36-1.svg)&lt;!-- --&gt;
+![](r_exposure_4_2_mapping_files/figure-html/unnamed-chunk-35-1.svg)&lt;!-- --&gt;
+
+---
+# A Note on Projections
+
+Any time you perform a spatial operation using multiple `sf` geometries, they all need be in the same CRS / projection.
+
+This includes plotting with `geom_sf()` or doing spatial joins with `st_join()`.
+
+A common way to do this quickly is to pull the CRS from one of the objects you're using:
+
+
+```r
+sf_df_1 %&gt;%                         # Start with first object
+  st_transform(st_crs(sf_df_2)) %&gt;% # Apply CRS of second
+  st_join(sf_df_2)                  # Join first to second
+```
+
+* `st_crs()` retrieves the CRS
+* `st_transform()` converts the piped-in `sf` dataframe to that CRS
+* `st_join()` performs the spatial join now that they share a common CRS
 
 ---
 class: inverse

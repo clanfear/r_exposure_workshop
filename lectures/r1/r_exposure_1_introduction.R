@@ -68,61 +68,56 @@ is.na(vector_w_missing)
 mean(vector_w_missing[!is.na(vector_w_missing)]) #<<
 
 library(dplyr)
-gapminder %>% filter(country == "Canada") %>% head(2)
+gapminder |> filter(country == "Canada") |> head(2)
 
-## take_this_data %>%
-##     do_first_thing(with = this_value) %>%
-##     do_next_thing(using = that_value) %>% ...
+## take_this_data |>
+##     do_first_thing(with = this_value) |>
+##     do_next_thing(using = that_value) |> ...
 
-## gapminder %>% lm(pop ~ year, data = .)
+## gapminder |> lm(pop ~ year, data = _)
 
-## lm_pop_year <- gapminder %>%
-##   filter(continent == "Americas") %>%
-##   lm(pop ~ year, data = .)
+## lm_pop_year <- gapminder |>
+##   filter(continent == "Americas") |>
+##   lm(pop ~ year, data = _)
+
+gapminder |> filter(country == "Oman") |> head(8)
 
 gapminder |>
-  head(3)
-
-gapminder |> lm(gdpPercap ~ pop, data = .)
-
-gapminder %>% filter(country == "Oman") %>% head(8)
-
-gapminder %>%
     filter(country == "Oman" &
            year >  1980 &
            year <= 2000 )
 
 former_yugoslavia <- c("Bosnia and Herzegovina", "Croatia", #<<
                        "Montenegro", "Serbia", "Slovenia") #<<
-yugoslavia <- gapminder %>% filter(country %in% former_yugoslavia)
+yugoslavia <- gapminder |> filter(country %in% former_yugoslavia)
 tail(yugoslavia, 2)
 
-yugoslavia %>% arrange(year, desc(pop))
+yugoslavia |> arrange(year, desc(pop))
 
-yugoslavia %>% select(country, year, pop) %>% head(4)
+yugoslavia |> select(country, year, pop) |> head(4)
 
-yugoslavia %>% select(-continent, -pop, -lifeExp) %>% head(4)
+yugoslavia |> select(-continent, -pop, -lifeExp) |> head(4)
 
-## DYS %>% select(starts_with("married"))
-## DYS %>% select(ends_with("18"))
+## DYS |> select(starts_with("married"))
+## DYS |> select(ends_with("18"))
 
-gapminder %>% select(where(is.numeric)) %>% head(3)
+gapminder |> select(where(is.numeric)) |> head(3)
 
-gapminder %>% select(where(is.factor)) %>% head(3)
+gapminder |> select(where(is.factor)) |> head(3)
 
-yugoslavia %>%
-    select(Life_Expectancy = lifeExp) %>%
+yugoslavia |>
+    select(Life_Expectancy = lifeExp) |>
     head(4)
 
-yugoslavia %>%
-    select(country, year, lifeExp) %>%
-    rename(Life_Expectancy = lifeExp) %>%
+yugoslavia |>
+    select(country, year, lifeExp) |>
+    rename(Life_Expectancy = lifeExp) |>
     head(4)
 
-yugoslavia %>% filter(country == "Serbia") %>%
-    select(year, pop, lifeExp) %>%
+yugoslavia |> filter(country == "Serbia") |>
+    select(year, pop, lifeExp) |>
     mutate(pop_million = pop / 1000000, #<<
-           life_exp_past_40 = lifeExp - 40) %>% #<<
+           life_exp_past_40 = lifeExp - 40) |> #<<
     head(5)
 
 ## ifelse(test = x==y, yes = first_value , no = second_value)
@@ -130,18 +125,18 @@ yugoslavia %>% filter(country == "Serbia") %>%
 example <- c(1, 0, NA, -2)
 ifelse(example > 0, "Positive", "Not Positive")
 
-yugoslavia %>% mutate(short_country = 
+yugoslavia |> mutate(short_country = 
                  ifelse(country == "Bosnia and Herzegovina", 
-                        "B and H", as.character(country))) %>% #<<
-    select(country, short_country, year, pop) %>%
-    arrange(year, short_country) %>% head(3)
+                        "B and H", as.character(country))) |> #<<
+    select(country, short_country, year, pop) |>
+    arrange(year, short_country) |> head(3)
 
-gapminder %>% 
+gapminder |> 
   mutate(gdpPercap_ordinal = 
     case_when(
       gdpPercap <  700 ~ "low",
       gdpPercap >= 700 & gdpPercap < 800 ~ "moderate",
-      TRUE ~ "high" )) %>% # Value when all other statements are FALSE
+      TRUE ~ "high" )) |> # Value when all other statements are FALSE
   slice(6:9) # get rows 6 through 9
 
 hist(gapminder$lifeExp,

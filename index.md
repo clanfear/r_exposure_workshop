@@ -3,7 +3,7 @@ layout: default
 ---
 
 # R Exposure Workshop
-## Spring 2022
+## Autumn 2022
 ### University of Washington Tacoma
 
 ## Installation

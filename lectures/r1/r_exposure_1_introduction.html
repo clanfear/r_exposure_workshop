@@ -11,10 +11,18 @@
     <textarea id="source">
 class: center, top, title-slide
 
+.title[
 # R Exposure 1
+]
+.subtitle[
 ## RStudio and Basic R
+]
+.author[
 ### Charles Lanfear
-### Apr 3, 2022<br>Updated: Apr 3, 2022
+]
+.date[
+### Oct 16, 2022<br>Updated: Oct 12, 2022
+]
 
 ---
 
@@ -399,7 +407,7 @@ getwd()
 ```
 
 ```
-## [1] "C:/Users/cclan/OneDrive/GitHub/r_exposure_workshop/lectures/r1"
+## [1] "C:/Users/cl948/OneDrive/GitHub/r_exposure_workshop/lectures/r1"
 ```
 
 --
@@ -525,7 +533,7 @@ head(gapminder) # Displays first six elements of an object
 ```
 
 ```
-## # A tibble: 6 x 6
+## # A tibble: 6 × 6
 ##   country     continent  year lifeExp      pop gdpPercap
 ##   &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
 ## 1 Afghanistan Asia       1952    28.8  8425333      779.
@@ -558,7 +566,7 @@ gapminder[1,] # First row
 ```
 
 ```
-## # A tibble: 1 x 6
+## # A tibble: 1 × 6
 ##   country     continent  year lifeExp     pop gdpPercap
 ##   &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;     &lt;dbl&gt;
 ## 1 Afghanistan Asia       1952    28.8 8425333      779.
@@ -572,7 +580,7 @@ gapminder[1,] # First row
 ```
 
 ```
-## # A tibble: 3 x 2
+## # A tibble: 3 × 2
 ##    year lifeExp
 ##   &lt;int&gt;   &lt;dbl&gt;
 ## 1  1952    28.8
@@ -623,7 +631,7 @@ gapminder[gapminder$year==1952, ]
 ```
 
 ```
-## # A tibble: 142 x 6
+## # A tibble: 142 × 6
 ##    country     continent  year lifeExp      pop gdpPercap
 ##    &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
 ##  1 Afghanistan Asia       1952    28.8  8425333      779.
@@ -636,7 +644,7 @@ gapminder[gapminder$year==1952, ]
 ##  8 Bahrain     Asia       1952    50.9   120447     9867.
 ##  9 Bangladesh  Asia       1952    37.5 46886859      684.
 ## 10 Belgium     Europe     1952    68    8730405     8343.
-## # ... with 132 more rows
+## # … with 132 more rows
 ```
 
 ---
@@ -802,24 +810,24 @@ It also provides functions for summarizing and joining data which are more strai
 While I recommend all users be familiar with base R methods I've just covered, `dplyr` is the dominant platform for data manipulation in R, so we will focus on it for the remainder of this unit.
 
 ---
-# But First, Pipes: `%&gt;%`
+# But First, Pipes: `|&gt;`
 
-`dplyr` uses the [`magrittr`](https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html) forward pipe operator, usually called simply a **pipe**. We write pipes like **`%&gt;%`** (`Ctrl+Shift+M` or `⌘ +Shift+M`).
+Tidyverse approaches to writing code use forward pipe operators, usually called simply a **pipe**. We write pipes like **`|&gt;`**.
 
 --
 
-Pipes take the object on the *left* and apply the function on the *right*: `x %&gt;% f(y) = f(x, y)`. Read out loud: "and then..."
+Pipes take the object on the *left* and apply the function on the *right*: `x |&gt; f(y) = f(x, y)`. Read out loud: "and then..."
 
 --
 
 
 ```r
 library(dplyr)
-gapminder %&gt;% filter(country == "Canada") %&gt;% head(2)
+gapminder |&gt; filter(country == "Canada") |&gt; head(2)
 ```
 
 ```
-## # A tibble: 2 x 6
+## # A tibble: 2 × 6
 ##   country continent  year lifeExp      pop gdpPercap
 ##   &lt;fct&gt;   &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
 ## 1 Canada  Americas   1952    68.8 14785584    11367.
@@ -841,9 +849,9 @@ Pipes are clearest to read when you have each function on a separate line.
 
 
 ```r
-take_this_data %&gt;%
-    do_first_thing(with = this_value) %&gt;%
-    do_next_thing(using = that_value) %&gt;% ...
+take_this_data |&gt;
+    do_first_thing(with = this_value) |&gt;
+    do_next_thing(using = that_value) |&gt; ...
 ```
 
 --
@@ -852,10 +860,11 @@ Stuff to the left of the pipe is passed to the *first argument* of the function 
 
 --
 
-If you ever find yourself piping a function where data are not the first argument, use `.` in the data argument instead.
+If you ever find yourself piping a function where data are not the first argument, use `_` in the data argument instead.
+
 
 ```r
-gapminder %&gt;% lm(pop ~ year, data = .)
+gapminder |&gt; lm(pop ~ year, data = _)
 ```
 
 ---
@@ -865,47 +874,14 @@ When creating a new object from the output of piped functions, place the assignm
 
 
 ```r
-lm_pop_year &lt;- gapminder %&gt;% 
-  filter(continent == "Americas") %&gt;%
-  lm(pop ~ year, data = .)
+lm_pop_year &lt;- gapminder |&gt; 
+  filter(continent == "Americas") |&gt;
+  lm(pop ~ year, data = _)
 ```
 
 No matter how long the chain of functions is, assignment is done at the top.&lt;sup&gt;1&lt;/sup&gt;
 
 .footnote[[1] Note this is just a stylistic convention: If you prefer, you *can* do assignment at the end of the chain.]
-
----
-# The Base R Pipe
-
-In R version 4.1.0, a base R pipe was introduced: `|&gt;`
-
-
-```r
-gapminder |&gt;
-  head(3)
-```
-
-```
-## # A tibble: 3 x 6
-##   country     continent  year lifeExp      pop gdpPercap
-##   &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
-## 1 Afghanistan Asia       1952    28.8  8425333      779.
-## 2 Afghanistan Asia       1957    30.3  9240934      821.
-## 3 Afghanistan Asia       1962    32.0 10267083      853.
-```
-
-It works just like `%&gt;%` but is sometimes faster.
-
-It cannot, however, pipe anywhere but the first argument:
-
-
-```r
-gapminder |&gt; lm(gdpPercap ~ pop, data = .)
-```
-
-```
-## Error in is.data.frame(data): object '.' not found
-```
 
 ---
 
@@ -915,11 +891,11 @@ I used **`filter()`** earlier. We subset *rows* of data using logical conditions
 
 
 ```r
-gapminder %&gt;% filter(country == "Oman") %&gt;% head(8)
+gapminder |&gt; filter(country == "Oman") |&gt; head(8)
 ```
 
 ```
-## # A tibble: 8 x 6
+## # A tibble: 8 × 6
 ##   country continent  year lifeExp     pop gdpPercap
 ##   &lt;fct&gt;   &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;     &lt;dbl&gt;
 ## 1 Oman    Asia       1952    37.6  507833     1828.
@@ -944,14 +920,14 @@ Let's say we want observations from Oman after 1980 and through 2000.
 
 
 ```r
-gapminder %&gt;%
+gapminder |&gt;
     filter(country == "Oman" &amp;
            year &gt;  1980 &amp;
            year &lt;= 2000 )
 ```
 
 ```
-## # A tibble: 4 x 6
+## # A tibble: 4 × 6
 ##   country continent  year lifeExp     pop gdpPercap
 ##   &lt;fct&gt;   &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;     &lt;dbl&gt;
 ## 1 Oman    Asia       1982    62.7 1301048    12955.
@@ -971,12 +947,12 @@ We can use `%in%` like `==` but for matching *any element* in the vector on its 
 ```r
 *former_yugoslavia &lt;- c("Bosnia and Herzegovina", "Croatia",
 *                      "Montenegro", "Serbia", "Slovenia")
-yugoslavia &lt;- gapminder %&gt;% filter(country %in% former_yugoslavia)
+yugoslavia &lt;- gapminder |&gt; filter(country %in% former_yugoslavia)
 tail(yugoslavia, 2)
 ```
 
 ```
-## # A tibble: 2 x 6
+## # A tibble: 2 × 6
 ##   country  continent  year lifeExp     pop gdpPercap
 ##   &lt;fct&gt;    &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;     &lt;dbl&gt;
 ## 1 Slovenia Europe     2002    76.7 2011497    20660.
@@ -992,11 +968,11 @@ Along with filtering the data to see certain rows, we might want to sort it:
 
 
 ```r
-yugoslavia %&gt;% arrange(year, desc(pop))
+yugoslavia |&gt; arrange(year, desc(pop))
 ```
 
 ```
-## # A tibble: 60 x 6
+## # A tibble: 60 × 6
 ##    country                continent  year lifeExp     pop gdpPercap
 ##    &lt;fct&gt;                  &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;     &lt;dbl&gt;
 ##  1 Serbia                 Europe     1952    58.0 6860147     3581.
@@ -1009,7 +985,7 @@ yugoslavia %&gt;% arrange(year, desc(pop))
 ##  8 Bosnia and Herzegovina Europe     1957    58.4 3076000     1354.
 ##  9 Slovenia               Europe     1957    67.8 1533070     5862.
 ## 10 Montenegro             Europe     1957    61.4  442829     3682.
-## # ... with 50 more rows
+## # … with 50 more rows
 ```
 
 The data are sorted by ascending `year` and descending `pop`.
@@ -1021,11 +997,11 @@ Not only can we subset rows, but we can include specific columns (and put them i
 
 
 ```r
-yugoslavia %&gt;% select(country, year, pop) %&gt;% head(4)
+yugoslavia |&gt; select(country, year, pop) |&gt; head(4)
 ```
 
 ```
-## # A tibble: 4 x 3
+## # A tibble: 4 × 3
 ##   country                 year     pop
 ##   &lt;fct&gt;                  &lt;int&gt;   &lt;int&gt;
 ## 1 Bosnia and Herzegovina  1952 2791000
@@ -1042,11 +1018,11 @@ We can instead drop only specific columns with `select()` using `-` signs:
 
 
 ```r
-yugoslavia %&gt;% select(-continent, -pop, -lifeExp) %&gt;% head(4)
+yugoslavia |&gt; select(-continent, -pop, -lifeExp) |&gt; head(4)
 ```
 
 ```
-## # A tibble: 4 x 3
+## # A tibble: 4 × 3
 ##   country                 year gdpPercap
 ##   &lt;fct&gt;                  &lt;int&gt;     &lt;dbl&gt;
 ## 1 Bosnia and Herzegovina  1952      974.
@@ -1067,8 +1043,8 @@ These are very useful if you have a "wide" data frame with column names followin
 
 
 ```r
-DYS %&gt;% select(starts_with("married"))
-DYS %&gt;% select(ends_with("18"))
+DYS |&gt; select(starts_with("married"))
+DYS |&gt; select(ends_with("18"))
 ```
 
 ---
@@ -1078,11 +1054,11 @@ An especially useful helper for select is `where()` which can be used for select
 
 
 ```r
-gapminder %&gt;% select(where(is.numeric)) %&gt;% head(3)
+gapminder |&gt; select(where(is.numeric)) |&gt; head(3)
 ```
 
 ```
-## # A tibble: 3 x 4
+## # A tibble: 3 × 4
 ##    year lifeExp      pop gdpPercap
 ##   &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
 ## 1  1952    28.8  8425333      779.
@@ -1096,11 +1072,11 @@ gapminder %&gt;% select(where(is.numeric)) %&gt;% head(3)
 
 
 ```r
-gapminder %&gt;% select(where(is.factor)) %&gt;% head(3)
+gapminder |&gt; select(where(is.factor)) |&gt; head(3)
 ```
 
 ```
-## # A tibble: 3 x 2
+## # A tibble: 3 × 2
 ##   country     continent
 ##   &lt;fct&gt;       &lt;fct&gt;    
 ## 1 Afghanistan Asia     
@@ -1118,13 +1094,13 @@ We can rename columns using `select()`, but that drops everything that isn't men
 
 
 ```r
-yugoslavia %&gt;%
-    select(Life_Expectancy = lifeExp) %&gt;%
+yugoslavia |&gt;
+    select(Life_Expectancy = lifeExp) |&gt;
     head(4)
 ```
 
 ```
-## # A tibble: 4 x 1
+## # A tibble: 4 × 1
 ##   Life_Expectancy
 ##             &lt;dbl&gt;
 ## 1            53.8
@@ -1141,14 +1117,14 @@ yugoslavia %&gt;%
 
 
 ```r
-yugoslavia %&gt;%
-    select(country, year, lifeExp) %&gt;%
-    rename(Life_Expectancy = lifeExp) %&gt;%
+yugoslavia |&gt;
+    select(country, year, lifeExp) |&gt;
+    rename(Life_Expectancy = lifeExp) |&gt;
     head(4)
 ```
 
 ```
-## # A tibble: 4 x 3
+## # A tibble: 4 × 3
 ##   country                 year Life_Expectancy
 ##   &lt;fct&gt;                  &lt;int&gt;           &lt;dbl&gt;
 ## 1 Bosnia and Herzegovina  1952            53.8
@@ -1169,15 +1145,15 @@ In `dplyr`, you can add new columns to a data frame using **`mutate()`**.
 
 
 ```r
-yugoslavia %&gt;% filter(country == "Serbia") %&gt;%
-    select(year, pop, lifeExp) %&gt;%
+yugoslavia |&gt; filter(country == "Serbia") |&gt;
+    select(year, pop, lifeExp) |&gt;
 *   mutate(pop_million = pop / 1000000,
-*          life_exp_past_40 = lifeExp - 40) %&gt;%
+*          life_exp_past_40 = lifeExp - 40) |&gt;
     head(5)
 ```
 
 ```
-## # A tibble: 5 x 5
+## # A tibble: 5 × 5
 ##    year     pop lifeExp pop_million life_exp_past_40
 ##   &lt;int&gt;   &lt;int&gt;   &lt;dbl&gt;       &lt;dbl&gt;            &lt;dbl&gt;
 ## 1  1952 6860147    58.0        6.86             18.0
@@ -1227,15 +1203,15 @@ ifelse(example &gt; 0, "Positive", "Not Positive")
 .smallish[
 
 ```r
-yugoslavia %&gt;% mutate(short_country = 
+yugoslavia |&gt; mutate(short_country = 
                  ifelse(country == "Bosnia and Herzegovina", 
-*                       "B and H", as.character(country))) %&gt;%
-    select(country, short_country, year, pop) %&gt;%
-    arrange(year, short_country) %&gt;% head(3)
+*                       "B and H", as.character(country))) |&gt;
+    select(country, short_country, year, pop) |&gt;
+    arrange(year, short_country) |&gt; head(3)
 ```
 
 ```
-## # A tibble: 3 x 4
+## # A tibble: 3 × 4
 ##   country                short_country  year     pop
 ##   &lt;fct&gt;                  &lt;chr&gt;         &lt;int&gt;   &lt;int&gt;
 ## 1 Bosnia and Herzegovina B and H        1952 2791000
@@ -1257,23 +1233,24 @@ Note: `country` is a factor--use `as.character()` to convert to character.
 .smallish[
 
 ```r
-gapminder %&gt;% 
+gapminder |&gt; 
   mutate(gdpPercap_ordinal = 
     case_when(
       gdpPercap &lt;  700 ~ "low",
       gdpPercap &gt;= 700 &amp; gdpPercap &lt; 800 ~ "moderate",
-      TRUE ~ "high" )) %&gt;% # Value when all other statements are FALSE
+      TRUE ~ "high" )) |&gt; # Value when all other statements are FALSE
   slice(6:9) # get rows 6 through 9
 ```
 
 ```
-## # A tibble: 4 x 7
-##   country   continent  year lifeExp     pop gdpPercap gdpPercap_ordin~
-##   &lt;fct&gt;     &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;           
-## 1 Afghanis~ Asia       1977    38.4  1.49e7      786. moderate        
-## 2 Afghanis~ Asia       1982    39.9  1.29e7      978. high            
-## 3 Afghanis~ Asia       1987    40.8  1.39e7      852. high            
-## 4 Afghanis~ Asia       1992    41.7  1.63e7      649. low
+## # A tibble: 4 × 7
+##   country     continent  year lifeExp      pop gdpPercap gdpPercap_o…¹
+##   &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;        
+## 1 Afghanistan Asia       1977    38.4 14880372      786. moderate     
+## 2 Afghanistan Asia       1982    39.9 12881816      978. high         
+## 3 Afghanistan Asia       1987    40.8 13867957      852. high         
+## 4 Afghanistan Asia       1992    41.7 16317921      649. low          
+## # … with abbreviated variable name ¹​gdpPercap_ordinal
 ```
 ]
 
@@ -1296,7 +1273,7 @@ hist(gapminder$lifeExp,
 *    main = "Observed Life Expectancies of Countries")
 ```
 
-&lt;img src="r_exposure_1_introduction_files/figure-html/unnamed-chunk-44-1.png" height="320px" /&gt;
+&lt;img src="r_exposure_1_introduction_files/figure-html/unnamed-chunk-42-1.png" height="320px" /&gt;
 
 .pull-right[
 .footnote[
@@ -1322,7 +1299,7 @@ Use `?hist` to see additional options available for customizing a histogram.
 *abline(v = mean(gapminder$gdpPercap), col = "cornflowerblue")
 ```
 
-&lt;img src="r_exposure_1_introduction_files/figure-html/unnamed-chunk-45-1.png" height="320px" /&gt;
+&lt;img src="r_exposure_1_introduction_files/figure-html/unnamed-chunk-43-1.png" height="320px" /&gt;
 ]
 
 .pull-right[
@@ -1345,7 +1322,7 @@ new_formula
 
 ```
 ## y ~ x1 + x2 + x3
-## &lt;environment: 0x000002660b364eb8&gt;
+## &lt;environment: 0x0000025c8bc1cc38&gt;
 ```
 
 ```r
@@ -1676,6 +1653,19 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable
