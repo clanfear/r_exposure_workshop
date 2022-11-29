@@ -4,17 +4,25 @@
     <title>R Exposure 2</title>
     <meta charset="utf-8" />
     <meta name="author" content="Charles Lanfear" />
-    <script src="libs/header-attrs-2.13/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.17/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
 class: center, top, title-slide
 
+.title[
 # R Exposure 2
+]
+.subtitle[
 ## Data Visualization and Management
+]
+.author[
 ### Charles Lanfear
-### Apr 17, 2022<br>Updated: Apr 16, 2022
+]
+.date[
+### Dec 4, 2022<br>Updated: Nov 29, 2022
+]
 
 ---
 
@@ -69,13 +77,13 @@ To give us something to visualize, we'll load the `gapminder` data from the last
 ```r
 library(gapminder)
 library(dplyr)
-China &lt;- gapminder %&gt;%
+China &lt;- gapminder |&gt;
   filter(country == "China")
 head(China, 4)
 ```
 
 ```
-## # A tibble: 4 x 6
+## # A tibble: 4 × 6
 ##   country continent  year lifeExp       pop gdpPercap
 ##   &lt;fct&gt;   &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;     &lt;int&gt;     &lt;dbl&gt;
 ## 1 China   Asia       1952    44   556263527      400.
@@ -106,7 +114,7 @@ plot(lifeExp ~ year,
 ]
 
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -138,7 +146,7 @@ ggplot(data = China,
 ]
 
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-9-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-6-1.svg)&lt;!-- --&gt;
 ]
 
 ---
@@ -230,7 +238,7 @@ Now let's see all this jargon in action.
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-11-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-8-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Initialize the plot with `ggplot()` and `x` and `y` aesthetics **mapped** to variables.]
@@ -253,7 +261,7 @@ ggplot(data = China,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-13-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-10-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Add a scatterplot **layer**.]
@@ -275,7 +283,7 @@ ggplot(data = China,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-15-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-12-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[**Set** aesthetics to make the points large and red.]
@@ -298,7 +306,7 @@ ggplot(data = China,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-17-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-14-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Add a layer to capitalize the x-axis label.]
@@ -322,7 +330,7 @@ ggplot(data = China,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-19-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-16-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Add a layer to clean up the y-axis label.]
@@ -347,7 +355,7 @@ ggplot(data = China,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-21-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-18-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Add a title layer.]
@@ -373,7 +381,7 @@ ggplot(data = China,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-23-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-20-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Pick a nicer theme with a new layer.]
@@ -399,7 +407,7 @@ ggplot(data = China,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-25-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-22-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Increase the base text size.]
@@ -430,7 +438,7 @@ We have a plot we like for China...
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-27-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-24-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[We can't tell countries apart! Maybe we could follow *lines*?]
@@ -455,7 +463,7 @@ ggplot(data = gapminder,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-29-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-26-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[`ggplot2` doesn't know how to connect the lines!]
@@ -481,7 +489,7 @@ ggplot(data = gapminder,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-31-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-28-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[That looks more reasonable... but the lines are too thick!]
@@ -507,7 +515,7 @@ ggplot(data = gapminder,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-33-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-30-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Much better... but maybe we can do highlight regional differences?]
@@ -534,7 +542,7 @@ ggplot(data = gapminder,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-35-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-32-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Patterns are obvious... but why not separate continents completely?]
@@ -562,7 +570,7 @@ ggplot(data = gapminder,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-37-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-34-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Now the text is too big!]
@@ -590,7 +598,7 @@ ggplot(data = gapminder,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-39-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-36-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Better, but could bring that legend in.]
@@ -619,7 +627,7 @@ ggplot(data = gapminder,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-41-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-38-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Better... but do we even need it?]
@@ -648,7 +656,7 @@ ggplot(data = gapminder,
 ]
 ]
 .pull-right[
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-43-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-40-1.svg)&lt;!-- --&gt;
 ]
 
 .footnote[Looking good!]
@@ -686,7 +694,7 @@ The graph won't be displayed when you do this. You can show the graph using a si
 lifeExp_by_year
 ```
 
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-45-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-42-1.svg)&lt;!-- --&gt;
 
 ---
 
@@ -698,7 +706,7 @@ lifeExp_by_year +
     theme(legend.position = "bottom")
 ```
 
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-46-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-43-1.svg)&lt;!-- --&gt;
 
 ---
 # Changing the Axes
@@ -723,7 +731,7 @@ ggplot(data = China, aes(x = year, y = gdpPercap)) +
     xlim(1940, 2010) + ggtitle("Chinese GDP per capita")
 ```
 
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-47-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-44-1.svg)&lt;!-- --&gt;
 
 ---
 # Saving `ggplot` Plots
@@ -864,7 +872,7 @@ Remember our Yugoslavia example from last unit?
 .smallish[
 
 ```r
-yugoslavia &lt;- gapminder %&gt;% filter(country %in% c("Bosnia and Herzegovina",
+yugoslavia &lt;- gapminder |&gt; filter(country %in% c("Bosnia and Herzegovina",
                "Croatia", "Macedonia", "Montenegro", "Serbia", "Slovenia"))
 ```
 ]
@@ -874,7 +882,7 @@ For the year 1982, let's get the *number of observations*, *total population*, *
 .smallish[
 
 ```r
-yugoslavia %&gt;% filter(year == 1982) %&gt;%
+yugoslavia |&gt; filter(year == 1982) |&gt;
     summarize(n_obs = n(),
               total_pop = sum(pop),
               mean_life_exp = mean(lifeExp),
@@ -882,7 +890,7 @@ yugoslavia %&gt;% filter(year == 1982) %&gt;%
 ```
 
 ```
-## # A tibble: 1 x 4
+## # A tibble: 1 × 4
 ##   n_obs total_pop mean_life_exp range_life_exp
 ##   &lt;int&gt;     &lt;int&gt;         &lt;dbl&gt;          &lt;dbl&gt;
 ## 1     5  20042685          71.3           3.94
@@ -902,13 +910,13 @@ Maybe you need to calculate the mean and standard deviation of a bunch of column
 .smallish[
 
 ```r
-yugoslavia %&gt;%
-  filter(year == 1982) %&gt;%
+yugoslavia |&gt;
+  filter(year == 1982) |&gt;
   summarize(across(c(lifeExp, pop), list(avg = ~mean(.), sd = ~sd(.))))
 ```
 
 ```
-## # A tibble: 1 x 4
+## # A tibble: 1 × 4
 ##   lifeExp_avg lifeExp_sd pop_avg   pop_sd
 ##         &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
 ## 1        71.3       1.60 4008537 3237282.
@@ -926,14 +934,14 @@ Break things up when it gets confusing!
 
 
 ```r
-yugoslavia %&gt;%
-  filter(year == 1982) %&gt;%
+yugoslavia |&gt;
+  filter(year == 1982) |&gt;
   summarize(
     across( 
       c(lifeExp, pop), 
       list(
         avg = ~mean(.), 
-        sd = ~sd(.)
+        sd  = ~sd(.)
       )
     )
   )
@@ -951,7 +959,7 @@ There are additional ways to use `across()` for repetitive operations:
 .smallish[
 
 ```r
-dataframe %&gt;% 
+dataframe |&gt; 
   summarize(across(everything(), list(mean = ~mean(.), sd = ~sd(.))))
 ```
 ]
@@ -961,7 +969,7 @@ dataframe %&gt;%
 .smallish[
 
 ```r
-dataframe %&gt;% 
+dataframe |&gt; 
   summarize(across(where(is.numeric), list(mean = ~mean(.), sd = ~sd(.))))
 ```
 ]
@@ -984,15 +992,15 @@ Typically the variables you group by will be integers, factors, or characters, a
 
 
 ```r
-yugoslavia %&gt;%
-* group_by(year) %&gt;%
+yugoslavia |&gt;
+* group_by(year) |&gt;
     summarize(total_pop = sum(pop),
-              total_gdp_per_cap = sum(pop*gdpPercap)/total_pop) %&gt;%
+              total_gdp_per_cap = sum(pop*gdpPercap)/total_pop) |&gt;
     head(5)
 ```
 
 ```
-## # A tibble: 5 x 3
+## # A tibble: 5 × 3
 ##    year total_pop total_gdp_per_cap
 ##   &lt;int&gt;     &lt;int&gt;             &lt;dbl&gt;
 ## 1  1952  15436728             3030.
@@ -1013,17 +1021,17 @@ Grouping can also be used with `mutate()` or `filter()` to give rank orders with
 
 
 ```r
-yugoslavia %&gt;% 
-  select(country, year, pop) %&gt;%
-  filter(year &gt;= 2002) %&gt;% 
-  group_by(country) %&gt;%
+yugoslavia |&gt; 
+  select(country, year, pop) |&gt;
+  filter(year &gt;= 2002) |&gt; 
+  group_by(country) |&gt;
   mutate(lag_pop = lag(pop, order_by = year),
-         pop_chg = pop - lag_pop) %&gt;%
+         pop_chg = pop - lag_pop) |&gt;
   head(4)
 ```
 
 ```
-## # A tibble: 4 x 5
+## # A tibble: 4 × 5
 ## # Groups:   country [2]
 ##   country                 year     pop lag_pop pop_chg
 ##   &lt;fct&gt;                  &lt;int&gt;   &lt;int&gt;   &lt;int&gt;   &lt;int&gt;
@@ -1258,9 +1266,9 @@ Let's use `pivot_longer()` to get the week and rank variables out of their curre
 
 ```r
 library(tidyr)
-billboard_2000 &lt;- billboard_2000_raw %&gt;%
+billboard_2000 &lt;- billboard_2000_raw |&gt;
   pivot_longer(starts_with("wk"), 
-*              names_to ="week",
+*              names_to  = "week",
 *              values_to = "rank")
 dim(billboard_2000)
 ```
@@ -1283,7 +1291,7 @@ head(billboard_2000)
 ```
 
 ```
-## # A tibble: 6 x 7
+## # A tibble: 6 × 7
 ##    year artist track                   time  date.entered week   rank
 ##   &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;                   &lt;chr&gt; &lt;date&gt;       &lt;chr&gt; &lt;int&gt;
 ## 1  2000 2 Pac  Baby Don't Cry (Keep... 4:22  2000-02-26   wk1      87
@@ -1318,9 +1326,9 @@ This is an improvement, but we don't want to keep the 18785 rows with missing ra
 The argument `values_drop_na = TRUE` to `pivot_longer()` will remove rows with missing ranks.
 
 ```r
-billboard_2000 &lt;- billboard_2000_raw %&gt;%
+billboard_2000 &lt;- billboard_2000_raw |&gt;
   pivot_longer(starts_with("wk"), 
-               names_to ="week", 
+               names_to  = "week", 
                values_to = "rank", 
 *              values_drop_na = TRUE)
 summary(billboard_2000$rank)
@@ -1364,7 +1372,7 @@ summary(billboard_2000$week)
 
 
 ```r
-billboard_2000 &lt;- billboard_2000 %&gt;%
+billboard_2000 &lt;- billboard_2000 |&gt;
 *   mutate(week = parse_number(week))
 summary(billboard_2000$week)
 ```
@@ -1381,9 +1389,9 @@ For more sophisticated conversion or pattern checking, you'll need to use string
 
 
 ```r
-billboard_2000 &lt;- billboard_2000_raw %&gt;%
+billboard_2000 &lt;- billboard_2000_raw |&gt;
   pivot_longer(starts_with("wk"), 
-               names_to ="week", 
+               names_to  = "week", 
                values_to = "rank",
                values_drop_na = TRUE,
 *              names_prefix = "wk",
@@ -1392,7 +1400,7 @@ head(billboard_2000, 3)
 ```
 
 ```
-## # A tibble: 3 x 7
+## # A tibble: 3 × 7
 ##    year artist track                   time  date.entered  week  rank
 ##   &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;                   &lt;chr&gt; &lt;date&gt;       &lt;int&gt; &lt;int&gt;
 ## 1  2000 2 Pac  Baby Don't Cry (Keep... 4:22  2000-02-26       1    87
@@ -1409,10 +1417,10 @@ The track length column isn't analytically friendly. Let's convert it to a numbe
 
 
 ```r
-billboard_2000 &lt;- billboard_2000 %&gt;%
+billboard_2000 &lt;- billboard_2000 |&gt;
     separate(time, into = c("minutes", "seconds"),
-*            sep = ":", convert = TRUE) %&gt;%
-    mutate(length = minutes + seconds / 60) %&gt;%
+*            sep = ":", convert = TRUE) |&gt;
+    mutate(length = minutes + seconds / 60) |&gt;
     select(-minutes, -seconds)
 summary(billboard_2000$length)
 ```
@@ -1477,12 +1485,12 @@ A common cue to use `pivot_wider()` is having measurements of different quantiti
 
 
 ```r
-(just_right_data &lt;- too_long_data %&gt;%
+(just_right_data &lt;- too_long_data |&gt;
     pivot_wider(names_from = Statistic, values_from = Value))
 ```
 
 ```
-## # A tibble: 2 x 4
+## # A tibble: 2 × 4
 ##   Group  Mean Median    SD
 ##   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
 ## 1 A      1.28      1  0.72
@@ -1496,12 +1504,12 @@ Let's look at songs that hit #1 at some point and look how they got there versus
 
 
 ```r
-billboard_2000 &lt;- billboard_2000 %&gt;%
-    group_by(artist, track) %&gt;%
+billboard_2000 &lt;- billboard_2000 |&gt;
+    group_by(artist, track) |&gt;
     mutate(`Weeks at #1` = sum(rank == 1),
 *          `Peak Rank`   = ifelse(any(rank == 1),
                                   "Hit #1",
-                                  "Didn't #1")) %&gt;%
+                                  "Didn't #1")) |&gt;
 *   ungroup()
 ```
 
@@ -1537,7 +1545,7 @@ billboard_trajectories &lt;-
 ---
 # Charts of 2000: Beauty!
 
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-74-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-71-1.svg)&lt;!-- --&gt;
 
 Observation: There appears to be censoring around week 20 for songs falling out of the top 50 that I'd want to follow up on.
 
@@ -1546,15 +1554,15 @@ Observation: There appears to be censoring around week 20 for songs falling out 
 
 
 ```r
-billboard_2000 %&gt;%
-    select(artist, track, `Weeks at #1`) %&gt;%
-    distinct(artist, track, `Weeks at #1`) %&gt;%
-    arrange(desc(`Weeks at #1`)) %&gt;%
+billboard_2000 |&gt;
+    select(artist, track, `Weeks at #1`) |&gt;
+    distinct(artist, track, `Weeks at #1`) |&gt;
+    arrange(desc(`Weeks at #1`)) |&gt;
     head(7)
 ```
 
 ```
-## # A tibble: 7 x 3
+## # A tibble: 7 × 3
 ##   artist              track                   `Weeks at #1`
 ##   &lt;chr&gt;               &lt;chr&gt;                           &lt;int&gt;
 ## 1 Destiny's Child     Independent Women Pa...            11
@@ -1573,14 +1581,14 @@ We have the date the songs first charted, but not the dates for later weeks. We 
 
 
 ```r
-billboard_2000 &lt;- billboard_2000 %&gt;%
+billboard_2000 &lt;- billboard_2000 |&gt;
 *   mutate(date = date.entered + (week - 1) * 7)
-billboard_2000 %&gt;% arrange(artist, track, week) %&gt;%
-    select(artist, date.entered, week, date, rank) %&gt;% head(4)
+billboard_2000 |&gt; arrange(artist, track, week) |&gt;
+    select(artist, date.entered, week, date, rank) |&gt; head(4)
 ```
 
 ```
-## # A tibble: 4 x 5
+## # A tibble: 4 × 5
 ##   artist date.entered  week date        rank
 ##   &lt;chr&gt;  &lt;date&gt;       &lt;int&gt; &lt;date&gt;     &lt;int&gt;
 ## 1 2 Pac  2000-02-26       1 2000-02-26    87
@@ -1616,7 +1624,7 @@ plot_by_day &lt;-
 ---
 # Calendar Time Plot!
 
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-78-1.svg)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-75-1.svg)&lt;!-- --&gt;
 
 We see some of the entry dates are before 2000---presumably songs still charting during 2000 that came out earlier. 
 
@@ -1651,17 +1659,17 @@ We need to think about the following when we want to merge data frames `A` and `
 
 There are many types of joins&lt;sup&gt;1&lt;/sup&gt;...
 
-* `A %&gt;% left_join(B)`: keep all rows from `A`, matched with `B` wherever possible (`NA` when not), keep columns from both `A` and `B`
+* `A |&gt; left_join(B)`: keep all rows from `A`, matched with `B` wherever possible (`NA` when not), keep columns from both `A` and `B`
 
-* `A %&gt;% right_join(B)`: keep all rows from `B`, matched with `A` wherever possible (`NA` when not), keep columns from both `A` and `B`
+* `A |&gt; right_join(B)`: keep all rows from `B`, matched with `A` wherever possible (`NA` when not), keep columns from both `A` and `B`
 
-* `A %&gt;% inner_join(B)`: keep only rows from `A` and `B` that match, keep columns from both `A` and `B`
+* `A |&gt; inner_join(B)`: keep only rows from `A` and `B` that match, keep columns from both `A` and `B`
 
-* `A %&gt;% full_join(B)`: keep all rows from both `A` and `B`, matched wherever possible (`NA` when not), keep columns from both `A` and `B`
+* `A |&gt; full_join(B)`: keep all rows from both `A` and `B`, matched wherever possible (`NA` when not), keep columns from both `A` and `B`
 
-* `A %&gt;% semi_join(B)`: keep rows from `A` that match rows in `B`, keep columns from only `A`
+* `A |&gt; semi_join(B)`: keep rows from `A` that match rows in `B`, keep columns from only `A`
 
-* `A %&gt;% anti_join(B)`: keep rows from `A` that *don't* match a row in `B`, keep columns from only `A`
+* `A |&gt; anti_join(B)`: keep rows from `A` that *don't* match a row in `B`, keep columns from only `A`
 
 .pull-right[.footnote[[1] Usually `left_join()` does the job.]]
 
@@ -1696,6 +1704,10 @@ We'll use data in the [`nycflights13` package](https://cran.r-project.org/web/pa
 library(nycflights13)
 ```
 
+```
+## Warning: package 'nycflights13' was built under R version 4.2.2
+```
+
 It includes five dataframes, some of which contain missing data (`NA`):
 
 * `flights`: flights leaving JFK, LGA, or EWR in 2013
@@ -1722,15 +1734,15 @@ data(airports)
 Which airlines had the most flights to Seattle from NYC?
 
 ```r
-flights %&gt;% filter(dest == "SEA") %&gt;% 
-    select(carrier) %&gt;%
-    left_join(airlines, by = "carrier") %&gt;%
-*   count(name) %&gt;%
+flights |&gt; filter(dest == "SEA") |&gt; 
+    select(carrier) |&gt;
+    left_join(airlines, by = "carrier") |&gt;
+*   count(name) |&gt;
     arrange(desc(n))
 ```
 
 ```
-## # A tibble: 5 x 2
+## # A tibble: 5 × 2
 ##   name                       n
 ##   &lt;chr&gt;                  &lt;int&gt;
 ## 1 Delta Air Lines Inc.    1213
@@ -1740,7 +1752,7 @@ flights %&gt;% filter(dest == "SEA") %&gt;%
 ## 5 American Airlines Inc.   365
 ```
 
-`count(name)` is a shortcut for `group_by(name) %&gt;% summarize(n=n())`: It creates a variable `n` equal to the number of rows in each group (`n()`).
+`count(name)` is a shortcut for `group_by(name) |&gt; summarize(n=n())`: It creates a variable `n` equal to the number of rows in each group (`n()`).
 
 ---
 ## Join Example 2
@@ -1748,15 +1760,15 @@ Who manufactures the planes that flew to SeaTac?
 
 
 ```r
-flights %&gt;% filter(dest == "SEA") %&gt;% select(tailnum) %&gt;%
-*   left_join(planes %&gt;% select(tailnum, manufacturer),
-              by = "tailnum") %&gt;%
-    count(manufacturer) %&gt;% # Count observations by manufacturer
+flights |&gt; filter(dest == "SEA") |&gt; select(tailnum) |&gt;
+*   left_join(planes |&gt; select(tailnum, manufacturer),
+              by = "tailnum") |&gt;
+    count(manufacturer) |&gt; # Count observations by manufacturer
     arrange(desc(n)) # Arrange data descending by count
 ```
 
 ```
-## # A tibble: 6 x 2
+## # A tibble: 6 × 2
 ##   manufacturer           n
 ##   &lt;chr&gt;              &lt;int&gt;
 ## 1 BOEING              2659
@@ -1776,13 +1788,13 @@ Is there a relationship between departure delays and wind gusts?
 
 
 ```r
-flights %&gt;% 
-    select(origin, year, month, day, hour, dep_delay) %&gt;%
+flights |&gt; 
+    select(origin, year, month, day, hour, dep_delay) |&gt;
     inner_join(weather, 
-           by = c("origin", "year", "month", "day", "hour")) %&gt;%
-    select(dep_delay, wind_gust) %&gt;%
+           by = c("origin", "year", "month", "day", "hour")) |&gt;
+    select(dep_delay, wind_gust) |&gt;
     # removing rows with missing values
-    filter(!is.na(dep_delay) &amp; !is.na(wind_gust)) %&gt;% 
+    filter(!is.na(dep_delay) &amp; !is.na(wind_gust)) |&gt; 
     ggplot(aes(x = wind_gust, y = dep_delay)) +
       geom_point() + 
       geom_smooth()
@@ -1793,7 +1805,7 @@ Because the data are the first argument for `ggplot()`, we can pipe them straigh
 ---
 ## Wind Gusts and Delays
 
-![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-84-1.png)&lt;!-- --&gt;
+![](r_exposure_2_intermediate_files/figure-html/unnamed-chunk-81-1.png)&lt;!-- --&gt;
 
 ---
 # Resources
@@ -1850,6 +1862,19 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable

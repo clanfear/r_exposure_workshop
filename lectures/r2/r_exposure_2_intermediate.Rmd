@@ -2,7 +2,7 @@
 title: "R Exposure 2"
 subtitle: "Data Visualization and Management"  
 author: "Charles Lanfear"
-date: "Apr 17, 2022<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Dec 4, 2022<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -66,7 +66,7 @@ To give us something to visualize, we'll load the `gapminder` data from the last
 ```{r, message=FALSE}
 library(gapminder)
 library(dplyr)
-China <- gapminder %>%
+China <- gapminder |>
   filter(country == "China")
 head(China, 4)
 ```
@@ -966,7 +966,7 @@ Remember our Yugoslavia example from last unit?
 
 .smallish[
 ```{r}
-yugoslavia <- gapminder %>% filter(country %in% c("Bosnia and Herzegovina",
+yugoslavia <- gapminder |> filter(country %in% c("Bosnia and Herzegovina",
                "Croatia", "Macedonia", "Montenegro", "Serbia", "Slovenia"))
 ```
 ]
@@ -975,7 +975,7 @@ For the year 1982, let's get the *number of observations*, *total population*, *
 
 .smallish[
 ```{r}
-yugoslavia %>% filter(year == 1982) %>%
+yugoslavia |> filter(year == 1982) |>
     summarize(n_obs = n(),
               total_pop = sum(pop),
               mean_life_exp = mean(lifeExp),
@@ -995,8 +995,8 @@ Maybe you need to calculate the mean and standard deviation of a bunch of column
 
 .smallish[
 ```{r}
-yugoslavia %>%
-  filter(year == 1982) %>%
+yugoslavia |>
+  filter(year == 1982) |>
   summarize(across(c(lifeExp, pop), list(avg = ~mean(.), sd = ~sd(.))))
 ```
 ]
@@ -1011,14 +1011,14 @@ It can get hard to read code with lots of **nested** functions--functions inside
 Break things up when it gets confusing!
 
 ```{r, eval = FALSE}
-yugoslavia %>%
-  filter(year == 1982) %>%
+yugoslavia |>
+  filter(year == 1982) |>
   summarize(
     across( 
       c(lifeExp, pop), 
       list(
         avg = ~mean(.), 
-        sd = ~sd(.)
+        sd  = ~sd(.)
       )
     )
   )
@@ -1035,7 +1035,7 @@ There are additional ways to use `across()` for repetitive operations:
 
 .smallish[
 ```{r, eval=FALSE}
-dataframe %>% 
+dataframe |> 
   summarize(across(everything(), list(mean = ~mean(.), sd = ~sd(.))))
 ```
 ]
@@ -1044,7 +1044,7 @@ dataframe %>%
 
 .smallish[
 ```{r, eval=FALSE}
-dataframe %>% 
+dataframe |> 
   summarize(across(where(is.numeric), list(mean = ~mean(.), sd = ~sd(.))))
 ```
 ]
@@ -1066,10 +1066,10 @@ Typically the variables you group by will be integers, factors, or characters, a
 
 
 ```{r}
-yugoslavia %>%
-  group_by(year) %>% #<<
+yugoslavia |>
+  group_by(year) |> #<<
     summarize(total_pop = sum(pop),
-              total_gdp_per_cap = sum(pop*gdpPercap)/total_pop) %>%
+              total_gdp_per_cap = sum(pop*gdpPercap)/total_pop) |>
     head(5)
 ```
 
@@ -1083,12 +1083,12 @@ Each value of year is its own **group**!
 Grouping can also be used with `mutate()` or `filter()` to give rank orders within a group, lagged values, and cumulative sums. You can read more about window functions in this [vignette](https://cran.r-project.org/web/packages/dplyr/vignettes/window-functions.html).
 
 ```{r}
-yugoslavia %>% 
-  select(country, year, pop) %>%
-  filter(year >= 2002) %>% 
-  group_by(country) %>%
+yugoslavia |> 
+  select(country, year, pop) |>
+  filter(year >= 2002) |> 
+  group_by(country) |>
   mutate(lag_pop = lag(pop, order_by = year),
-         pop_chg = pop - lag_pop) %>%
+         pop_chg = pop - lag_pop) |>
   head(4)
 ```
 
@@ -1310,9 +1310,9 @@ Let's use `pivot_longer()` to get the week and rank variables out of their curre
 
 ```{r, message=FALSE, warning=FALSE}
 library(tidyr)
-billboard_2000 <- billboard_2000_raw %>%
+billboard_2000 <- billboard_2000_raw |>
   pivot_longer(starts_with("wk"), 
-               names_to ="week", #<<
+               names_to  = "week", #<<
                values_to = "rank") #<<
 dim(billboard_2000)
 ```
@@ -1346,9 +1346,9 @@ This is an improvement, but we don't want to keep the `r sum(is.na(billboard_200
 
 The argument `values_drop_na = TRUE` to `pivot_longer()` will remove rows with missing ranks.
 ```{r}
-billboard_2000 <- billboard_2000_raw %>%
+billboard_2000 <- billboard_2000_raw |>
   pivot_longer(starts_with("wk"), 
-               names_to ="week", 
+               names_to  = "week", 
                values_to = "rank", 
                values_drop_na = TRUE) #<<
 summary(billboard_2000$rank)
@@ -1375,7 +1375,7 @@ summary(billboard_2000$week)
 `tidyr` provides a convenience function to grab just the numeric information from a column that mixes text and numbers:
 
 ```{r}
-billboard_2000 <- billboard_2000 %>%
+billboard_2000 <- billboard_2000 |>
     mutate(week = parse_number(week)) #<<
 summary(billboard_2000$week)
 ```
@@ -1386,9 +1386,9 @@ For more sophisticated conversion or pattern checking, you'll need to use string
 # Or use `names_prefix`
 
 ```{r}
-billboard_2000 <- billboard_2000_raw %>%
+billboard_2000 <- billboard_2000_raw |>
   pivot_longer(starts_with("wk"), 
-               names_to ="week", 
+               names_to  = "week", 
                values_to = "rank",
                values_drop_na = TRUE,
                names_prefix = "wk", #<<
@@ -1404,10 +1404,10 @@ We use `names_prefix` to remove `"wk"` from the values, and `names_transform` to
 The track length column isn't analytically friendly. Let's convert it to a number rather than the character (minutes:seconds) format:
 
 ```{r}
-billboard_2000 <- billboard_2000 %>%
+billboard_2000 <- billboard_2000 |>
     separate(time, into = c("minutes", "seconds"),
-             sep = ":", convert = TRUE) %>% #<<
-    mutate(length = minutes + seconds / 60) %>%
+             sep = ":", convert = TRUE) |> #<<
+    mutate(length = minutes + seconds / 60) |>
     select(-minutes, -seconds)
 summary(billboard_2000$length)
 ```
@@ -1455,7 +1455,7 @@ A common cue to use `pivot_wider()` is having measurements of different quantiti
 # After `pivot_wider()`
 
 ```{r}
-(just_right_data <- too_long_data %>%
+(just_right_data <- too_long_data |>
     pivot_wider(names_from = Statistic, values_from = Value))
 ```
 
@@ -1465,12 +1465,12 @@ A common cue to use `pivot_wider()` is having measurements of different quantiti
 Let's look at songs that hit #1 at some point and look how they got there versus songs that did not:
 
 ```{r}
-billboard_2000 <- billboard_2000 %>%
-    group_by(artist, track) %>%
+billboard_2000 <- billboard_2000 |>
+    group_by(artist, track) |>
     mutate(`Weeks at #1` = sum(rank == 1),
            `Peak Rank`   = ifelse(any(rank == 1), #<<
                                   "Hit #1",
-                                  "Didn't #1")) %>%
+                                  "Didn't #1")) |>
     ungroup() #<<
 ```
 
@@ -1515,10 +1515,10 @@ Observation: There appears to be censoring around week 20 for songs falling out 
 ## Which Were #1 the Most Weeks?
 
 ```{r}
-billboard_2000 %>%
-    select(artist, track, `Weeks at #1`) %>%
-    distinct(artist, track, `Weeks at #1`) %>%
-    arrange(desc(`Weeks at #1`)) %>%
+billboard_2000 |>
+    select(artist, track, `Weeks at #1`) |>
+    distinct(artist, track, `Weeks at #1`) |>
+    arrange(desc(`Weeks at #1`)) |>
     head(7)
 ```
 
@@ -1528,10 +1528,10 @@ billboard_2000 %>%
 We have the date the songs first charted, but not the dates for later weeks. We can calculate these now that the data are tidy:
 
 ```{r}
-billboard_2000 <- billboard_2000 %>%
+billboard_2000 <- billboard_2000 |>
     mutate(date = date.entered + (week - 1) * 7) #<<
-billboard_2000 %>% arrange(artist, track, week) %>%
-    select(artist, date.entered, week, date, rank) %>% head(4)
+billboard_2000 |> arrange(artist, track, week) |>
+    select(artist, date.entered, week, date, rank) |> head(4)
 ```
 
 This works because `date` objects are in units of days—we just add 7 days per week to the start date.
@@ -1597,17 +1597,17 @@ We need to think about the following when we want to merge data frames `A` and `
 
 There are many types of joins<sup>1</sup>...
 
-* `A %>% left_join(B)`: keep all rows from `A`, matched with `B` wherever possible (`NA` when not), keep columns from both `A` and `B`
+* `A |> left_join(B)`: keep all rows from `A`, matched with `B` wherever possible (`NA` when not), keep columns from both `A` and `B`
 
-* `A %>% right_join(B)`: keep all rows from `B`, matched with `A` wherever possible (`NA` when not), keep columns from both `A` and `B`
+* `A |> right_join(B)`: keep all rows from `B`, matched with `A` wherever possible (`NA` when not), keep columns from both `A` and `B`
 
-* `A %>% inner_join(B)`: keep only rows from `A` and `B` that match, keep columns from both `A` and `B`
+* `A |> inner_join(B)`: keep only rows from `A` and `B` that match, keep columns from both `A` and `B`
 
-* `A %>% full_join(B)`: keep all rows from both `A` and `B`, matched wherever possible (`NA` when not), keep columns from both `A` and `B`
+* `A |> full_join(B)`: keep all rows from both `A` and `B`, matched wherever possible (`NA` when not), keep columns from both `A` and `B`
 
-* `A %>% semi_join(B)`: keep rows from `A` that match rows in `B`, keep columns from only `A`
+* `A |> semi_join(B)`: keep rows from `A` that match rows in `B`, keep columns from only `A`
 
-* `A %>% anti_join(B)`: keep rows from `A` that *don't* match a row in `B`, keep columns from only `A`
+* `A |> anti_join(B)`: keep rows from `A` that *don't* match a row in `B`, keep columns from only `A`
 
 .pull-right[.footnote[[1] Usually `left_join()` does the job.]]
 
@@ -1665,24 +1665,24 @@ data(airports)
 
 Which airlines had the most flights to Seattle from NYC?
 ```{r}
-flights %>% filter(dest == "SEA") %>% 
-    select(carrier) %>%
-    left_join(airlines, by = "carrier") %>%
-    count(name) %>% #<<
+flights |> filter(dest == "SEA") |> 
+    select(carrier) |>
+    left_join(airlines, by = "carrier") |>
+    count(name) |> #<<
     arrange(desc(n))
 ```
 
-`count(name)` is a shortcut for `group_by(name) %>% summarize(n=n())`: It creates a variable `n` equal to the number of rows in each group (`n()`).
+`count(name)` is a shortcut for `group_by(name) |> summarize(n=n())`: It creates a variable `n` equal to the number of rows in each group (`n()`).
 
 ---
 ## Join Example 2
 Who manufactures the planes that flew to SeaTac?
 
 ```{r}
-flights %>% filter(dest == "SEA") %>% select(tailnum) %>%
-    left_join(planes %>% select(tailnum, manufacturer), #<<
-              by = "tailnum") %>%
-    count(manufacturer) %>% # Count observations by manufacturer
+flights |> filter(dest == "SEA") |> select(tailnum) |>
+    left_join(planes |> select(tailnum, manufacturer), #<<
+              by = "tailnum") |>
+    count(manufacturer) |> # Count observations by manufacturer
     arrange(desc(n)) # Arrange data descending by count
 ```
 
@@ -1694,13 +1694,13 @@ Note you can perform operations on the data inside functions such as `left_join(
 Is there a relationship between departure delays and wind gusts?
 
 ```{r, warning=FALSE, message=FALSE, eval=FALSE}
-flights %>% 
-    select(origin, year, month, day, hour, dep_delay) %>%
+flights |> 
+    select(origin, year, month, day, hour, dep_delay) |>
     inner_join(weather, 
-           by = c("origin", "year", "month", "day", "hour")) %>%
-    select(dep_delay, wind_gust) %>%
+           by = c("origin", "year", "month", "day", "hour")) |>
+    select(dep_delay, wind_gust) |>
     # removing rows with missing values
-    filter(!is.na(dep_delay) & !is.na(wind_gust)) %>% 
+    filter(!is.na(dep_delay) & !is.na(wind_gust)) |> 
     ggplot(aes(x = wind_gust, y = dep_delay)) +
       geom_point() + 
       geom_smooth()
@@ -1712,11 +1712,11 @@ Because the data are the first argument for `ggplot()`, we can pipe them straigh
 ## Wind Gusts and Delays
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE, cache=TRUE, fig.height=4, dev='png', dpi=600}
-flights %>% select(origin, year, month, day, hour, dep_delay) %>%
-    inner_join(weather, by = c("origin", "year", "month", "day", "hour")) %>%
-    select(dep_delay, wind_gust) %>%
+flights |> select(origin, year, month, day, hour, dep_delay) |>
+    inner_join(weather, by = c("origin", "year", "month", "day", "hour")) |>
+    select(dep_delay, wind_gust) |>
     # removing rows with missing values
-    filter(!is.na(dep_delay) & !is.na(wind_gust)) %>%
+    filter(!is.na(dep_delay) & !is.na(wind_gust)) |>
     ggplot(aes(x = wind_gust, y = dep_delay)) +
       geom_point() + geom_smooth()
 ```
