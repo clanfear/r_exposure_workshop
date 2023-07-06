@@ -2,7 +2,7 @@
 title: "R Exposure 1"
 subtitle: "RStudio and Basic R"  
 author: "Charles Lanfear"
-date: "Oct 16, 2022<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Jul 12, 2023<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -896,7 +896,7 @@ This is a simple way to change some values but not others!
 Note: `country` is a factor--use `as.character()` to convert to character.
 
 ---
-# `case_when()`
+## `case_when()`
 
 **`case_when()`** performs multiple `ifelse()` operations at the same time. `case_when()` allows you to create a new variable with values based on multiple logical statements. This is useful for making categorical variables or variables from combinations of other variables.
 .smallish[
@@ -910,6 +910,8 @@ gapminder |>
   slice(6:9) # get rows 6 through 9
 ```
 ]
+
+.footnote[Consider `case_match()` when only working with one variable]
 
 ---
 class: inverse
@@ -984,6 +986,8 @@ See here for more on [formulae](https://www.datacamp.com/community/tutorials/r-f
 ```{r}
 table(mtcars$cyl, mtcars$am)
 ```
+
+.footnote[Look at `tabyl()` in the `{janitor}` package for easy fancy tables]
 
 ---
 
@@ -1098,7 +1102,7 @@ R supports many more complex models, for example:
 
 * `lavaan` fits structural equation models with intuitive syntax.
 
-* `plm` and `tseries` fit time series models.
+* `fixest` and `tseries` fits time series models.
 
 Most of these other packages support mode summaries with `summary()` and all create output objects which can be accessed using `$`.
 

@@ -2,7 +2,7 @@
 title: "R Exposure 2"
 subtitle: "Data Visualization and Management"  
 author: "Charles Lanfear"
-date: "Dec 4, 2022<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Jul 19, 2023<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs

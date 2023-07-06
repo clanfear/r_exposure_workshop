@@ -21,7 +21,7 @@ class: center, top, title-slide
 ### Charles Lanfear
 ]
 .date[
-### Oct 16, 2022<br>Updated: Oct 12, 2022
+### Jul 12, 2023<br>Updated: Jul 5, 2023
 ]
 
 ---
@@ -407,7 +407,7 @@ getwd()
 ```
 
 ```
-## [1] "C:/Users/cl948/OneDrive/GitHub/r_exposure_workshop/lectures/r1"
+## [1] "C:/Users/cclan/OneDrive/GitHub/r_exposure_workshop/lectures/r1"
 ```
 
 --
@@ -644,7 +644,7 @@ gapminder[gapminder$year==1952, ]
 ##  8 Bahrain     Asia       1952    50.9   120447     9867.
 ##  9 Bangladesh  Asia       1952    37.5 46886859      684.
 ## 10 Belgium     Europe     1952    68    8730405     8343.
-## # … with 132 more rows
+## # ℹ 132 more rows
 ```
 
 ---
@@ -985,7 +985,7 @@ yugoslavia |&gt; arrange(year, desc(pop))
 ##  8 Bosnia and Herzegovina Europe     1957    58.4 3076000     1354.
 ##  9 Slovenia               Europe     1957    67.8 1533070     5862.
 ## 10 Montenegro             Europe     1957    61.4  442829     3682.
-## # … with 50 more rows
+## # ℹ 50 more rows
 ```
 
 The data are sorted by ascending `year` and descending `pop`.
@@ -1227,7 +1227,7 @@ This is a simple way to change some values but not others!
 Note: `country` is a factor--use `as.character()` to convert to character.
 
 ---
-# `case_when()`
+## `case_when()`
 
 **`case_when()`** performs multiple `ifelse()` operations at the same time. `case_when()` allows you to create a new variable with values based on multiple logical statements. This is useful for making categorical variables or variables from combinations of other variables.
 .smallish[
@@ -1244,15 +1244,16 @@ gapminder |&gt;
 
 ```
 ## # A tibble: 4 × 7
-##   country     continent  year lifeExp      pop gdpPercap gdpPercap_o…¹
-##   &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;        
-## 1 Afghanistan Asia       1977    38.4 14880372      786. moderate     
-## 2 Afghanistan Asia       1982    39.9 12881816      978. high         
-## 3 Afghanistan Asia       1987    40.8 13867957      852. high         
-## 4 Afghanistan Asia       1992    41.7 16317921      649. low          
-## # … with abbreviated variable name ¹​gdpPercap_ordinal
+##   country   continent  year lifeExp    pop gdpPercap gdpPercap_ordinal
+##   &lt;fct&gt;     &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;  &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;            
+## 1 Afghanis… Asia       1977    38.4 1.49e7      786. moderate         
+## 2 Afghanis… Asia       1982    39.9 1.29e7      978. high             
+## 3 Afghanis… Asia       1987    40.8 1.39e7      852. high             
+## 4 Afghanis… Asia       1992    41.7 1.63e7      649. low
 ```
 ]
+
+.footnote[Consider `case_match()` when only working with one variable]
 
 ---
 class: inverse
@@ -1322,7 +1323,6 @@ new_formula
 
 ```
 ## y ~ x1 + x2 + x3
-## &lt;environment: 0x0000025c8bc1cc38&gt;
 ```
 
 ```r
@@ -1355,6 +1355,8 @@ table(mtcars$cyl, mtcars$am)
 ##   6  4  3
 ##   8 12  2
 ```
+
+.footnote[Look at `tabyl()` in the `{janitor}` package for easy fancy tables]
 
 ---
 
@@ -1597,7 +1599,7 @@ R supports many more complex models, for example:
 
 * `lavaan` fits structural equation models with intuitive syntax.
 
-* `plm` and `tseries` fit time series models.
+* `fixest` and `tseries` fits time series models.
 
 Most of these other packages support mode summaries with `summary()` and all create output objects which can be accessed using `$`.
 
