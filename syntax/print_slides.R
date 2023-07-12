@@ -20,4 +20,4 @@ build_course <- function(lectures = 1:6){
 }
 
 
-build_course(5:6)
+build_course(1)
