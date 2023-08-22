@@ -10,3 +10,5 @@ tibble
 purrr
 stringr
 forcats
+scales
+lubridate
