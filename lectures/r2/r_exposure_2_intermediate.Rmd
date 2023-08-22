@@ -2,7 +2,7 @@
 title: "R Exposure 2"
 subtitle: "Data Visualization and Management"  
 author: "Charles Lanfear"
-date: "Jul 19, 2023<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
+date: "Aug 22, 2023<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -486,7 +486,8 @@ ggplot(data = gapminder, #<<
 ```{r, fig.height=4, dev='svg', eval=FALSE}
 ggplot(data = gapminder, 
        aes(x = year, y = lifeExp)) +
-  geom_line(color = "red", size = 3) + #<<
+  geom_line(color = "red", #<<
+            linewidth = 3) + #<<
   xlab("Year") + 
   ylab("Life expectancy") +
   ggtitle("Life expectancy over time") +
@@ -498,7 +499,8 @@ ggplot(data = gapminder,
 ```{r,  dev='svg', echo=FALSE}
 ggplot(data = gapminder, 
        aes(x = year, y = lifeExp)) +
-  geom_line(color = "red", size = 3) + #<<
+  geom_line(color = "red", #<<
+            linewidth = 3) + #<<
   xlab("Year") + 
   ylab("Life expectancy") +
   ggtitle("Life expectancy over time") +
@@ -519,7 +521,8 @@ ggplot(data = gapminder,
 ggplot(data = gapminder, 
        aes(x = year, y = lifeExp, 
            group = country)) + #<<
-  geom_line(color = "red", size = 3) +
+  geom_line(color = "red", #<<
+            linewidth = 3) + #<<
   xlab("Year") + 
   ylab("Life expectancy") +
   ggtitle("Life expectancy over time") +
@@ -532,7 +535,8 @@ ggplot(data = gapminder,
 ggplot(data = gapminder, 
        aes(x = year, y = lifeExp, 
            group = country)) + #<<
-  geom_line(color = "red", size = 3) +
+  geom_line(color = "red", #<<
+            linewidth = 3) + #<<
   xlab("Year") + 
   ylab("Life expectancy") +
   ggtitle("Life expectancy over time") +
@@ -553,7 +557,8 @@ ggplot(data = gapminder,
 ggplot(data = gapminder, 
        aes(x = year, y = lifeExp, 
            group = country)) +
-  geom_line(color = "red") + #<<
+  geom_line(color = "red", #<<
+            linewidth = 3) + #<<
   xlab("Year") + 
   ylab("Life expectancy") +
   ggtitle("Life expectancy over time") +
@@ -566,7 +571,8 @@ ggplot(data = gapminder,
 ggplot(data = gapminder, 
        aes(x = year, y = lifeExp, 
            group = country)) +
-  geom_line(color = "red") + #<<
+  geom_line(color = "red", #<<
+            linewidth = 3) + #<<
   xlab("Year") + 
   ylab("Life expectancy") +
   ggtitle("Life expectancy over time") +
@@ -822,11 +828,11 @@ We can modify the axes in a variety of ways, such as:
 ---
 # Axis Changes
 
-```{r, fig.height=3.5, dev='svg'}
+```{r, fig.height=3.25, dev='svg'}
 ggplot(data = China, aes(x = year, y = gdpPercap)) +
     geom_line() +
     scale_y_log10(breaks = c(1000, 2000, 3000, 4000, 5000), #<<
-                  labels = scales::dollar) + #<<
+                  labels = scales::label_dollar()) + #<<
     xlim(1940, 2010) + ggtitle("Chinese GDP per capita")
 ```
 
@@ -871,9 +877,7 @@ ggplot(estimated_pes, aes(x = Target, y = PE, group = Reporter)) +
 ```
 ]
 
-.footnote[
-[1] [Lanfear, Charles C., Lindsey R. Beach, Timothy A. Thomas. 2018. "Formal Social Control in Changing Neighborhoods: Racial Implications of Neighborhood Context on Reactive Policing." *City & Community* 17(4):1075-1099](https://onlinelibrary.wiley.com/doi/10.1111/cico.12346)
-]
+
 
 ---
 
@@ -881,7 +885,9 @@ ggplot(estimated_pes, aes(x = Target, y = PE, group = Reporter)) +
 ![](img/arrest_pe_plot.png)
 ]
 
-.footnote[The process for this plot is documented in my [Advanced Counterfactuals slides](https://clanfear.github.io/CSSS508/Lectures/Week10/CSSS508_Advanced_Counterfactuals.html#1)]
+.footnote[
+[1] [Source: Lanfear et al. (2018)](https://onlinelibrary.wiley.com/doi/10.1111/cico.12346)
+]
 
 --
 
@@ -890,10 +896,14 @@ ggplot(estimated_pes, aes(x = Target, y = PE, group = Reporter)) +
 ---
 
 .image-full[
-![](img/crime_rr_plot.svg)
+![](img/jama.png)
 ]
 
-.footnote[The code for this one is a bit *trickier*.]
+The code for this one is a bit *trickier*.
+
+.footnote[
+Source: [Lanfear et al. (2023)](https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2804655)
+]
 
 ---
 class: inverse
@@ -945,6 +955,10 @@ class: inverse
 class: inverse
 
 # Summarizing Data
+
+.image-full[
+![](img/dplyr.svg)
+]
 
 ---
 ## General Aggregation: `summarize()`
@@ -1024,7 +1038,7 @@ yugoslavia |>
   )
 ```
 
-RStudio also helps you by tracking parentheses: Put your cursor after a `)` and see!
+RStudio also helps you by tracking parentheses: Put your cursor after a `)` and see! Or turn on [rainbow parentheses](https://posit.co/blog/rstudio-1-4-preview-rainbow-parentheses/)!
 
 ---
 # Avoiding Repetition
@@ -1295,13 +1309,10 @@ The `tidyr` package provides functions to tidy up data, similar to `reshape` in 
 
 --
 
-* **`separate()`**: pulls apart one column into multiple columns (common after `pivot_longer()` where values are embedded in column names)
-    * `extract_numeric()` does a simple version of this for the common case when you just want grab the number part
+* **`separate()`**<sup>1</sup>: pulls apart one column into multiple columns (common after `pivot_longer()` where values are embedded in column names)
+    * `readr::parse_number()` does a simple version of this for the common case when you just want grab the number part
 
---
-
-* **`extract()`** for pivoting a column into multiple *sets* of columns.
-   * See [Hadley's response to this question](https://stackoverflow.com/questions/25925556/gather-multiple-sets-of-columns) for an example.
+.footnote[[1] New *experimental* `separate_wider` (`_delim`, `_regex`, and `_position`) functions  have been added recently---they work similarly!]
 
 ---
 # `pivot_longer()`
@@ -1380,7 +1391,7 @@ billboard_2000 <- billboard_2000 |>
 summary(billboard_2000$week)
 ```
 
-For more sophisticated conversion or pattern checking, you'll need to use string parsing (to be covered in R4).
+For more sophisticated conversion or pattern checking, you'll need to use string parsing (covered in R4).
 
 ---
 # Or use `names_prefix`
@@ -1415,7 +1426,6 @@ summary(billboard_2000$length)
 `sep = ":"` tells `separate()` to split the column into two where it finds a colon (`:`).
 
 Then we add `seconds / 60` to `minutes` to produce a numeric `length` in minutes.
-
 
 ---
 # `pivot_wider()` Motivation
@@ -1568,7 +1578,12 @@ We see some of the entry dates are before 2000---presumably songs still charting
 
 ---
 class: inverse
-##Joining Data
+
+# Joining Data
+
+.image-full[
+![](img/dplyr.svg)
+]
 
 ---
 ## When Do We Need to Join Data?

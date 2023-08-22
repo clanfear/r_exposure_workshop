@@ -12,7 +12,7 @@ render_and_print_slides <- function(unit){
     pagedown::chrome_print(current_html, format="pdf")
     message(paste0("Finished rendering ", current_rmd))
 }
-
+render_and_print_slides(1)
 build_course <- function(lectures = 1:6){
     for(i in lectures){
         render_and_print_slides(i)
